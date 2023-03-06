@@ -26,6 +26,7 @@ public class ImageDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Getter
     public static class Response {
         private Long imageId;
         private UserDto.Response owner;

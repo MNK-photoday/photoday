@@ -1,7 +1,9 @@
 package com.photoday.photoday.dto;
 
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 
+@Getter
 public class PageInfo {
     private int pageNumber;
     private int size;

@@ -91,7 +91,8 @@ public class ImageController {
 
     @GetMapping("/{imageId}/bookmarks")
     public ResponseEntity updateBookmark(@PathVariable Long imageId) {
-        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+        responses.add(response);
+        return new ResponseEntity<>(new MultiResponseDto(responses, pageInfo), HttpStatus.OK);
     }
 
     @DeleteMapping("/{imageId}/bookmarks/{bookmarkId}")
@@ -105,25 +106,15 @@ public class ImageController {
         return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
     }
 
-    @GetMapping("/{imageId}/reports")
-    public ResponseEntity getBookmarks(@PathVariable Long imageId) {
-        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
-    }
+//    @DeleteMapping("/{imageId}/reports/{reportId}")
+//    public ResponseEntity deleteReport(@PathVariable Long imageId,
+//                                       @PathVariable Long reportId) {
+//        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+//    }
 
-    @DeleteMapping("/{imageId}/reports/{reportId}")
-    public ResponseEntity deleteReport(@PathVariable Long imageId,
-                                       @PathVariable Long reportId) {
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
-    }
-
-    @PostMapping("/{imageId}/likes/")
+    @PostMapping("/{imageId}/likes")
     public ResponseEntity createLike(@PathVariable Long imageId) {
         return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
     }
-
-    @DeleteMapping("/{imageId}/likes/{likeId}")
-    public ResponseEntity deleteLike(@PathVariable Long imageId,
-                                     @PathVariable Long likeId) {
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
-    }
+    
 }
