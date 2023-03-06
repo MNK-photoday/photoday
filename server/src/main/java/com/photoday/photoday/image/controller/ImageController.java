@@ -1,0 +1,129 @@
+package com.photoday.photoday.image.controller;
+
+import com.photoday.photoday.dto.MultiResponseDto;
+import com.photoday.photoday.dto.PageInfo;
+import com.photoday.photoday.dto.SingleResponseDto;
+import com.photoday.photoday.image.dto.ImageDto;
+import com.photoday.photoday.image.entity.Image;
+import com.photoday.photoday.user.dto.UserDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/images")
+@RequiredArgsConstructor
+@Validated
+public class ImageController {
+    private String imageUrl = "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAzMjJfOTQg%2FMDAxNjE2NDA2MDcyNzY3.nb3pBLtRRcORiPmEk52fFSXHoAdIsBwcE76XfXUdZi4g.w9jHhZMztKRvq8FEAqKbLoPxUnpwmYMHFwNKrmOpftQg.JPEG.yomian%2F1616406049173.jpg&type=a340";
+    private String profileUrl = "https://i.pinimg.com/236x/56/cc/80/56cc80ea80aff65bc09c7967b993821c.jpg";
+    private List<String> getTags() {
+        List<String> tags = new ArrayList<>();
+        tags.add("선생님");
+        tags.add("안녕하세요");
+        return tags;
+    }
+    LocalDateTime now = LocalDateTime.now();
+
+    UserDto.Response owner = new UserDto.Response(1L, "박진영", profileUrl, "잘 부탁드립니다.", 0, 0,10,40);
+
+    ImageDto.Response response = ImageDto.Response.builder()
+            .imageId(1L)
+            .imageUrl(imageUrl)
+            .tags(getTags())
+            .viewCount(10)
+            .likeCount(300)
+            .owner(owner)
+            .reportCount(0)
+            .createdAt(now)
+            .build();
+
+    List<ImageDto.Response> responses = new ArrayList<>();
+
+    PageImpl page = new PageImpl(List.of(new Image()));
+    PageInfo pageInfo = new PageInfo(page);
+
+    @PostMapping
+    public ResponseEntity createImage(@RequestBody @Valid ImageDto.Post post) {
+
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{imageId}")
+    public ResponseEntity update(@PathVariable Long imageId,
+                                 @RequestBody @Valid ImageDto.Patch patch) {
+
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity gets(Pageable pageable) {
+        responses.add(response);
+
+        return new ResponseEntity(new MultiResponseDto(responses, pageInfo), HttpStatus.OK);
+    }
+
+    @GetMapping("/{imageId}")
+    public ResponseEntity get(@PathVariable Long imageId) {
+
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{imageId}")
+    public ResponseEntity delete(@PathVariable Long imageId) {
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{imageId}/bookmarks")
+    public ResponseEntity createBookmark(@PathVariable Long imageId) {
+        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/{imageId}/bookmarks")
+    public ResponseEntity updateBookmark(@PathVariable Long imageId) {
+        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{imageId}/bookmarks/{bookmarkId}")
+    public ResponseEntity deleteBookmark(@PathVariable Long imageId,
+                                         @PathVariable Long bookmarkId) {
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @PostMapping("/{imageId}/reports")
+    public ResponseEntity createReport(@PathVariable Long imageId) {
+        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/{imageId}/reports")
+    public ResponseEntity getBookmarks(@PathVariable Long imageId) {
+        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{imageId}/reports/{reportId}")
+    public ResponseEntity deleteReport(@PathVariable Long imageId,
+                                       @PathVariable Long reportId) {
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @PostMapping("/{imageId}/likes/")
+    public ResponseEntity createLike(@PathVariable Long imageId) {
+        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{imageId}/likes/{likeId}")
+    public ResponseEntity deleteLike(@PathVariable Long imageId,
+                                     @PathVariable Long likeId) {
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+    }
+}
