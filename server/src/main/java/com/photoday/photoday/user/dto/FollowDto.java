@@ -12,9 +12,17 @@ public class FollowDto {
     @Getter
     @Setter
     public static class ResponseFollowUsers {
-        private List<User> followers;
-        private List<User> following;
+        private List<ResponseFollowUserData> followers;
+        private List<ResponseFollowUserData> following;
         private int followerCount;
         private int followingCount;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    public static class ResponseFollowUserData {
+        private Long userId;
+        private String name;
     }
 }

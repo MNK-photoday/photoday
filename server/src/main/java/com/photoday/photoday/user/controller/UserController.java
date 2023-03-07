@@ -42,25 +42,25 @@ public class UserController {
 
     @GetMapping("/follow")
     public ResponseEntity getFollowUsers() {
-        User user1 = new User(1L, "hi");
-        User user2 = new User(2L, "hello");
         int follower = 10;
         int following = 10;
-        List<User> followers = List.of(user1, user2);
-        List<User> followings = List.of(user1, user2);
+        FollowDto.ResponseFollowUserData responseFollowUserData1 = new FollowDto.ResponseFollowUserData(1L, "hi");
+        FollowDto.ResponseFollowUserData responseFollowUserData2 = new FollowDto.ResponseFollowUserData(2L, "hello");
+        List<FollowDto.ResponseFollowUserData> followers = List.of(responseFollowUserData1, responseFollowUserData2);
+        List<FollowDto.ResponseFollowUserData> followings = List.of(responseFollowUserData1, responseFollowUserData2);
         FollowDto.ResponseFollowUsers response = new FollowDto.ResponseFollowUsers(followers, followings, follower, following);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PostMapping("/follow/{following-id}")
-    public ResponseEntity followingUser(@PathVariable("following-id") long followingId) {
-        User user1 = new User(1L, "hi");
-        User user2 = new User(2L, "hello");
+    @PostMapping("/follow/{followingId}")
+    public ResponseEntity followingUser(@PathVariable("followingId") long followingId) {
         int follower = 10;
         int following = 10;
-        List<User> followers = List.of(user1, user2);
-        List<User> followings = List.of(user1, user2);
+        FollowDto.ResponseFollowUserData responseFollowUserData1 = new FollowDto.ResponseFollowUserData(1L, "hi");
+        FollowDto.ResponseFollowUserData responseFollowUserData2 = new FollowDto.ResponseFollowUserData(2L, "hello");
+        List<FollowDto.ResponseFollowUserData> followers = List.of(responseFollowUserData1, responseFollowUserData2);
+        List<FollowDto.ResponseFollowUserData> followings = List.of(responseFollowUserData1, responseFollowUserData2);
         FollowDto.ResponseFollowUsers response = new FollowDto.ResponseFollowUsers(followers, followings, follower, following);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
