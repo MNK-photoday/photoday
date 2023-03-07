@@ -6,6 +6,7 @@
     "node": true // module 해결
   },
   "extends": [
+    "prettier",
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:import/recommended",
