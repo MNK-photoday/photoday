@@ -91,17 +91,16 @@ public class ImageController {
         return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
     }
 
-    @GetMapping("/{imageId}/bookmarks")
-    public ResponseEntity updateBookmark(@PathVariable Long imageId) {
+    @GetMapping("/bookmarks")
+    public ResponseEntity getBookmark(Pageable pageable) {
         responses.add(response);
         return new ResponseEntity<>(new MultiResponseDto(responses, pageInfo), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{imageId}/bookmarks/{bookmarkId}")
-    public ResponseEntity deleteBookmark(@PathVariable Long imageId,
-                                         @PathVariable Long bookmarkId) {
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
-    }
+//    @DeleteMapping("/{imageId}/bookmarks")
+//    public ResponseEntity deleteBookmark(@PathVariable Long imageId) {
+//        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+//    }
 
     @PostMapping("/{imageId}/reports")
     public ResponseEntity createReport(@PathVariable Long imageId) {

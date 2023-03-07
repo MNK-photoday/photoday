@@ -47,7 +47,7 @@ public class TagController {
     PageImpl page = new PageImpl(List.of(new Image()));
     PageInfo pageInfo = new PageInfo(page);
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity getTags(@RequestBody @Valid TagDto.Get tags,
                                   Pageable pageable) {
         responses.add(response);
