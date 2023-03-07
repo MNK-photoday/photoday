@@ -2,10 +2,11 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "amd":  true, // require 해결
-    "node": true // module 해결 
+    "amd": true, // require 해결
+    "node": true // module 해결
   },
   "extends": [
+    "prettier",
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:import/recommended",
