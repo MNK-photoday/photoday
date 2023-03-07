@@ -2,20 +2,13 @@ package com.photoday.photoday.tag.dto;
 
 import lombok.Getter;
 
+import javax.validation.constraints.Size;
+import java.util.List;
+
 public class TagDto {
     @Getter
-    public static class Post {
-        private String name;
-    }
-
-    @Getter
-    public static class Patch {
-        private String name;
-
-    }
-
-    @Getter
-    public static class Response {
-        private String name;
+    public static class Get {
+        @Size(min=1)
+        private List<String> tags;
     }
 }
