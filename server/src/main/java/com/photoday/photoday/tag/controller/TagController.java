@@ -4,15 +4,15 @@ import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.dto.PageInfo;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
+import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.dto.UserDto;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,9 @@ public class TagController {
 
     PageImpl page = new PageImpl(List.of(new Image()));
     PageInfo pageInfo = new PageInfo(page);
-    public ResponseEntity getTags(@RequestParam(required = false) ArrayList<String> tags,
+
+    @GetMapping
+    public ResponseEntity getTags(@RequestBody @Valid TagDto.Get tags,
                                   Pageable pageable) {
         responses.add(response);
         return new ResponseEntity(new MultiResponseDto(responses, pageInfo), HttpStatus.OK);

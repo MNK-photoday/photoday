@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -53,7 +54,8 @@ public class ImageController {
     PageInfo pageInfo = new PageInfo(page);
 
     @PostMapping
-    public ResponseEntity createImage(@RequestBody @Valid ImageDto.Post post) {
+    public ResponseEntity createImage(@RequestPart ImageDto.Post post,
+                                      @RequestPart(value = "file") MultipartFile multipartFile) {
 
         return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
@@ -91,7 +93,8 @@ public class ImageController {
 
     @GetMapping("/{imageId}/bookmarks")
     public ResponseEntity updateBookmark(@PathVariable Long imageId) {
-        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+        responses.add(response);
+        return new ResponseEntity<>(new MultiResponseDto(responses, pageInfo), HttpStatus.OK);
     }
 
     @DeleteMapping("/{imageId}/bookmarks/{bookmarkId}")
@@ -105,25 +108,14 @@ public class ImageController {
         return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
     }
 
-    @GetMapping("/{imageId}/reports")
-    public ResponseEntity getBookmarks(@PathVariable Long imageId) {
-        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
-    }
+//    @DeleteMapping("/{imageId}/reports/{reportId}")
+//    public ResponseEntity deleteReport(@PathVariable Long imageId,
+//                                       @PathVariable Long reportId) {
+//        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+//    }
 
-    @DeleteMapping("/{imageId}/reports/{reportId}")
-    public ResponseEntity deleteReport(@PathVariable Long imageId,
-                                       @PathVariable Long reportId) {
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
-    }
-
-    @PostMapping("/{imageId}/likes/")
+    @PostMapping("/{imageId}/likes")
     public ResponseEntity createLike(@PathVariable Long imageId) {
         return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{imageId}/likes/{likeId}")
-    public ResponseEntity deleteLike(@PathVariable Long imageId,
-                                     @PathVariable Long likeId) {
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
 }
