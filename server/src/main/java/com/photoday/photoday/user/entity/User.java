@@ -32,18 +32,21 @@ public class User {
     @Column(nullable = false)
     private String profileImageUrl = "";
 
-    @Column(nullable = false)
-    private String likeCount;
+    @Column
+    private String aboutMe = "";
 
     @Column(nullable = false)
-    private String report_count;
+    private int likeCount;
+
+    @Column(nullable = false)
+    private int reportCount;
 
     @Column(nullable = false)
     private MemberStatus status = MemberStatus.MEMBER_ACTIVE;
 
     private LocalDateTime banTime;
 
-    private Integer todayReportCount;
+    private int todayReportCount;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
