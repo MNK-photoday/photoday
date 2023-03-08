@@ -12,7 +12,6 @@ function App() {
       element: <Root />, // 템플릿
       children: [
         { path: '/', element: <Main /> },
-        // { element: <Main /> },
         {
           path: '/mypage',
           element: <MyPage />,
