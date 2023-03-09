@@ -1,5 +1,12 @@
+import * as style from './Login.styles';
+
 function Login() {
-  return <div>로그인을 합시다</div>;
+  return (
+    <style.LoginContainerWrap>
+      <style.imgContainerWrap />
+      <style.inputContainerWrap></style.inputContainerWrap>
+    </style.LoginContainerWrap>
+  );
 }
 
 export default Login;
