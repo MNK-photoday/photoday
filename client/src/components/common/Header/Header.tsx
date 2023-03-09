@@ -15,9 +15,6 @@ function Header() {
             <style.Logo>
               Pho<style.LogoPoint>to</style.LogoPoint>day
             </style.Logo>
-            <style>
-              Pho<style.LogoPoint>to</style.LogoPoint>day
-            </style>
           </style.LogoBox>
           <SearchBar />
           <style.LinkBox>

@@ -19,7 +19,6 @@ export const HeaderContent = styled.div`
 `;
 
 export const LogoBox = styled.div`
-  /* ${ColFlex} */
   margin-right: 100px;
 `;
 export const Logo = styled.p`
