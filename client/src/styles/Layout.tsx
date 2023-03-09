@@ -1,10 +1,10 @@
 import styled from 'styled-components';
+import { ColFlex } from './GlobalStyles';
 
 /*최상위 컨테이너 */
 export const ContainerWrap = styled.div`
   display: flex;
   justify-content: center;
-  margin: 40px 0;
 `;
 
 /* 컨텐츠 컨테이너 */
