@@ -1,5 +1,6 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { ColFlex } from '../../../styles/GlobalStyles';
+import { ColFlex, RowFlex } from '../../../styles/GlobalStyles';
 
 export const HeaderContainerWrap = styled.div`
   display: flex;
@@ -12,7 +13,28 @@ export const HeaderContainerFlex = styled.div`
 `;
 
 export const HeaderContent = styled.div`
-  ${ColFlex}
-  height: 60px;
-  background-color: red;
+  ${RowFlex}
+  height: 70px;
+  align-items: center;
+`;
+
+export const LogoBox = styled.div`
+  /* ${ColFlex} */
+  margin-right: 100px;
+`;
+export const Logo = styled.p`
+  font-size: var(--font-size-xl);
+`;
+
+export const LogoPoint = styled.span`
+  font-size: var(--font-size-xl);
+  color: var(--color-primary-green);
+`;
+export const LinkBox = styled.div``;
+export const HeaderLink = styled(Link)`
+  font-size: var(--font-size-sm);
+  margin-left: 30px;
+  &:first-child {
+    margin-left: 100px;
+  }
 `;
