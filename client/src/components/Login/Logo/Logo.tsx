@@ -1,4 +1,4 @@
-import * as style from './Logo.style';
+import * as style from './Logo.styles';
 
 function Logo() {
   return (
