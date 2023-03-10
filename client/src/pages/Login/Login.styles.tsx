@@ -15,7 +15,7 @@ export const LoginContainerWrap = styled.div`
   display: flex;
 `;
 
-export const imgContainerWrap = styled.div`
+export const ImgContainerWrap = styled.div`
   background-color: blue;
   width: 75%;
   height: 100vh;
@@ -23,8 +23,8 @@ export const imgContainerWrap = styled.div`
   background-size: cover;
 `;
 
-export const inputContainerWrap = styled.div`
-  background-color: green;
+export const InputContainerWrap = styled.div`
+  /* background-color: green; */
   width: 25%;
   /* height: 100vh; */
 `;
