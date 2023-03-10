@@ -9,13 +9,18 @@ export const FooterContainerWrap = styled.div`
 export const FooterContainerFlex = styled.div`
   ${ColFlex}
   width: 100%;
-  max-width: 90vw;
+  max-width: 95vw;
   position: fixed;
   bottom: 0;
 `;
 
 export const FooterContent = styled.div`
-  height: 20px;
-  padding: 5px 0;
-  background-color: green;
+  height: 30px;
+  padding: 10px 0;
+  text-align: end;
+`;
+
+export const FooterSpan = styled.span`
+  color: var(--color-primary-black);
+  font-size: var(--font-size-sm);
 `;
