@@ -1,5 +1,4 @@
 import * as style from './Input.styles';
-import { FcGoogle } from 'react-icons/fc';
 
 export function Input() {
   return (
@@ -7,19 +6,18 @@ export function Input() {
       <style.LoginInputLabel htmlFor="email">email</style.LoginInputLabel>
       <style.EmailInput type="text" id="email" />
       <style.LoginInputLabel htmlFor="password">password</style.LoginInputLabel>
-      <style.passwordInput type="text" id="password" />
+      <style.PasswordInput type="text" id="password" />
     </style.InputContainerWrap>
   );
 }
 
-//삭제 가능성 있음
-export function Login() {
-  return <Input />;
-}
-
-//삭제 가능성 있음
-export function Signup() {
-  return <Input />;
+export function EmailInput() {
+  return (
+    <style.InputContainerWrap>
+      <style.LoginInputLabel htmlFor="email">email</style.LoginInputLabel>
+      <style.EmailInput type="text" id="email" />
+    </style.InputContainerWrap>
+  );
 }
 
 export function AccountRecovery() {
@@ -31,10 +29,18 @@ export function AccountRecovery() {
   );
 }
 
-export function CheckBox(props: { text: string }) {
+interface IProps {
+  text: string;
+  handleonChecked: () => void;
+}
+
+export function CheckBox(props: IProps) {
   return (
     <>
-      <style.CheckBox type="checkbox"></style.CheckBox>
+      <style.CheckBox
+        type="checkbox"
+        onClick={props.handleonChecked}
+      ></style.CheckBox>
       <style.Label htmlFor="checkbox">{props.text}</style.Label>
     </>
   );

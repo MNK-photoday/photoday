@@ -2,7 +2,6 @@ import { GlobalStyle } from '../styles/GlobalStyles';
 import { Outlet } from 'react-router-dom';
 import Header from '../components/common/Header/Header';
 import Footer from '../components/common/Footer/Footer';
-import Login from '../pages/Login/Login';
 
 export function Root() {
   return (
@@ -19,7 +18,7 @@ export function LoginRoot() {
   return (
     <>
       <GlobalStyle />
-      <Login />
+      <Outlet />
     </>
   );
 }
