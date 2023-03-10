@@ -16,6 +16,7 @@ export const HeaderContent = styled.div`
   ${RowFlex}
   height: 70px;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const LogoBox = styled.div`

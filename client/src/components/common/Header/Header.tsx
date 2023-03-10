@@ -16,7 +16,7 @@ function Header() {
               Pho<style.LogoPoint>to</style.LogoPoint>day
             </style.Logo>
           </style.LogoBox>
-          <SearchBar />
+          {/* <SearchBar /> */}
           <style.LinkBox>
             <style.HeaderLink to="/login">Login</style.HeaderLink>
             <style.HeaderLink to="/signup">SignUp</style.HeaderLink>
