@@ -1,6 +1,6 @@
 import Logo from '../Logo/Logo';
 import { Input } from '../Input/Input';
-import * as style from '../Login/Login.style';
+import * as style from '../Login/Login.styles';
 
 function Signup() {
   return (

@@ -1,7 +1,7 @@
 import Logo from '../Logo/Logo';
 import { Input, CheckBox } from '../Input/Input';
 import { GoogleButton, Button } from '../Button/Button';
-import * as style from './Login.style';
+import * as style from './Login.styles';
 
 export interface IProps {
   name: string;
