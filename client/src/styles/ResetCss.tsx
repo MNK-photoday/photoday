@@ -205,6 +205,11 @@ const ResetCss = css`
   .hidden {
     display: none;
   }
+
+  input {
+    border: none;
+    outline: none;
+  }
 `;
 
 export default ResetCss;
