@@ -13,10 +13,12 @@ const Variables = css`
     --color-tag-line: 1px solid #9b9b9b;
     --color-input-box-line: 1px solid #d9d9d9;
     --color-taginput-box-line: 1px solid #3cb46e;
+    --box-radius-3: 3px;
     --box-radius-10: 10px;
     --box-radius-15: 15px;
     --box-radius-20: 20px;
     --box-radius-30: 30px;
+    --font-size-xxxl: 50px;
     --font-size-xxl: 30px;
     --font-size-xl: 24px;
     --font-size-l: 20px;
