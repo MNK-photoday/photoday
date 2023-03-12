@@ -2,9 +2,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Root, LoginRoot } from './routes/Route';
 import Main from './pages/Main/Main';
 import MyPage from './pages/MyPage/MyPage';
-import Login from './components/Login/Login/Login';
-import Signup from './components/Login/Signup/Signup';
-import AccountRecovery from './components/Login/AccountRecovery/AccountRecovery';
+import Login from './pages/Login/Login';
+import Signup from './pages/Signup/Signup';
+import AccountRecovery from './pages/AccountRecovery/AccountRecovery';
 
 function App() {
   const router = createBrowserRouter([

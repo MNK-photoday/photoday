@@ -4,15 +4,13 @@ import { RowFlex } from '../../../styles/GlobalStyles';
 export const LoginLogoContainer = styled.div`
   ${RowFlex}
   align-items: center;
-  height: 200px;
+  height: 25%;
 `;
 
-// 정호 merge 후, 불러오기
-export const Logo = styled.p`
-  align-items: center;
+export const LoginLogo = styled.p`
   font-size: var(--font-size-xxl);
 `;
 
-export const LogoPoint = styled.span`
+export const LoginLogoPoint = styled.span`
   color: var(--color-primary-green);
 `;
