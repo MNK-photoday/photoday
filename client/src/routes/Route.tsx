@@ -18,7 +18,6 @@ export function LoginRoot() {
   return (
     <>
       <GlobalStyle />
-      <Header />
       <Outlet />
     </>
   );
