@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import MainImage from '../../assets/imgs/image1.jpg';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
-import { useState } from 'react';
-import Card from '../../components/common/Image/ImageCard';
+import ImageCard from '../../components/common/Image/ImageCard';
+
 import {
   S_ContentImgBox,
   S_MainContent,
@@ -27,13 +28,13 @@ function Main() {
               <SearchBar setActiveTextBox={setActiveTextBox} />
               <S_SearchImgBox textBoxActive={activeTextBox}>
                 <S_ContentImgBox>
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
+                  <ImageCard />
+                  <ImageCard />
+                  <ImageCard />
+                  <ImageCard />
+                  <ImageCard />
+                  <ImageCard />
+                  <ImageCard />
                 </S_ContentImgBox>
               </S_SearchImgBox>
               <S_MainTextBox textBoxActive={activeTextBox}>
