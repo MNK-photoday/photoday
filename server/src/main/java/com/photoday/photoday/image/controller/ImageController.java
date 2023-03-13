@@ -1,13 +1,16 @@
 package com.photoday.photoday.image.controller;
 
 import com.photoday.photoday.dto.MultiResponseDto;
-import com.photoday.photoday.dto.PageInfo;
 import com.photoday.photoday.dto.SingleResponseDto;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
-import com.photoday.photoday.user.dto.UserDto;
+import com.photoday.photoday.image.mapper.ImageMapper;
+import com.photoday.photoday.image.service.ImageService;
+import com.photoday.photoday.tag.dto.TagDto;
+import com.photoday.photoday.tag.entity.Tag;
+import com.photoday.photoday.tag.mapper.TagMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,96 +27,64 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class ImageController {
-    private String imageUrl = "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAzMjJfOTQg%2FMDAxNjE2NDA2MDcyNzY3.nb3pBLtRRcORiPmEk52fFSXHoAdIsBwcE76XfXUdZi4g.w9jHhZMztKRvq8FEAqKbLoPxUnpwmYMHFwNKrmOpftQg.JPEG.yomian%2F1616406049173.jpg&type=a340";
-    private String profileUrl = "https://i.pinimg.com/236x/56/cc/80/56cc80ea80aff65bc09c7967b993821c.jpg";
-    private List<String> getTags() {
-        List<String> tags = new ArrayList<>();
-        tags.add("선생님");
-        tags.add("안녕하세요");
-        return tags;
-    }
-    LocalDateTime now = LocalDateTime.now();
-
-    UserDto.Response owner = new UserDto.Response(1L, "박진영", profileUrl, "잘 부탁드립니다.", 0, 0,10,40);
-
-    ImageDto.Response response = ImageDto.Response.builder()
-            .imageId(1L)
-            .imageUrl(imageUrl)
-            .tags(getTags())
-            .viewCount(10)
-            .likeCount(300)
-            .owner(owner)
-            .reportCount(0)
-            .createdAt(now)
-            .build();
-
-    List<ImageDto.Response> responses = new ArrayList<>();
-
-    PageImpl page = new PageImpl(List.of(new Image()));
-    PageInfo pageInfo = new PageInfo(page);
+    private final ImageService imageService;
+    private final ImageMapper imageMapper;
+    private final TagMapper tagMapper;
 
     @PostMapping
-    public ResponseEntity createImage(@RequestPart ImageDto.Post post,
-                                      @RequestPart(value = "file") MultipartFile multipartFile) {
-
+    public ResponseEntity createImage(@RequestPart TagDto post,
+                                      @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
+        Image image = imageService.createImage(tagMapper.dtoToTag(post), multipartFile);
+        ImageDto.Response response = imageMapper.imageToResponse(image);
         return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{imageId}")
-    public ResponseEntity update(@PathVariable Long imageId,
-                                 @RequestBody @Valid ImageDto.Patch patch) {
-
+    public ResponseEntity update(@PathVariable Long imageId, @RequestBody @Valid TagDto patch) {
+        List<Tag> tagList = tagMapper.dtoToTag(patch);
+        Image image = imageService.modifyImageTags(imageId, tagList);
+        ImageDto.Response response = imageMapper.imageToResponse(image);
         return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity gets(Pageable pageable) {
-        responses.add(response);
-
-        return new ResponseEntity(new MultiResponseDto(responses, pageInfo), HttpStatus.OK);
-    }
-
     @GetMapping("/{imageId}")
-    public ResponseEntity get(@PathVariable Long imageId) {
-
+    public ResponseEntity getImage(@PathVariable Long imageId) {
+        Image image = imageService.getImage(imageId);
+        ImageDto.Response response = imageMapper.imageToResponse(image);
         return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
 
     @DeleteMapping("/{imageId}")
     public ResponseEntity delete(@PathVariable Long imageId) {
-
+        imageService.deleteImage(imageId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{imageId}/bookmarks")
-    public ResponseEntity createBookmark(@PathVariable Long imageId) {
-        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+    @PatchMapping("/{imageId}/bookmarks")
+    public ResponseEntity updateBookmark(@PathVariable Long imageId) {
+        Image image = imageService.updateBookmark(imageId);
+        ImageDto.Response response = imageMapper.imageToResponse(image);
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
 
     @GetMapping("/bookmarks")
-    public ResponseEntity getBookmark(Pageable pageable) {
-        responses.add(response);
-        return new ResponseEntity<>(new MultiResponseDto(responses, pageInfo), HttpStatus.OK);
+    public ResponseEntity getBookmarkImages(Pageable pageable) {
+        Page<Image> page = imageService.getBookmarkImages(pageable);
+        List<Image> imageList = page.getContent();
+        return new ResponseEntity<>(new MultiResponseDto(imageList, page), HttpStatus.OK);
     }
-
-//    @DeleteMapping("/{imageId}/bookmarks")
-//    public ResponseEntity deleteBookmark(@PathVariable Long imageId) {
-//        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
-//    }
 
     @PostMapping("/{imageId}/reports")
     public ResponseEntity createReport(@PathVariable Long imageId) {
-        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+        Image image = imageService.createReport(imageId);
+        ImageDto.Response response = imageMapper.imageToResponse(image);
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
 
-//    @DeleteMapping("/{imageId}/reports/{reportId}")
-//    public ResponseEntity deleteReport(@PathVariable Long imageId,
-//                                       @PathVariable Long reportId) {
-//        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
-//    }
-
-    @PostMapping("/{imageId}/likes")
-    public ResponseEntity createLike(@PathVariable Long imageId) {
-        return new ResponseEntity<>(new SingleResponseDto(response), HttpStatus.OK);
+    @PatchMapping("/{imageId}/likes")
+    public ResponseEntity updateLike(@PathVariable Long imageId) {
+        Image image = imageService.updateLike(imageId);
+        ImageDto.Response response = imageMapper.imageToResponse(image);
+        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
 }

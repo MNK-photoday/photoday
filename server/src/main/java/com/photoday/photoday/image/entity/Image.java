@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Image {
+public class Image { // 메타데이터 필드 추가
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long imageId;
@@ -24,13 +24,7 @@ public class Image {
     private String imageUrl;
 
     @Column(nullable = false)
-    private int likeCount =0;
-
-    @Column(nullable = false)
-    private int reportCount=0;
-
-    @Column(nullable = false)
-    private int viewCount=0;
+    private int viewCount;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -39,7 +33,7 @@ public class Image {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImageTag> imageTagList = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL)

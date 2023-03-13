@@ -1,5 +1,6 @@
 package com.photoday.photoday.image.dto;
 
+import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ImageDto {
-    @Getter
-    public static class Post {
-        @Size(min =1, max = 5)
-        List<String> tags;
-    }
 
     @Getter
     public static class Patch {
