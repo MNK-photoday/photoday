@@ -1,47 +1,57 @@
-import * as style from './Input.styles';
+import {
+  S_InputContainerWrap,
+  S_LoginInputLabel,
+  S_EmailInput,
+  S_PasswordInput,
+  S_CheckBox,
+  S_Label,
+} from './Input.styles';
+import React from 'react';
 
 export function Input() {
   return (
-    <style.InputContainerWrap>
-      <style.LoginInputLabel htmlFor="email">email</style.LoginInputLabel>
-      <style.EmailInput type="text" id="email" />
-      <style.LoginInputLabel htmlFor="password">password</style.LoginInputLabel>
-      <style.PasswordInput type="text" id="password" />
-    </style.InputContainerWrap>
+    <S_InputContainerWrap>
+      <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
+      <S_EmailInput type="text" id="email" />
+      <S_LoginInputLabel htmlFor="password">password</S_LoginInputLabel>
+      <S_PasswordInput type="text" id="password" />
+    </S_InputContainerWrap>
   );
 }
 
 export function EmailInput() {
   return (
-    <style.InputContainerWrap>
-      <style.LoginInputLabel htmlFor="email">email</style.LoginInputLabel>
-      <style.EmailInput type="text" id="email" />
-    </style.InputContainerWrap>
+    <S_InputContainerWrap>
+      <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
+      <S_EmailInput type="text" id="email" />
+    </S_InputContainerWrap>
   );
 }
 
 export function AccountRecovery() {
   return (
-    <style.InputContainerWrap>
-      <style.LoginInputLabel htmlFor="email">email</style.LoginInputLabel>
-      <style.EmailInput type="text" id="email" />
-    </style.InputContainerWrap>
+    <S_InputContainerWrap>
+      <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
+      <S_EmailInput type="text" id="email" />
+    </S_InputContainerWrap>
   );
 }
 
 interface IProps {
-  text: string;
-  handleonChecked: () => void;
+  isChecked: boolean;
+  children: React.ReactNode;
+  onClickEvent: () => void;
 }
 
-export function CheckBox(props: IProps) {
+export function CheckBox({ isChecked, children, onClickEvent }: IProps) {
   return (
     <>
-      <style.CheckBox
+      <S_CheckBox
         type="checkbox"
-        onClick={props.handleonChecked}
-      ></style.CheckBox>
-      <style.Label htmlFor="checkbox">{props.text}</style.Label>
+        onClick={onClickEvent}
+        isChecked={isChecked}
+      ></S_CheckBox>
+      <S_Label htmlFor="checkbox">{children}</S_Label>
     </>
   );
 }
