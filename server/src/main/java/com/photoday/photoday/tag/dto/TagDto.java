@@ -5,10 +5,8 @@ import lombok.Getter;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@Getter
 public class TagDto {
-    @Getter
-    public static class Get {
-        @Size(min=1)
-        private List<String> tags;
-    }
+    @Size(min = 1)
+    private List<String> names;
 }
