@@ -1,13 +1,20 @@
-import React from 'react';
-import * as style from './SearchBar.styles';
+import React, { KeyboardEvent, PropsWithChildren } from 'react';
 import { BsSearch } from 'react-icons/bs';
-
-function SearchBar() {
+import { S_SearchBarInput, S_SearchBarWrap } from './SearchBar.styles';
+type Props = {
+  setActiveTextBox: (a: boolean) => void;
+};
+function SearchBar({ setActiveTextBox }: PropsWithChildren<Props>) {
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      setActiveTextBox(false);
+    }
+  }
   return (
-    <style.SearchBarWrap>
+    <S_SearchBarWrap>
       <BsSearch className="search-icon" />
-      <style.SearchBarInput></style.SearchBarInput>
-    </style.SearchBarWrap>
+      <S_SearchBarInput onKeyDown={handleKeyDown}></S_SearchBarInput>
+    </S_SearchBarWrap>
   );
 }
 
