@@ -82,15 +82,20 @@ export const S_Tag = styled.button`
   margin-right: 5px;
   padding: 9px 7px 7px;
   border: var(--color-tag-line);
-  border-radius: var(--box-radius-10);
+  border-radius: 40px;
   font-size: var(--font-size-sm);
-  transition: all 0.3s ease-in-out;
 
   &:hover {
-    transition: all 0.3s ease-in-out;
     background-color: var(--color-primary-green);
     color: #fff;
     border: 1px solid var(--color-primary-green);
     cursor: pointer;
+    > .close-icon {
+      display: inline-block;
+      color: #fff;
+    }
+  }
+  .close-icon {
+    display: none;
   }
 `;

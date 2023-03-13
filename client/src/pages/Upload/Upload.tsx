@@ -1,5 +1,5 @@
 import Button from '../../components/common/Button/Button';
-import { Container, ContainerWrap, Content } from '../../styles/Layout';
+import { Container, ContainerWrap } from '../../styles/Layout';
 import {
   S_FileBox,
   S_Tag,
@@ -11,7 +11,7 @@ import {
   S_UploadBox,
   S_UploadTitle,
 } from './Upload.styles';
-import { TiDelete } from 'react-icons/ti';
+import { IoClose } from 'react-icons/io5';
 
 function Upload() {
   const InputTagHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +32,7 @@ function Upload() {
               ></S_TagInput>
               <S_TagBox>
                 <S_Tag>
-                  임시태그 <TiDelete />
+                  임시태그 <IoClose className="close-icon" />
                 </S_Tag>
               </S_TagBox>
             </S_UploadBottomLeft>
