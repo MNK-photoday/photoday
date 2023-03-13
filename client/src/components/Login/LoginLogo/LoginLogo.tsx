@@ -1,12 +1,16 @@
-import * as style from './LoginLogo.styles';
+import {
+  S_LoginLogoContainer,
+  S_LoginLogo,
+  S_LoginLogoPoint,
+} from './LoginLogo.styles';
 
 function LoginLogo() {
   return (
-    <style.LoginLogoContainer>
-      <style.LoginLogo>
-        pho<style.LoginLogoPoint>to</style.LoginLogoPoint>day
-      </style.LoginLogo>
-    </style.LoginLogoContainer>
+    <S_LoginLogoContainer>
+      <S_LoginLogo to="/">
+        pho<S_LoginLogoPoint>to</S_LoginLogoPoint>day
+      </S_LoginLogo>
+    </S_LoginLogoContainer>
   );
 }
 
