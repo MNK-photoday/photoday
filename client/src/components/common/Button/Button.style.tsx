@@ -13,9 +13,6 @@ const variantCSS = {
     background-color: var(--color-primary-green);
     color: var(--white);
     border-radius: var(--box-radius-3);
-    border: none;
-    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease 0s;
 
     &:disabled {
       background-color: var(--color-primary-gray30);
@@ -28,9 +25,6 @@ const variantCSS = {
   primary: css`
     background-color: var(--color-primary-gray30);
     color: var(--color-primary-black);
-    border: none;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease 0s;
 
     &:disabled {
       background-color: var(--color-primary-gray30);
@@ -41,6 +35,7 @@ const variantCSS = {
     }
   `,
 };
+
 const shapeCSS = {
   default: css`
     border-radius: var(--box-radius-3);
@@ -49,6 +44,7 @@ const shapeCSS = {
     border-radius: var(--box-radius-10);
   `,
 };
+
 const sizeCSS = {
   small: css`
     padding: 6px 15px;
@@ -63,10 +59,13 @@ const sizeCSS = {
   `,
 };
 
-export const ButtonBox = styled.button<ButtonProps>`
+export const S_ButtonBox = styled.button<ButtonProps>`
   ${({ variant }) => variantCSS[variant]}
   ${({ size }) => sizeCSS[size]}
   ${({ shape }) => shapeCSS[shape]}
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+  border: none;
+  transition: all 0.3s ease 0s;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
 `;

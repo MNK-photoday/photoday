@@ -1,5 +1,5 @@
 import React, { Children } from 'react';
-import * as style from './Button.style';
+import { S_ButtonBox } from './Button.style';
 
 interface ButtonProps {
   variant: 'primary' | 'point';
@@ -8,6 +8,7 @@ interface ButtonProps {
   disabled?: boolean;
   fullWidth?: boolean;
   children: React.ReactNode;
+  buttonClickEvent?: () => void;
 }
 
 function Button({
@@ -16,18 +17,20 @@ function Button({
   size,
   disabled = false,
   fullWidth = false,
+  buttonClickEvent,
   children,
 }: ButtonProps) {
   return (
-    <style.ButtonBox
+    <S_ButtonBox
       variant={variant}
       shape={shape}
       size={size}
       fullWidth={fullWidth}
       disabled={disabled}
+      onClick={buttonClickEvent}
     >
       {children}
-    </style.ButtonBox>
+    </S_ButtonBox>
   );
 }
 
