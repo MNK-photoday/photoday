@@ -1,8 +1,7 @@
-import { type } from 'os';
-import styled, { keyframes } from 'styled-components';
-import { ColFlex, RowFlex } from '../../styles/GlobalStyles';
+import styled from 'styled-components';
+import { RowFlex } from '../../styles/GlobalStyles';
 
-export const S_MainContentBox = styled.div`
+export const S_MainContentBox = styled.main`
   ${RowFlex}
   height: 100%;
   padding: 40px 0;
@@ -13,7 +12,7 @@ export const S_MainContentBox = styled.div`
   flex-wrap: wrap;
 `;
 
-export const S_MainContent = styled.div`
+export const S_MainContent = styled.section`
   width: 47%;
   ${RowFlex};
   justify-content: center;
@@ -24,7 +23,7 @@ export const S_MainContent = styled.div`
   }
 `;
 
-export const S_MainImgBox = styled.div`
+export const S_MainImgBox = styled.article`
   ${RowFlex}
   width: 85%;
   height: 48%;
@@ -37,7 +36,7 @@ export const S_MainImg = styled.img`
   height: 100%;
 `;
 
-export const S_SearchContentBox = styled.div`
+export const S_SearchContentBox = styled.article`
   width: 100%;
   height: 50%;
   position: relative;
@@ -58,7 +57,7 @@ export const S_ContentImgBox = styled.div`
   flex-wrap: wrap;
   padding: 10px 0;
 `;
-export const S_MainTextSpan = styled.span`
+export const S_MainTitle = styled.h1`
   font-size: var(--font-size-xxxl);
   color: var(--color-primary-black);
   font-weight: 500;
