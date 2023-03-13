@@ -61,11 +61,10 @@ export const S_LinkTo = styled(Link)<{ isAccount: boolean }>`
   color: var(--color-primary-green);
   margin-left: 10px;
 
-  font-size: ${({ isAccount }) =>
-    isAccount ? 'var(--font-size-sm)' : undefined};
-  display: ${({ isAccount }) => (isAccount ? 'flex' : undefined)};
-  justify-content: ${({ isAccount }) => (isAccount ? 'end' : undefined)};
-  font-weight: ${({ isAccount }) => (!isAccount ? 'bold' : undefined)};
+  font-size: ${({ isAccount }) => isAccount && 'var(--font-size-sm)'};
+  display: ${({ isAccount }) => isAccount && 'flex'};
+  justify-content: ${({ isAccount }) => isAccount && 'end'};
+  font-weight: ${({ isAccount }) => !isAccount && 'bold'};
 
   &:hover {
     color: hsl(140, 40%, 44%);
