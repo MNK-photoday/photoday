@@ -4,26 +4,36 @@ import {
   ContainerWrap,
 } from '../../../styles/Layout';
 import SearchBar from '../SearchBar/SearchBar';
-import * as style from './Header.styles';
+import {
+  S_HeaderContainerFlex,
+  S_HeaderContainerWrap,
+  S_HeaderContent,
+  S_HeaderLink,
+  S_LinkBox,
+  S_Logo,
+  S_LogoBox,
+  S_LogoPoint,
+} from './Header.styles';
 
 function Header() {
   return (
-    <style.HeaderContainerWrap>
-      <style.HeaderContainerFlex>
-        <style.HeaderContent>
-          <style.LogoBox>
-            <style.Logo>
-              Pho<style.LogoPoint>to</style.LogoPoint>day
-            </style.Logo>
-          </style.LogoBox>
+    <S_HeaderContainerWrap>
+      <S_HeaderContainerFlex>
+        <S_HeaderContent>
+          <S_LogoBox>
+            <S_Logo>
+              pho<S_LogoPoint>to</S_LogoPoint>day
+            </S_Logo>
+          </S_LogoBox>
+          {/* 메인화면이 아닌 모든 곳에는 활성화, 메인화면에서는 비활성화 되어야함 */}
           {/* <SearchBar /> */}
-          <style.LinkBox>
-            <style.HeaderLink to="/login">Login</style.HeaderLink>
-            <style.HeaderLink to="/signup">SignUp</style.HeaderLink>
-          </style.LinkBox>
-        </style.HeaderContent>
-      </style.HeaderContainerFlex>
-    </style.HeaderContainerWrap>
+          <S_LinkBox>
+            <S_HeaderLink to="/login">Login</S_HeaderLink>
+            <S_HeaderLink to="/signup">SignUp</S_HeaderLink>
+          </S_LinkBox>
+        </S_HeaderContent>
+      </S_HeaderContainerFlex>
+    </S_HeaderContainerWrap>
   );
 }
 

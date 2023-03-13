@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const SearchBarWrap = styled.div`
+export const S_SearchBarWrap = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
@@ -13,13 +13,14 @@ export const SearchBarWrap = styled.div`
   }
 `;
 
-export const SearchBarInput = styled.input`
+export const S_SearchBarInput = styled.input`
   border-radius: 15px;
   background-color: var(--color-primary-gray10);
   height: 30px;
   width: 100%;
-  padding: 3px 35px;
+  padding: 3px 40px;
   border: none;
   outline: none;
   font-size: var(--font-size-m);
+  color: var(--color-primary-black);
 `;

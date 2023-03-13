@@ -1,19 +1,19 @@
-import styled from 'styled-components';
+import { type } from 'os';
+import styled, { keyframes } from 'styled-components';
 import { ColFlex, RowFlex } from '../../styles/GlobalStyles';
 
-export const MainContentBox = styled.div`
+export const S_MainContentBox = styled.div`
   ${RowFlex}
   height: 100%;
-  /* background-color: blue; */
   padding: 40px 0;
   box-sizing: border-box;
+  /* 전체높이 - 헤더높이 - 푸터높이*/
   height: calc(100vh - 60px - 30px);
   justify-content: space-between;
   flex-wrap: wrap;
 `;
 
-export const MainContent = styled.div`
-  /* background-color: red; */
+export const S_MainContent = styled.div`
   width: 47%;
   ${RowFlex};
   justify-content: center;
@@ -24,43 +24,52 @@ export const MainContent = styled.div`
   }
 `;
 
-export const MainImgBox = styled.div`
-  display: flex;
-  /* background-color: yellow; */
+export const S_MainImgBox = styled.div`
+  ${RowFlex}
   width: 85%;
   height: 48%;
   position: relative;
 `;
 
-export const MainImg = styled.img`
+export const S_MainImg = styled.img`
   position: absolute;
   width: 100%;
   height: 100%;
 `;
 
-export const SearchContentBox = styled.div`
-  /* background-color: blue; */
+export const S_SearchContentBox = styled.div`
   width: 100%;
   height: 50%;
-`;
-
-export const SearchImgBox = styled.div`
-  margin-top: 20px;
-  /* background-color: yellow; */
-  width: 100%;
-  height: 100%;
   position: relative;
 `;
 
-export const MainTextBox = styled.div`
-  /* background-color: saddlebrown; */
-  width: 50%;
-  bottom: 350px;
-  position: absolute;
+export const S_SearchImgBox = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  height: ${({ textBoxActive }: { textBoxActive: boolean }) =>
+    textBoxActive ? '0%' : '100%'};
+  visibility: ${({ textBoxActive }: { textBoxActive: boolean }) =>
+    textBoxActive ? 'hidden' : 'visible'};
+  transition: 1s;
+  overflow-y: scroll;
 `;
-export const MainTextSpan = styled.span`
-  font-size: 50px;
+export const S_ContentImgBox = styled.div`
+  ${RowFlex}
+  flex-wrap: wrap;
+  padding: 10px 0;
+`;
+export const S_MainTextSpan = styled.span`
+  font-size: var(--font-size-xxxl);
   color: var(--color-primary-black);
   font-weight: 500;
   line-height: 1.2;
+`;
+
+export const S_MainTextBox = styled.div`
+  width: 100%;
+  margin-top: 50px;
+  position: absolute;
+  opacity: ${({ textBoxActive }: { textBoxActive: boolean }) =>
+    textBoxActive ? 1 : 0};
+  transition: 1s;
 `;
