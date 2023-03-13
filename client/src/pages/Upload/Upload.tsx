@@ -1,24 +1,63 @@
+import Button from '../../components/common/Button/Button';
 import { Container, ContainerWrap, Content } from '../../styles/Layout';
-import * as style from './Upload.styles';
+import {
+  S_FileBox,
+  S_Tag,
+  S_TagBox,
+  S_TagInput,
+  S_UploadBottom,
+  S_UploadBottomLeft,
+  S_UploadBottomLight,
+  S_UploadBox,
+  S_UploadTitle,
+} from './Upload.styles';
+import { TiDelete } from 'react-icons/ti';
 
 function Upload() {
+  const InputTagHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+  };
   return (
     <ContainerWrap>
       <Container>
-        <style.UploadBox>
-          <style.UploadTitle>File Upload</style.UploadTitle>
-          <style.FileBox>Drag files to upload</style.FileBox>
-          <style.UploadBottom>
-            <div>
-              <input type="text" />
-              <div>생성된 태그 영역</div>
-            </div>
-            <div>
-              <div>choose file</div>
-              <div>upload</div>
-            </div>
-          </style.UploadBottom>
-        </style.UploadBox>
+        <S_UploadBox>
+          <S_UploadTitle>File Upload</S_UploadTitle>
+          <S_FileBox>Drag files to upload</S_FileBox>
+          <S_UploadBottom>
+            <S_UploadBottomLeft>
+              <S_TagInput
+                placeholder="add to tag"
+                type="text"
+                onChange={InputTagHandler}
+              ></S_TagInput>
+              <S_TagBox>
+                <S_Tag>
+                  임시태그 <TiDelete />
+                </S_Tag>
+              </S_TagBox>
+            </S_UploadBottomLeft>
+            <S_UploadBottomLight>
+              <Button
+                variant={'primary'}
+                shape={'round'}
+                size={'medium'}
+                fullWidth={false}
+                disabled={false}
+              >
+                Choose file
+              </Button>
+              <Button
+                variant={'point'}
+                shape={'round'}
+                size={'medium'}
+                fullWidth={false}
+                disabled={false}
+              >
+                Upload file
+              </Button>
+            </S_UploadBottomLight>
+          </S_UploadBottom>
+        </S_UploadBox>
       </Container>
     </ContainerWrap>
   );
