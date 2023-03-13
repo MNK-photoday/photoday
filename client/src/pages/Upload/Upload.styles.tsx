@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { RowFlex, ColFlex, Flex } from '../../styles/GlobalStyles';
+import { RowFlex, ColFlex } from '../../styles/GlobalStyles';
 
 export const S_UploadBox = styled.div`
   ${ColFlex}
@@ -41,16 +41,18 @@ export const S_UploadBottom = styled.div`
   width: 930px;
 `;
 
-export const S_UploadBottomLeft = styled.div`
+export const S_TagContainer = styled.div`
   ${ColFlex}
   justify-content: flex-start;
 `;
 export const S_TagInput = styled.input`
   width: 500px;
-  /* height: 25px; */
+
   border: 1px solid #ccc;
-  font-size: 1rem;
   border-radius: var(--box-radius-10);
+
+  font-size: 1rem;
+
   margin-bottom: 10px;
   padding: 8px;
 
@@ -63,14 +65,6 @@ export const S_TagInput = styled.input`
 
   ::placeholder {
     color: var(--color-primary-gray20);
-  }
-`;
-
-export const S_UploadBottomLight = styled.div`
-  ${ColFlex}
-  > Button {
-    margin-bottom: 10px;
-    font-size: 1rem;
   }
 `;
 
@@ -97,5 +91,14 @@ export const S_Tag = styled.button`
   }
   .close-icon {
     display: none;
+  }
+`;
+
+export const S_ButtonContainer = styled.div`
+  ${ColFlex}
+
+  > Button {
+    margin-bottom: 10px;
+    font-size: 1rem;
   }
 `;
