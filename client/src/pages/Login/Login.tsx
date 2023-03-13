@@ -1,30 +1,56 @@
-import * as style from './Login.styles';
+import {
+  S_LoginContainerWrap,
+  S_ImgContainer,
+  S_ContentSection,
+  S_LoginContainer,
+  S_LinkTo,
+  S_CheckBoxContainer,
+  S_ButtounContainer,
+  S_LinkToTextContainer,
+} from './Login.styles';
 import { Input, CheckBox } from '../../components/Login/Input/Input';
-import { GoogleButton } from '../../components/Login/GoogleBtn/GoogleBtn';
-import { Button } from '../../components/Login/GoogleBtn/Button.styles';
+import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
+import Button from '../../components/common/Button/Button';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
-import LinkText from '../../components/Login/LinkText/LinkText';
+import { useState } from 'react';
 
 function Login() {
+  const [isSigned, setIsSigned] = useState(false);
+
+  const handleIsSigned = () => {
+    setIsSigned(!isSigned);
+  };
+
   return (
-    <style.LoginContainerWrap>
-      <style.ImgContainer />
-      <style.ContentSection>
-        <style.LoginContainer>
+    <S_LoginContainerWrap>
+      <S_ImgContainer />
+      <S_ContentSection>
+        <S_LoginContainer>
           <LoginLogo />
           <Input />
-          <style.LinkToAccountRecovery to="/account-recovery">
+          <S_LinkTo to="/account-recovery" isAccount>
             Forgot password?
-          </style.LinkToAccountRecovery>
-          <style.CheckBoxContainer>
-            {/* <CheckBox text="Stay signed in" /> */}
-          </style.CheckBoxContainer>
-          <GoogleButton text="Log in with Google" />
-          <Button isGreen={true}>Log in</Button>
-          <LinkText text="Don’t have an account?" linkTo="Sign Up" />
-        </style.LoginContainer>
-      </style.ContentSection>
-    </style.LoginContainerWrap>
+          </S_LinkTo>
+          <S_CheckBoxContainer>
+            <CheckBox isChecked={isSigned} onClickEvent={handleIsSigned}>
+              Stay signed in
+            </CheckBox>
+          </S_CheckBoxContainer>
+          <S_ButtounContainer>
+            <GoogleButton>Log in with Google</GoogleButton>
+            <Button variant="point" shape="default" size="large" fullWidth>
+              Log in
+            </Button>
+          </S_ButtounContainer>
+          <S_LinkToTextContainer>
+            Don’t have an account?
+            <S_LinkTo to="/signup" isAccount={false}>
+              Sign Up
+            </S_LinkTo>
+          </S_LinkToTextContainer>
+        </S_LoginContainer>
+      </S_ContentSection>
+    </S_LoginContainerWrap>
   );
 }
 

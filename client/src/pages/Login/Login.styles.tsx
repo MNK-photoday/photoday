@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Content } from '../../styles/Layout';
+import { RowFlex } from '../../styles/GlobalStyles';
 import img5 from '../../assets/imgs/image5.jpg';
 import img6 from '../../assets/imgs/image6.jpg';
 import img7 from '../../assets/imgs/image7.jpg';
@@ -13,44 +14,58 @@ const images: string[] = [img5, img6, img7, img8, img9, img10, img11];
 const randomImg = Math.floor(Math.random() * images.length);
 const backgroundImg = images[randomImg];
 
-export const LoginContainerWrap = styled.div`
+export const S_LoginContainerWrap = styled.div`
   display: flex;
 `;
 
-export const LoginContainer = styled.div`
-  padding: 0 50px;
-  height: 100vh;
-`;
-
-export const ImgContainer = styled(Content)`
+export const S_ImgContainer = styled(Content)`
   background-color: blue;
   height: 100vh;
   background: url(${backgroundImg}) no-repeat;
   background-size: cover;
 `;
 
-export const ContentSection = styled.section`
+export const S_ContentSection = styled.section`
   width: 450px;
   position: fixed;
   right: 0;
   background: var(--white);
 `;
 
-export const PasswordGuide = styled.p`
+export const S_LoginContainer = styled.div`
+  padding: 0 50px;
+  height: 100vh;
+`;
+
+export const S_PasswordGuide = styled.p`
   font-size: 12px;
   margin-bottom: 20px;
   color: var(--color-primary-black);
 `;
 
-export const CheckBoxContainer = styled.div`
+export const S_CheckBoxContainer = styled.div`
+  display: flex;
   margin: 10px 0 20px;
 `;
 
-export const LinkToAccountRecovery = styled(Link)`
-  color: var(--color-primary-green);
+export const S_ButtounContainer = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const S_LinkToTextContainer = styled.div`
+  ${RowFlex}
   font-size: var(--font-size-sm);
-  display: flex;
-  justify-content: end;
+`;
+
+export const S_LinkTo = styled(Link)<{ isAccount: boolean }>`
+  color: var(--color-primary-green);
+  margin-left: 10px;
+
+  font-size: ${({ isAccount }) =>
+    isAccount ? 'var(--font-size-sm)' : undefined};
+  display: ${({ isAccount }) => (isAccount ? 'flex' : undefined)};
+  justify-content: ${({ isAccount }) => (isAccount ? 'end' : undefined)};
+  font-weight: ${({ isAccount }) => (!isAccount ? 'bold' : undefined)};
 
   &:hover {
     color: hsl(140, 40%, 44%);

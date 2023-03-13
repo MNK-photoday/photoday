@@ -1,27 +1,35 @@
-import * as style from '../Login/Login.styles';
-import { Button } from '../../components/Login/GoogleBtn/Button.styles';
+import {
+  S_LoginContainerWrap,
+  S_ImgContainer,
+  S_ContentSection,
+  S_LoginContainer,
+  S_PasswordGuide,
+} from '../Login/Login.styles';
 import { EmailInput } from '../../components/Login/Input/Input';
 import { Link } from 'react-router-dom';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
+import Button from '../../components/common/Button/Button';
 
 function AccountRecovery() {
   return (
-    <style.LoginContainerWrap>
-      <style.ImgContainer />
-      <style.ContentSection>
-        <style.LoginContainer>
+    <S_LoginContainerWrap>
+      <S_ImgContainer />
+      <S_ContentSection>
+        <S_LoginContainer>
           <LoginLogo />
           <EmailInput />
-          <style.PasswordGuide>
+          <S_PasswordGuide>
             Forgot your account’s password? <br />
             Enter your email address and we’ll send you a recovery link.
-          </style.PasswordGuide>
+          </S_PasswordGuide>
           <Link to="/login">
-            <Button isGreen={true}>Send recovery email</Button>
+            <Button variant="point" shape="default" size="large" fullWidth>
+              Send recovery email
+            </Button>
           </Link>
-        </style.LoginContainer>
-      </style.ContentSection>
-    </style.LoginContainerWrap>
+        </S_LoginContainer>
+      </S_ContentSection>
+    </S_LoginContainerWrap>
   );
 }
 
