@@ -41,7 +41,7 @@ public class ImageService {
         Image image = makeImage(imageUrl, userId);
 
         // Tag를 id값이 있는 객체로 바꾸고 imageTag에 연관관계를 맺는다.
-        List<ImageTag> imageTagList = tagListToImageTagList(tagList);
+        List<ImageTag> imageTagList = tagListToImageTagList(tagList, image);
         image.setImageTagList(imageTagList);
 
         return imageRepository.save(image);
@@ -52,7 +52,6 @@ public class ImageService {
 
         Image image = new Image();
         image.setImageUrl(imageUrl);
-//        image.setCreatedAt(LocalDateTime.now());
         image.setUser(user);
 
         return image;
@@ -64,21 +63,20 @@ public class ImageService {
         Long userId = userService.getLoginUserId();
         if(image.getUser().getUserId()!=userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
 
-        //기존 imageTag는 삭제해야함 -> 아마 여기서 제대로 안 지워져서 아래 로직에서 duplicate 에러 날 것으로 예상됨.
-        //duplicate 에러날 시, orphan or on delete 고려.
         image.getImageTagList().clear();
 
-        //새로운 태그들을 tag -> imageTag로 변환해서 저장해야함.
-        List<ImageTag> imageTagList = tagListToImageTagList(tagList);
+        //새로운 태그들을 tag -> imageTag로 변환해서 저장.
+        List<ImageTag> imageTagList = tagListToImageTagList(tagList, image);
 
-        image.setImageTagList(imageTagList);
+        image.getImageTagList().addAll(imageTagList);
         return imageRepository.save(image);
     }
 
-    private List<ImageTag> tagListToImageTagList(List<Tag> tagList) {
+    private List<ImageTag> tagListToImageTagList(List<Tag> tagList, Image image) {
         return tagList.stream()
                 .map(tagService::verifyTag)
                 .map(this::tagToImageTag)
+                .map(tag->{tag.setImage(image); return tag;})
                 .collect(Collectors.toList());
     }
 
