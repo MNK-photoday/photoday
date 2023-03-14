@@ -5,17 +5,15 @@
     "amd": true, // require 해결
     "node": true // module 해결
   },
-  "plugins": ["react", "import", "jsx-a11y", "prettier", "@typescript-eslint"],
+  "plugins": ["react", "jsx-a11y", "prettier"],
   "extends": [
     "prettier",
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:import/recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:prettier/recommended"
   ],
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -24,25 +22,6 @@
     "sourceType": "module"
   },
   "rules": {
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          ["builtin", "external"],
-          "internal",
-          ["parent", "sibling"],
-          "index"
-        ],
-        "newlines-between": "always",
-        "pathGroups": [
-          {
-            "pattern": "@/**",
-            "group": "internal",
-            "position": "after"
-          }
-        ]
-      }
-    ],
     "react/react-in-jsx-scope": 0,
     "react/jsx-uses-react": 0,
     "import/no-unresolved": "off",
