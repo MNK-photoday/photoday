@@ -18,25 +18,28 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final JwtProvider jwtTokenizer;
+    private final JwtProvider jwtProvider;
     private final RedisService redisService;
 
     @GetMapping("/reissue")
     public ResponseEntity reissue(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = jwtTokenizer.getRefreshTokenToRequest(request);
-        jwtTokenizer.verifyRefreshToken(refreshToken);
-        jwtTokenizer.setNewAccessToken(refreshToken, response);
-        String redisRefreshToken = redisService.getValues(jwtTokenizer.getSubject(refreshToken));
+        String refreshToken = jwtProvider.getRefreshTokenFromRequest(request);
+
+        String redisRefreshToken = redisService.getValues(jwtProvider.getSubject(refreshToken));
         if (Objects.isNull(redisRefreshToken)) {
-            throw new JwtException("인증 정보 만료");
+            throw new JwtException("로그아웃 상태");
         }
+
+        jwtProvider.verifyRefreshToken(refreshToken);
+        jwtProvider.setNewAccessToken(refreshToken, response);
+
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/logout")
     public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = jwtTokenizer.getRefreshTokenToRequest(request);
-        redisService.deleteValues(jwtTokenizer.getSubject(refreshToken));
+        String refreshToken = jwtProvider.getRefreshTokenFromRequest(request);
+        redisService.deleteValues(jwtProvider.getSubject(refreshToken));
         Cookie cookie = new Cookie("Refresh", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);

@@ -137,7 +137,7 @@ public class JwtProvider {
         return expiration;
     }
 
-    public String getRefreshTokenToRequest(HttpServletRequest request) {
+    public String getRefreshTokenFromRequest(HttpServletRequest request) {
         String refresh = CookieUtil.getTokenCookie(request, "Refresh").getValue();
 
         return refresh;

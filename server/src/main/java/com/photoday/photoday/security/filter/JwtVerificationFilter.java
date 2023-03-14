@@ -36,8 +36,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         try {
             if (!Objects.isNull(accessToken) && accessToken.startsWith("Bearer") || requestURI.equals("/api/auth/reissue")) {
                 if (requestURI.equals("/api/auth/reissue")) {
-                    String refreshToken = jwtProvider.getRefreshTokenToRequest(request);
-                    setAuthenticationToContextByNewAccessToken(refreshToken);
+                    String refreshToken = jwtProvider.getRefreshTokenFromRequest(request);
+                    jwtProvider.verifyRefreshToken(refreshToken);
+                    setAuthenticationForReissue(refreshToken);
                 } else {
                     Map<String, Object> claims = verifyJws(request);
                     setAuthenticationToContext(claims);
@@ -76,7 +77,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private void setAuthenticationToContextByNewAccessToken(String refreshToken) {
+    private void setAuthenticationForReissue(String refreshToken) {
         String subject = jwtProvider.getSubject(refreshToken);
         UserDetails userDetails = principalDetailsService.loadUserByUsername(subject);
 

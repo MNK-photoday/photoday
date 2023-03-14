@@ -10,7 +10,6 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 public class RedisService {
-
     private final RedisTemplate redisTemplate;
 
     public void setValues(String key, String value){
