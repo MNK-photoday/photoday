@@ -56,7 +56,8 @@ public class UserService {
     }
 
     public User updateUser(User user, MultipartFile multipartFile) throws IOException {
-        User verifiedUser = findVerifiedUser(user.getUserId());
+        User verifiedUser = findVerifiedUser(getLoginUserId());
+        user.setUserId(getLoginUserId());
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
@@ -103,6 +104,14 @@ public class UserService {
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         return user.getUserId();
+    }
+
+    public Long checkLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(userRepository.findByEmail(authentication.getName()).isPresent()) {
+            return userRepository.findByEmail(authentication.getName()).get().getUserId();
+        }
+        return null;
     }
 
     public String getLoginUserEmail() {

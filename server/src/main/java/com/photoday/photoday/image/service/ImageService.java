@@ -11,6 +11,7 @@ import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +62,7 @@ public class ImageService {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
 
         Long userId = userService.getLoginUserId();
-        if(image.getUser().getUserId()!=userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
+        if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
 
         image.getImageTagList().clear();
 
@@ -76,7 +77,10 @@ public class ImageService {
         return tagList.stream()
                 .map(tagService::verifyTag)
                 .map(this::tagToImageTag)
-                .map(tag->{tag.setImage(image); return tag;})
+                .map(tag -> {
+                    tag.setImage(image);
+                    return tag;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -87,13 +91,16 @@ public class ImageService {
     }
 
     public Image getImage(long imageId) {
-        return findImage(imageId);
+        Image image = findImage(imageId);
+        image.setViewCount(image.getViewCount()+1);
+        Image save = imageRepository.save(image);
+        return save;
     }
 
     public void deleteImage(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
         Long userId = userService.getLoginUserId();
-        if(image.getUser().getUserId()!=userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
+        if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
         imageRepository.deleteById(imageId);
     }
 
@@ -113,14 +120,18 @@ public class ImageService {
             Bookmark newBookmark = new Bookmark();
             newBookmark.setUser(user);
             newBookmark.setImage(image);
+            image.getBookmarkList().add(newBookmark);
         }
 
-        return imageRepository.save(image);
+        Image save = imageRepository.save(image);
+        return save;
     }
 
     public Page<Image> getBookmarkImages(Pageable pageable) {
         Long userId = userService.getLoginUserId();
-        return imageRepository.findAllByBookmark(pageable, userId);
+        Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
+        Page<Image> page = imageRepository.findAllBookmarkImages(pageRequest, userId);
+        return page;
     }
 
     public Image createReport(long imageId) {
@@ -129,15 +140,21 @@ public class ImageService {
         User user = userService.findVerifiedUser(userId);
 
         //사용자가 이미 신고했으면 예외 터뜨리기.
-        image.getReportList().stream().filter(r -> r.getUser().getUserId() == userId)
-                .findFirst().ifPresent(u -> new RuntimeException("이미 신고한 게시물입니다."));
+        Optional<Report> optionalReport = image.getReportList().stream().filter(r -> r.getUser().getUserId() == userId).findFirst();
 
-        //아니면 신고 목록에 추가 및 저장
-        Report report = new Report();
-        report.setUser(user);
-        report.setImage(image);
+        if (optionalReport.isPresent()) {
+            throw new RuntimeException("이미 신고한 게시물");
+        } else {
+            //아니면 신고 목록에 추가 및 저장
+            Report report = new Report();
+            report.setUser(user);
+            report.setImage(image);
+            image.getReportList().add(report);
+        }
 
-        return imageRepository.save(image);
+        Image save = imageRepository.save(image);
+
+        return save;
     }
 
     public Image updateLike(long imageId) {
@@ -145,20 +162,21 @@ public class ImageService {
         Long userId = userService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
 
-        // 좋아요 했으면, 리스트에서 제거 , 안 했으면 리스트에 추가
-        Optional<Like> optionalLike = image.getLikeList().stream()
+        //TODO 포스트맨에서는 1,1,0 으로 됨(등록,버그,취소). 프론트랑 연결해서 실험해봐야할 듯.
+        Optional<Like> like = image.getLikeList().stream()
                 .filter(l -> l.getUser().getUserId() == userId)
                 .findFirst();
 
-        if (optionalLike.isPresent()) {
-            image.getLikeList().remove(optionalLike.get());
+        if (like.isPresent()) {
+            image.getLikeList().remove(like.get());
         } else {
-            Like like = new Like();
-            like.setUser(user);
-            like.setImage(image);
+            Like newLike = new Like();
+            newLike.setUser(user);
+            newLike.setImage(image);
         }
 
-        return imageRepository.save(image);
+        Image save = imageRepository.save(image);
+        return save;
     }
 
     private Image findImage(long imageId) {

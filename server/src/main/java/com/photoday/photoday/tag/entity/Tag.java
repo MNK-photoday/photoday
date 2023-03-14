@@ -1,5 +1,6 @@
 package com.photoday.photoday.tag.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.photoday.photoday.image.entity.ImageTag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Tag {
     private String name;
 
     @OneToMany(mappedBy = "tag")
+    @JsonManagedReference
     private List<ImageTag> imageTagList = new ArrayList<>();
 
     public void setImageTag(ImageTag imageTag) {

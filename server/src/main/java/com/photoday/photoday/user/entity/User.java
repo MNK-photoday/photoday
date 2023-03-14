@@ -1,10 +1,10 @@
 package com.photoday.photoday.user.entity;
 
+import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.image.entity.Bookmark;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.image.entity.Like;
 import com.photoday.photoday.image.entity.Report;
-import com.photoday.photoday.follow.entity.Follow;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

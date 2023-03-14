@@ -4,8 +4,8 @@ import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.mapper.UserMapper;
-import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +15,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImageMapper {
     private final UserMapper userMapper;
-    private final UserService userService;
+
+    public ImageDto.BookmarkAndSearchResponse imageToBookmarkAndSearchResponse(Image image){
+        return ImageDto.BookmarkAndSearchResponse.builder()
+                .imageId(image.getImageId())
+                .imageUrl(image.getImageUrl())
+                .like(hasLiked(image))
+                .viewCount(image.getViewCount())
+                .build();
+    }
 
     public ImageDto.Response imageToResponse(Image image) {
         return ImageDto.Response.builder()
@@ -41,9 +49,8 @@ public class ImageMapper {
     }
 
     private boolean hasBookmarked(Image image) {
-        //TODO 비로그인 회원이면 false 때려야함,,
-        String email = userService.getLoginUserEmail();
-        if (email.equals("Anonymous")) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (email.isEmpty()) {
             return false;
         }
         return image.getBookmarkList().stream()
@@ -51,9 +58,8 @@ public class ImageMapper {
     }
 
     private boolean hasReported(Image image) {
-        //TODO 비로그인 회원이면 false 때려야함,,
-        String email = userService.getLoginUserEmail();
-        if (email.equals("Anonymous")) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (email.isEmpty()) {
             return false;
         }
         return image.getReportList().stream()
@@ -61,9 +67,8 @@ public class ImageMapper {
     }
 
     private boolean hasLiked(Image image) {
-        //TODO 비로그인 회원이면 false 때려야함,,
-        String email = userService.getLoginUserEmail();
-        if (email.equals("Anonymous")) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (email.isEmpty()) {
             return false;
         }
         return image.getLikeList().stream()
