@@ -1,30 +1,49 @@
 import {
   S_InputContainerWrap,
   S_LoginInputLabel,
-  S_EmailInput,
-  S_PasswordInput,
+  S_EmailAndPasswordInput,
   S_CheckBox,
   S_Label,
 } from './Input.styles';
-import React from 'react';
 
-export function Input() {
+interface emailProps {
+  emailValue: string;
+  changeEventHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export function EmailInput({ emailValue, changeEventHandler }: emailProps) {
   return (
-    <S_InputContainerWrap>
+    <>
       <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
-      <S_EmailInput type="text" id="email" />
-      <S_LoginInputLabel htmlFor="password">password</S_LoginInputLabel>
-      <S_PasswordInput type="text" id="password" />
-    </S_InputContainerWrap>
+      <S_EmailAndPasswordInput
+        type="email"
+        id="email"
+        value={emailValue}
+        onChange={changeEventHandler}
+      />
+    </>
   );
 }
 
-export function EmailInput() {
+interface passwordProps {
+  passwordValue: string;
+  changeEventHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export function PasswordInput({
+  passwordValue,
+  changeEventHandler,
+}: passwordProps) {
   return (
-    <S_InputContainerWrap>
-      <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
-      <S_EmailInput type="text" id="email" />
-    </S_InputContainerWrap>
+    <>
+      <S_LoginInputLabel htmlFor="password">password</S_LoginInputLabel>
+      <S_EmailAndPasswordInput
+        type="password"
+        id="password"
+        value={passwordValue}
+        onChange={changeEventHandler}
+      />
+    </>
   );
 }
 
@@ -32,7 +51,7 @@ export function AccountRecovery() {
   return (
     <S_InputContainerWrap>
       <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
-      <S_EmailInput type="text" id="email" />
+      <S_EmailAndPasswordInput type="text" id="email" />
     </S_InputContainerWrap>
   );
 }
