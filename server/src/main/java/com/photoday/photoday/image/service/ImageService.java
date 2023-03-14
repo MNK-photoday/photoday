@@ -1,8 +1,5 @@
 package com.photoday.photoday.image.service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.*;
@@ -13,7 +10,6 @@ import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,16 +28,14 @@ import java.util.stream.Collectors;
 public class ImageService {
     private final ImageRepository imageRepository;
     private final TagService tagService;
-    private final AmazonS3Client amazonS3Client;
-    @Value("${cloud.aws.s3.bucket}")
-    private String s3Bucket;
-    private final UserService userService; //TODO 순환참조
+    private final S3Service s3Service;
+    private final UserService userService;
 
     public Image createImage(List<Tag> tagList, MultipartFile multipartFile) throws IOException {
         Long userId = userService.getLoginUserId();
 
         // S3에 이미지 저장하고 url을 받는다.
-        String imageUrl = saveImage(multipartFile);
+        String imageUrl = s3Service.saveImage(multipartFile);
 
         // Image 객체를 생성하는 중 >> mapper에서 만들어 오지 않았기 때문에
         Image image = makeImage(imageUrl, userId);
@@ -62,23 +56,6 @@ public class ImageService {
         image.setUser(user);
 
         return image;
-    }
-
-    public String saveImage(MultipartFile multipartFile) throws IOException {
-        String originalFilename = multipartFile.getOriginalFilename();
-        long size = multipartFile.getSize();
-
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentType(multipartFile.getContentType());
-        objectMetadata.setContentLength(size);
-
-        //TODO 메타데이터 저장, pre signed url 고려
-
-        amazonS3Client.putObject(
-                new PutObjectRequest(s3Bucket, originalFilename, multipartFile.getInputStream(), objectMetadata)
-        );
-
-        return amazonS3Client.getUrl(s3Bucket, originalFilename).toString();
     }
 
     public Image modifyImageTags(long imageId, List<Tag> tagList) {

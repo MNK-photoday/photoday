@@ -2,7 +2,7 @@ package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
-import com.photoday.photoday.image.service.ImageService;
+import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
-    private final ImageService imageService;
+    private final S3Service s3Service;
 
     public User createUser(User user) {
         verifyExistsEmail(user.getEmail());
@@ -59,7 +58,7 @@ public class UserService {
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
             try {
-                url = imageService.saveImage(multipartFile);
+                url = s3Service.saveImage(multipartFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
