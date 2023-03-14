@@ -61,8 +61,7 @@ public class ErrorResponse {
             return fieldErrors.stream()
                     .map(error -> new FieldError(
                             error.getField(),
-                            error.getRejectedValue() == null ?
-                                    "" : error.getRejectedValue().toString(),
+                            error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
                             error.getDefaultMessage()))
                     .collect(Collectors.toList());
         }

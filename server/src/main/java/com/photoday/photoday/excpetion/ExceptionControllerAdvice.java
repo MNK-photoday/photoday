@@ -19,7 +19,6 @@ public class ExceptionControllerAdvice {
     public ResponseEntity handleCustomException(CustomException e) {
         log.error("handleCustomException", e);
         final ErrorResponse errorResponse = ErrorResponse.of(e.getExceptionCode());
-
         return new ResponseEntity(errorResponse, e.getExceptionCode().getHttpStatus());
     }
 
@@ -29,7 +28,6 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("handleMethodArgumentNotValidException", e);
         final ErrorResponse errorResponse = ErrorResponse.of(e.getBindingResult());
-
         return errorResponse;
     }
 
@@ -39,7 +37,6 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
         log.error("handleConstraintViolationException", e);
         final ErrorResponse errorResponse = ErrorResponse.of(e.getConstraintViolations());
-
         return errorResponse;
     }
 
@@ -49,7 +46,6 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
         final ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED);
-
         return errorResponse;
     }
 
@@ -58,7 +54,6 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleJwtException(JwtException e) {
         log.error("JwtException", e);
         final ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED);
-
         return errorResponse;
     }
 
@@ -67,7 +62,6 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleException(Exception e) {
         log.error("handleException", e);
         final ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
-
         return errorResponse;
     }
 }
