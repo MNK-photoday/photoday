@@ -3,6 +3,7 @@ package com.photoday.photoday.image.mapper;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.user.dto.UserDto;
+import com.photoday.photoday.user.mapper.UserMapper;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class ImageMapper {
+    private final UserMapper userMapper;
     private final UserService userService;
 
     public ImageDto.Response imageToResponse(Image image) {
@@ -39,27 +41,36 @@ public class ImageMapper {
     }
 
     private boolean hasBookmarked(Image image) {
-        //TODO 비로그인 회원이면 false 때려야함,, 지금은 예외 터짐. 리팩토링 필요. 디비 세 번 뒤짐.
-        Long userId = userService.getLoginUserId();
+        //TODO 비로그인 회원이면 false 때려야함,,
+        String email = userService.getLoginUserEmail();
+        if (email.equals("Anonymous")) {
+            return false;
+        }
         return image.getBookmarkList().stream()
-                .anyMatch(bookmark -> bookmark.getUser().getUserId() == userId);
+                .anyMatch(bookmark -> bookmark.getUser().getEmail().equals(email));
     }
 
     private boolean hasReported(Image image) {
-        //TODO 비로그인 회원이면 false 때려야함,, 지금은 예외 터짐.
-        Long userId = userService.getLoginUserId();
+        //TODO 비로그인 회원이면 false 때려야함,,
+        String email = userService.getLoginUserEmail();
+        if (email.equals("Anonymous")) {
+            return false;
+        }
         return image.getReportList().stream()
-                .anyMatch(report -> report.getUser().getUserId() == userId);
+                .anyMatch(report -> report.getUser().getEmail().equals(email));
     }
 
     private boolean hasLiked(Image image) {
-        //TODO 비로그인 회원이면 false 때려야함,, 지금은 예외 터짐.
-        Long userId = userService.getLoginUserId();
+        //TODO 비로그인 회원이면 false 때려야함,,
+        String email = userService.getLoginUserEmail();
+        if (email.equals("Anonymous")) {
+            return false;
+        }
         return image.getLikeList().stream()
-                .anyMatch(like -> like.getUser().getUserId() == userId);
+                .anyMatch(like -> like.getUser().getEmail().equals(email));
     }
 
     private UserDto.Response getOwner(Image image) {
-        return new UserDto.Response(image.getUser());
+        return userMapper.userToUserResponse(image.getUser());
     }
 }
