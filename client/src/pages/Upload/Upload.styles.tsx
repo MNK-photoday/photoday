@@ -8,7 +8,7 @@ export const S_UploadBox = styled.div`
   padding: 40px 0;
 `;
 
-export const S_UploadTitle = styled.div`
+export const S_UploadTitle = styled.h1`
   ${RowFlex}
   align-items: center;
 
