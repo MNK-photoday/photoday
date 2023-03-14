@@ -56,5 +56,4 @@ public class FollowService {
 
         return findFollowUser();
     }
-
 }

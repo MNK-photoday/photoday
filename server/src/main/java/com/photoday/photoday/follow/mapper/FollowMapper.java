@@ -12,8 +12,8 @@ public interface FollowMapper {
     default FollowDto.ResponseFollowUsers followUserListToResponseFollowUsers(List<List<User>> followUsers) {
         List<List<FollowDto.ResponseFollowUserData>> followUserDataList = followUsers.stream()
                         .map(users -> users.stream()
-                        .map(userData -> new FollowDto.ResponseFollowUserData(userData.getUserId(), userData.getName()))
-                        .collect(Collectors.toList()))
+                            .map(userData -> new FollowDto.ResponseFollowUserData(userData.getUserId(), userData.getName()))
+                            .collect(Collectors.toList()))
                         .collect(Collectors.toList());
 
         FollowDto.ResponseFollowUsers responseFollowUserDataList =
