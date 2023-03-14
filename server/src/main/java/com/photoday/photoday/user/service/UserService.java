@@ -2,6 +2,7 @@ package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
+import com.photoday.photoday.image.service.ImageService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
+    private final ImageService imageService;
+
     public User createUser(User user) {
         verifyExistsEmail(user.getEmail());
 
@@ -41,33 +46,40 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getUser() {
+    public User getUser(long userId) {
         Long loginUserId = getLoginUserId();
-        User verifiedUser = findVerifiedUser(loginUserId);
-
-        return verifiedUser;
+        User targetUser = findVerifiedUser(userId);
+        //TODO 본인 조회할 때는 response의 checkFollow 정보 확인하기?
+        return targetUser;
     }
 
-    public User updateUser(User user, MultipartFile multipartFile) {
+    public User updateUser(User user, MultipartFile multipartFile) throws IOException {
         User verifiedUser = findVerifiedUser(user.getUserId());
-//        String url = imageService.getImageUrl(multipartFile);
-        Optional.ofNullable(user.getPassword()).ifPresent(password -> verifiedUser.setPassword(password));
-        Optional.ofNullable(user.getDescription()).ifPresent(aboutMe -> verifiedUser.setDescription(aboutMe));
+
+        Optional.ofNullable(multipartFile).ifPresent(file -> {
+            String url = null;
+            try {
+                url = imageService.saveImage(multipartFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            verifiedUser.setProfileImageUrl(url);
+        });
+
+        Optional.ofNullable(user.getPassword()).ifPresent(password -> verifiedUser.setPassword(passwordEncoder.encode(password)));
+        Optional.ofNullable(user.getDescription()).ifPresent(description -> verifiedUser.setDescription(description));
 
         return verifiedUser;
     }
 
     public void deleteUser() {
         Long loginUserId = getLoginUserId();
-
         userRepository.deleteById(loginUserId);
     }
 
     public User findVerifiedUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-
         User verifiedUser = user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
-
         return verifiedUser;
     }
 
@@ -75,20 +87,19 @@ public class UserService {
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
-            throw new CustomException(ExceptionCode.USER_EXISTS);
+            throw new CustomException(ExceptionCode.USER_ALREADY_EXISTS);
         }
     }
 
     private String getNameFromUser(User user) {
         String name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
-
         return name;
     }
 
     public Long getLoginUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName()).get();
-
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         return user.getUserId();
     }
 }

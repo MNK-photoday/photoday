@@ -12,4 +12,5 @@ public interface UserMapper {
     @Mapping(target = "likeCount", expression = "java(user.getLikes() != null ? user.getLikes().size() : 0)")
     @Mapping(target = "reportCount", expression = "java(user.getReports() != null ? user.getReports().size() : 0)")
     UserDto.Response userToUserResponse(User user);
+    //TODO responseDto에서 생성자로 넣었는데, 여기서 매핑 애너테이션 중복해서 사용해야하는지?
 }
