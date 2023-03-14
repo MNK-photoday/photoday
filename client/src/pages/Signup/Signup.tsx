@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   S_LoginContainerWrap,
   S_ImgContainer,
@@ -8,29 +8,111 @@ import {
   S_CheckBoxContainer,
   S_ButtounContainer,
   S_LinkToTextContainer,
+  S_InvalidMessage,
   S_LinkTo,
 } from '../Login/Login.styles';
-import { S_TermsGuideModal, S_Ul, S_Li } from './Signup.styles';
-import { Input, CheckBox } from '../../components/Login/Input/Input';
+import {
+  EmailInput,
+  PasswordInput,
+  CheckBox,
+} from '../../components/Login/Input/Input';
+import {
+  validateEmail,
+  validatePassword,
+} from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 import Button from '../../components/common/Button/Button';
+import { S_TermsGuideModal, S_Ul, S_Li } from './Signup.styles';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
+import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 
 function Signup() {
-  const [isChecked, setIsChecked] = useState(false);
+  const [isCheckedTerms, setIsCheckedTerms] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
+  const [loginForm, setLoginForm] = useState({
+    email: '',
+    password: '',
+  });
+  const [isAllValid, setIsAllValid] = useState({
+    email: true,
+    password: true,
+  });
+
+  useEffect(() => {
+    const emailIdentifier = setTimeout(() => {
+      if (loginForm.email) {
+        setIsAllValid((state) => {
+          return {
+            ...state,
+            email: validateEmail(loginForm.email),
+          };
+        });
+      }
+    }, 500);
+
+    const passwordIdentifier = setTimeout(() => {
+      if (loginForm.password) {
+        setIsAllValid((state) => {
+          return {
+            ...state,
+            password: validatePassword(loginForm.password),
+          };
+        });
+      }
+    }, 500);
+
+    // 작성 후, 다 지웠을 때 변화를 위해서 추가
+    if (!loginForm.email) {
+      setIsAllValid((state) => {
+        return {
+          ...state,
+          email: true,
+        };
+      });
+    }
+    if (!loginForm.password) {
+      setIsAllValid((state) => {
+        return {
+          ...state,
+          password: true,
+        };
+      });
+    }
+
+    return () => {
+      clearTimeout(emailIdentifier);
+      clearTimeout(passwordIdentifier);
+    };
+  }, [loginForm]);
+
+  const changeEmailAndPasswordValueHandler = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    e.preventDefault();
+    const inputType = e.target.type;
+    const value = e.target.value;
+
+    switch (inputType) {
+      case 'email':
+        setLoginForm({ ...loginForm, email: value });
+        break;
+      case 'password':
+        setLoginForm({ ...loginForm, password: value });
+        break;
+    }
+  };
 
   const handleonChecked = () => {
-    setIsChecked(!isChecked);
+    setIsCheckedTerms(!isCheckedTerms);
   };
 
   const handleonDoubleChecked = () => {
-    setIsChecked(true);
+    setIsCheckedTerms(true);
   };
 
   const handleonIsShowModal = () => {
     setIsShowModal(!isShowModal);
-    setIsChecked(false);
+    setIsCheckedTerms(false);
   };
 
   return (
@@ -39,13 +121,37 @@ function Signup() {
       <S_ContentSection>
         <S_LoginContainer>
           <LoginLogo />
-          <Input />
+          <S_InputContainerWrap>
+            <EmailInput
+              emailValue={loginForm.email}
+              changeEventHandler={changeEmailAndPasswordValueHandler}
+            />
+            {!isAllValid.email && (
+              <S_InvalidMessage
+                isShowMessage={!isAllValid.email ? 'show' : 'hide'}
+              >
+                {`${loginForm.email} is not a valid email address.`}
+              </S_InvalidMessage>
+            )}
+            <PasswordInput
+              passwordValue={loginForm.password}
+              changeEventHandler={changeEmailAndPasswordValueHandler}
+            />
+            {!isAllValid.password && (
+              <S_InvalidMessage
+                isShowMessage={!isAllValid.password ? 'show' : 'hide'}
+              >
+                Passwords must contain 8 to 16 characters in English, numbers,
+                and special characters.
+              </S_InvalidMessage>
+            )}
+          </S_InputContainerWrap>
           <S_PasswordGuide>
             Passwords must contain at least eight characters,
             <br /> including at least 1 letter and 1 number.
           </S_PasswordGuide>
           <S_CheckBoxContainer>
-            <CheckBox isChecked={isChecked} onClickEvent={handleonChecked}>
+            <CheckBox isChecked={isCheckedTerms} onClickEvent={handleonChecked}>
               <p onClick={handleonIsShowModal}>Check Terms and Conditions</p>
             </CheckBox>
           </S_CheckBoxContainer>
@@ -76,7 +182,7 @@ function Signup() {
                 </S_Li>
               </S_Ul>
               <CheckBox
-                isChecked={isChecked}
+                isChecked={isCheckedTerms}
                 onClickEvent={() => {
                   handleonIsShowModal();
                   handleonDoubleChecked();
@@ -88,8 +194,14 @@ function Signup() {
           )}
           <S_ButtounContainer>
             <GoogleButton>Sign up with Google</GoogleButton>
-            <Button variant="point" shape="default" size="large" fullWidth>
-              Log in
+            <Button
+              variant="point"
+              shape="default"
+              size="large"
+              fullWidth
+              disabled={!isAllValid.email || !isAllValid.password}
+            >
+              Sign up
             </Button>
           </S_ButtounContainer>
           <S_LinkToTextContainer>
