@@ -28,4 +28,18 @@ public class Report {
 
     @CreatedDate
     private LocalDateTime createdAt; // 로직 고려
+
+    public void setImage(Image image) {
+        this.image = image;
+        if(image.getReportList().contains(this)){
+            image.getReportList().add(this);
+        }
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        if(user.getReports().contains(this)){
+            user.getReports().add(this);
+        }
+    }
 }

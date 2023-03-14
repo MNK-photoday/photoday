@@ -23,4 +23,18 @@ public class ImageTag {
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image image;
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+        if(tag.getImageTagList().contains(this)){
+            tag.getImageTagList().add(this);
+        }
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+        if(image.getImageTagList().contains(this)){
+            image.getImageTagList().add(this);
+        }
+    }
 }

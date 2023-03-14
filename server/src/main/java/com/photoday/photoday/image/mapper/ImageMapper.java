@@ -3,16 +3,19 @@ package com.photoday.photoday.image.mapper;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.user.dto.UserDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.photoday.photoday.user.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface ImageMapper {
+@Component
+@RequiredArgsConstructor
+public class ImageMapper {
+    private final UserService userService;
 
-    default ImageDto.Response imageToResponse(Image image) {
+    public ImageDto.Response imageToResponse(Image image) {
         return ImageDto.Response.builder()
                 .imageId(image.getImageId())
                 .owner(getOwner(image))
@@ -28,32 +31,35 @@ public interface ImageMapper {
                 .build();
     }
 
-    default List<String> getTags(Image image) {
+    private List<String> getTags(Image image) {
         return image.getImageTagList().stream()
                 .map(imageTag -> imageTag.getTag().getName())
                 .collect(Collectors.toList());
 
     }
 
-    default boolean hasBookmarked(Image image) {
-        // TODO: UserId는 Authentication에서 꺼내서 비교할 것
+    private boolean hasBookmarked(Image image) {
+        //TODO 비로그인 회원이면 false 때려야함,, 지금은 예외 터짐. 리팩토링 필요. 디비 세 번 뒤짐.
+        Long userId = userService.getLoginUserId();
         return image.getBookmarkList().stream()
-                .anyMatch(bookmark -> bookmark.getUser().getUserId() == 1L);
+                .anyMatch(bookmark -> bookmark.getUser().getUserId() == userId);
     }
 
-    default boolean hasReported(Image image) {
-        // TODO: UserId는 Authentication에서 꺼내서 비교할 것
+    private boolean hasReported(Image image) {
+        //TODO 비로그인 회원이면 false 때려야함,, 지금은 예외 터짐.
+        Long userId = userService.getLoginUserId();
         return image.getReportList().stream()
-                .anyMatch(report -> report.getUser().getUserId() == 1L);
+                .anyMatch(report -> report.getUser().getUserId() == userId);
     }
 
-    default boolean hasLiked(Image image) {
-        // TODO: UserId는 Authentication에서 꺼내서 비교할 것
+    private boolean hasLiked(Image image) {
+        //TODO 비로그인 회원이면 false 때려야함,, 지금은 예외 터짐.
+        Long userId = userService.getLoginUserId();
         return image.getLikeList().stream()
-                .anyMatch(like -> like.getUser().getUserId() == 1L);
+                .anyMatch(like -> like.getUser().getUserId() == userId);
     }
 
-    default UserDto.Response getOwner(Image image) {
+    private UserDto.Response getOwner(Image image) {
         return new UserDto.Response(image.getUser());
     }
 }

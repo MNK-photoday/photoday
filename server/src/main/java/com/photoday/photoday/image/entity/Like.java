@@ -24,4 +24,18 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void setImage(Image image) {
+        this.image = image;
+        if(!image.getLikeList().contains(this)){
+            image.getLikeList().add(this);
+        }
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        if(!user.getLikes().contains(this)){
+            user.getLikes().add(this);
+        }
+    }
 }

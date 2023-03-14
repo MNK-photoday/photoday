@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ImageDto {
-
     @Getter
     public static class Patch {
         @Size(min =1, max = 5)

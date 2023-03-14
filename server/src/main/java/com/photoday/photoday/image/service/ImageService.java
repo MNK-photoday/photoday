@@ -3,11 +3,14 @@ package com.photoday.photoday.image.service;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.service.TagService;
 import com.photoday.photoday.user.entity.User;
+import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,21 +30,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ImageService {
-
     private final ImageRepository imageRepository;
     private final TagService tagService;
     private final AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String s3Bucket;
+    private final UserService userService; //TODO 순환참조
 
     public Image createImage(List<Tag> tagList, MultipartFile multipartFile) throws IOException {
-        // TODO: Authentication 에서 UserId 꺼내서 사용할 것
+        Long userId = userService.getLoginUserId();
 
         // S3에 이미지 저장하고 url을 받는다.
         String imageUrl = saveImage(multipartFile);
 
         // Image 객체를 생성하는 중 >> mapper에서 만들어 오지 않았기 때문에
-        Long userId = 1L;
         Image image = makeImage(imageUrl, userId);
 
         // Tag를 id값이 있는 객체로 바꾸고 imageTag에 연관관계를 맺는다.
@@ -52,8 +54,7 @@ public class ImageService {
     }
 
     private Image makeImage(String imageUrl, Long userId) {
-        User user = new User();
-        user.setUserId(userId);
+        User user = userService.findVerifiedUser(userId);
 
         Image image = new Image();
         image.setImageUrl(imageUrl);
@@ -71,7 +72,7 @@ public class ImageService {
         objectMetadata.setContentType(multipartFile.getContentType());
         objectMetadata.setContentLength(size);
 
-        //메타데이터 저장
+        //TODO 메타데이터 저장, pre signed url 고려
 
         amazonS3Client.putObject(
                 new PutObjectRequest(s3Bucket, originalFilename, multipartFile.getInputStream(), objectMetadata)
@@ -82,7 +83,9 @@ public class ImageService {
 
     public Image modifyImageTags(long imageId, List<Tag> tagList) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        //TODO 시큐리티로 '로그인 유저 == 이미지업로드한 유저' 검증
+
+        Long userId = userService.getLoginUserId();
+        if(image.getUser().getUserId()!=userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
 
         //기존 imageTag는 삭제해야함 -> 아마 여기서 제대로 안 지워져서 아래 로직에서 duplicate 에러 날 것으로 예상됨.
         //duplicate 에러날 시, orphan or on delete 고려.
@@ -114,80 +117,70 @@ public class ImageService {
 
     public void deleteImage(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        //TODO 시큐리티로 '로그인 유저 == 이미지업로드한 유저' 검증
+        Long userId = userService.getLoginUserId();
+        if(image.getUser().getUserId()!=userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
         imageRepository.deleteById(imageId);
     }
 
     public Image updateBookmark(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        //TODO 시큐리티로 사용자 검증
-        // 비로그인 회원이면 항상 bookmark = false
-
-        // dummy(원래는 로그인한 사용자)
-        User user = new User(1L, "sssss");
+        Long userId = userService.getLoginUserId();
+        User user = userService.findVerifiedUser(userId);
 
         // 북마크 했으면, 리스트에서 제거 , 안 했으면 리스트에 추가
         Optional<Bookmark> bookmark = image.getBookmarkList().stream()
-                .filter(b -> b.getUser().getUserId() == user.getUserId())
+                .filter(b -> b.getUser().getUserId() == userId)
                 .findFirst();
 
         if (bookmark.isPresent()) {
-            image.getBookmarkList().remove(bookmark);
+            image.getBookmarkList().remove(bookmark.get());
         } else {
             Bookmark newBookmark = new Bookmark();
             newBookmark.setUser(user);
-            image.getBookmarkList().add(newBookmark);
+            newBookmark.setImage(image);
         }
 
         return imageRepository.save(image);
     }
 
     public Page<Image> getBookmarkImages(Pageable pageable) {
-        //TODO 시큐리티로 사용자 검증
-
-        // dummy(원래는 로그인한 사용자)
-        User user = new User(1L, "sssss");
-
-        return imageRepository.findAllByBookmark(pageable, user.getUserId());
+        Long userId = userService.getLoginUserId();
+        return imageRepository.findAllByBookmark(pageable, userId);
     }
 
     public Image createReport(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        //TODO 시큐리티로 사용자 검증
-
-        // dummy(원래는 로그인한 사용자)
-        User user = new User(1L, "sssss");
+        Long userId = userService.getLoginUserId();
+        User user = userService.findVerifiedUser(userId);
 
         //사용자가 이미 신고했으면 예외 터뜨리기.
-        image.getReportList().stream().filter(r -> r.getUser().getUserId() == user.getUserId())
+        image.getReportList().stream().filter(r -> r.getUser().getUserId() == userId)
                 .findFirst().ifPresent(u -> new RuntimeException("이미 신고한 게시물입니다."));
 
         //아니면 신고 목록에 추가 및 저장
         Report report = new Report();
         report.setUser(user);
-        image.getReportList().add(report);
+        report.setImage(image);
 
         return imageRepository.save(image);
     }
 
     public Image updateLike(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        //TODO 시큐리티로 사용자 검증
-
-        // dummy(원래는 로그인한 사용자)
-        User user = new User(1L, "sssss");
+        Long userId = userService.getLoginUserId();
+        User user = userService.findVerifiedUser(userId);
 
         // 좋아요 했으면, 리스트에서 제거 , 안 했으면 리스트에 추가
         Optional<Like> optionalLike = image.getLikeList().stream()
-                .filter(l -> l.getUser().getUserId() == user.getUserId())
+                .filter(l -> l.getUser().getUserId() == userId)
                 .findFirst();
 
         if (optionalLike.isPresent()) {
-            image.getBookmarkList().remove(optionalLike);
+            image.getLikeList().remove(optionalLike.get());
         } else {
             Like like = new Like();
             like.setUser(user);
-            image.getLikeList().add(like);
+            like.setImage(image);
         }
 
         return imageRepository.save(image);
