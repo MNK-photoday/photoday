@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Container, Content } from '../../styles/Layout';
 import { Flex, RowFlex, ColFlex } from '../../styles/GlobalStyles';
+import Button from '../../components/common/Button/Button';
 
 export const S_UserPageContainer = styled(Container)`
   background-color: red;
@@ -18,6 +19,30 @@ export const S_UserThumnailArea = styled.div`
   align-items: center;
   width: 20%;
   background-color: pink;
+`;
+
+export const S_UserProfileIamge = styled.img`
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  margin: 10px 0;
+`;
+
+export const S_UserFollowContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const S_UserFollow = styled.span`
+  display: flex;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  margin: 8px 10px;
+`;
+
+export const S_Button = styled(Button)`
+  background-color: red;
 `;
 
 export const S_UserInfoArea = styled(Content)`
@@ -45,6 +70,7 @@ export const S_UserPhotoContentBox = styled.article`
 
 export const S_UserPhotoContent = styled.img`
   background-color: yellow;
+  /* width 추후에 수정 */
   width: 100%;
   height: 200px;
   object-fit: cover;
