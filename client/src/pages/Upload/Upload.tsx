@@ -1,3 +1,6 @@
+import { IoClose } from 'react-icons/io5';
+import { useRef, useState } from 'react';
+
 import Button from '../../components/common/Button/Button';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import {
@@ -11,14 +14,33 @@ import {
   S_UploadBox,
   S_UploadTitle,
 } from './Upload.styles';
-import { IoClose } from 'react-icons/io5';
-import { useRef } from 'react';
+
+type UploadImage = {
+  file: File;
+  thumbnail: string;
+  type: string;
+};
 
 function Upload() {
   const chooseFileRef = useRef<HTMLInputElement>(null);
 
-  const chooseFileHandler = () => {
+  const [imagefile, setImagefile] = useState<UploadImage | null>(null);
+
+  const fileInputClickHandler = () => {
     chooseFileRef.current?.click();
+  };
+
+  const uploadImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files !== null) {
+      const fileList = event.target.files;
+      if (fileList.length > 0) {
+        setImagefile({
+          file: fileList[0],
+          thumbnail: URL.createObjectURL(fileList[0]),
+          type: fileList[0].type,
+        });
+      }
+    }
   };
 
   const inputTagHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +52,18 @@ function Upload() {
         <S_UploadBox>
           <S_UploadTitle>File Upload</S_UploadTitle>
           <S_FileBox>Drag files to upload</S_FileBox>
-          <input type="file" accept="image/*" ref={chooseFileRef} />
+          <input
+            type="file"
+            accept="image/*"
+            ref={chooseFileRef}
+            onChange={uploadImageHandler}
+          />
+          {/* 아래는 미리보기 기능을 위한 임시 코드입니다. */}
+          {imagefile && (
+            <div>
+              <img src={imagefile.thumbnail} alt="thumbnail" />
+            </div>
+          )}
           <S_UploadBottom>
             <S_TagContainer>
               <S_TagInput
@@ -49,7 +82,7 @@ function Upload() {
                 variant={'primary'}
                 shape={'round'}
                 size={'medium'}
-                buttonClickEvent={chooseFileHandler}
+                buttonClickEvent={fileInputClickHandler}
               >
                 Choose file
               </Button>

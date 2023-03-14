@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { RowFlex, ColFlex } from '../../styles/GlobalStyles';
 
 export const S_UploadBox = styled.div`
