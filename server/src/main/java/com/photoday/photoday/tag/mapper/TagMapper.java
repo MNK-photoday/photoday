@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface TagMapper {
-
     default List<Tag> dtoToTag(TagDto post) {
         return post.getNames().stream()
                 .map(this::getTag)

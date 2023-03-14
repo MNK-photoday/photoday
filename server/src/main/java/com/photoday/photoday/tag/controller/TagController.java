@@ -9,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,12 +19,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TagController {
     private final TagService tagService;
-    @PostMapping
-    public ResponseEntity searchByTags(@RequestBody @Valid TagDto tags,
-                                  Pageable pageable) {
+    @GetMapping
+    public ResponseEntity searchByTags(@RequestBody @Valid TagDto tags, Pageable pageable) {
         Page<Image> imagePage = tagService.searchByTags(tags, pageable);
         List<Image> imageList = imagePage.getContent();
-
         return new ResponseEntity(new MultiResponseDto(imageList, imagePage), HttpStatus.OK);
     }
 }

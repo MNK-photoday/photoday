@@ -22,11 +22,11 @@ public class Tag {
     private String name;
 
     @OneToMany(mappedBy = "tag")
-    private List<ImageTag> imageTags = new ArrayList<>();
+    private List<ImageTag> imageTagList = new ArrayList<>();
 
     public void setImageTag(ImageTag imageTag) {
-        this.getImageTags().add(imageTag);
-        if(imageTag.getTag()!=this){
+        this.getImageTagList().add(imageTag);
+        if (imageTag.getTag() != this) {
             imageTag.setTag(this);
         }
     }

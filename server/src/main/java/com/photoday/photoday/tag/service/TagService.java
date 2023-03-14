@@ -28,12 +28,6 @@ public class TagService {
 
     public Tag verifyTag(Tag tag) {
         Optional<Tag> optionalTag = tagRepository.findByName(tag.getName());
-        Tag verifiedTag;
-        if (optionalTag.isEmpty()) {
-            verifiedTag = tagRepository.save(tag);
-        } else {
-            verifiedTag = optionalTag.get();
-        }
-        return verifiedTag;
+        return optionalTag.orElseGet(() -> tagRepository.save(tag));
     }
 }
