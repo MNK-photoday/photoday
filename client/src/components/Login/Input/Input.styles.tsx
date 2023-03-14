@@ -6,17 +6,7 @@ export const BorderCSS = css`
   height: 40px;
 `;
 
-export const InputCSS = css`
-  ${BorderCSS}
-  height: 40px;
-  padding-left: 15px;
-
-  &:focus {
-    box-shadow: inset 0 0 0 1px var(--color-primary-green);
-  }
-`;
-
-export const S_InputContainerWrap = styled.div`
+export const S_InputContainerWrap = styled.form`
   display: flex;
   flex-direction: column;
 `;
@@ -27,14 +17,14 @@ export const S_LoginInputLabel = styled.label`
   color: var(--color-primary-black);
 `;
 
-export const S_EmailInput = styled.input`
-  ${InputCSS}
-  margin-bottom: 20px;
-`;
-
-export const S_PasswordInput = styled.input`
-  ${InputCSS}
-  margin-bottom: 3px;
+export const S_EmailAndPasswordInput = styled.input`
+  ${BorderCSS}
+  height: 40px;
+  padding-left: 15px;
+  margin-bottom: 15px;
+  &:focus {
+    box-shadow: inset 0 0 0 1px var(--color-primary-green);
+  }
 `;
 
 export const S_CheckBox = styled.input<{ isChecked: boolean }>`

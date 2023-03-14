@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Content } from '../../styles/Layout';
 import { RowFlex } from '../../styles/GlobalStyles';
@@ -11,8 +11,8 @@ import img10 from '../../assets/imgs/image10.jpg';
 import img11 from '../../assets/imgs/image11.jpg';
 
 const images: string[] = [img5, img6, img7, img8, img9, img10, img11];
-const randomImg = Math.floor(Math.random() * images.length);
-const backgroundImg = images[randomImg];
+const randomImage = Math.floor(Math.random() * images.length);
+const backgroundImage = images[randomImage];
 
 export const S_LoginContainerWrap = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ export const S_LoginContainerWrap = styled.div`
 export const S_ImgContainer = styled(Content)`
   background-color: blue;
   height: 100vh;
-  background: url(${backgroundImg}) no-repeat;
+  background: url(${backgroundImage}) no-repeat;
   background-size: cover;
 `;
 
@@ -60,13 +60,32 @@ export const S_LinkToTextContainer = styled.div`
 export const S_LinkTo = styled(Link)<{ isAccount: boolean }>`
   color: var(--color-primary-green);
   margin-left: 10px;
-
   font-size: ${({ isAccount }) => isAccount && 'var(--font-size-sm)'};
   display: ${({ isAccount }) => isAccount && 'flex'};
   justify-content: ${({ isAccount }) => isAccount && 'end'};
   font-weight: ${({ isAccount }) => !isAccount && 'bold'};
-
+  position: ${({ isAccount }) => isAccount && 'relative'};
+  bottom: ${({ isAccount }) => isAccount && '10'}px;
   &:hover {
     color: hsl(140, 40%, 44%);
   }
+`;
+
+export type ShowMessageType = 'show' | 'hide';
+
+const InvalidMessageCSS = {
+  show: css`
+    position: relative;
+    bottom: 10px;
+    left: 2px;
+    color: var(--color-primary-red);
+    font-size: var(--font-size-sm);
+  `,
+  hide: css`
+    display: none;
+  `,
+};
+
+export const S_InvalidMessage = styled.p<{ isShowMessage: ShowMessageType }>`
+  ${({ isShowMessage }) => InvalidMessageCSS[isShowMessage]}
 `;

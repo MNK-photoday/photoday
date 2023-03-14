@@ -16,6 +16,7 @@ const variantCSS = {
 
     &:disabled {
       background-color: var(--color-primary-gray30);
+      pointer-events: none;
     }
     &:hover {
       transform: translateY(-2px);
@@ -54,7 +55,7 @@ const sizeCSS = {
     font-size: var(--font-size-sm);
   `,
   large: css`
-    padding: 10px 105px;
+    padding: 10px 80px;
     font-size: var(--font-size-m);
   `,
 };
