@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   S_UserPageContainer,
   S_UserSection,
