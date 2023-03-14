@@ -16,6 +16,7 @@ const variantCSS = {
 
     &:disabled {
       background-color: var(--color-primary-gray30);
+      pointer-events: none;
     }
     &:hover {
       transform: translateY(-2px);
