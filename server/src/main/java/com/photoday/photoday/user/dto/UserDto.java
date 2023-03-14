@@ -45,16 +45,5 @@ public class UserDto {
         private int followerCount;
         private int followingCount;
         private boolean checkFollow;
-
-        public Response(User user) {
-            this.userId = user.getUserId();
-            this.name = user.getName();
-            this.profileImageUrl = user.getProfileImageUrl();
-            this.description = user.getDescription();
-            this.likeCount = user.getLikes().size();
-            this.reportCount = user.getReports().size();
-            this.followerCount = user.getFollower().size();
-            this.followingCount = user.getFollowing().size();
-        }
     }
 }

@@ -2,6 +2,8 @@ package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
+import com.photoday.photoday.follow.entity.Follow;
+import com.photoday.photoday.follow.repository.FollowRepository;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.entity.User;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final S3Service s3Service;
@@ -47,8 +50,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getUser(long userId) {
         Long loginUserId = getLoginUserId();
+        findVerifiedUser(loginUserId);
         User targetUser = findVerifiedUser(userId);
-        //TODO 본인 조회할 때는 response의 checkFollow 정보 확인하기?
         return targetUser;
     }
 
@@ -100,5 +103,11 @@ public class UserService {
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         return user.getUserId();
+    }
+
+    public String getLoginUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return authentication.getName();
     }
 }
