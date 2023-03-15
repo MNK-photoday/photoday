@@ -1,18 +1,24 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+
 import { RowFlex } from '../../../styles/GlobalStyles';
 
-export const S_HeaderContainerWrap = styled.header`
-  display: flex;
-  justify-content: center;
+export const S_HeaderWrap = styled.header`
+  ${RowFlex}
+  align-items: center;
+  height: 70px;
 `;
-export const S_HeaderContainerFlex = styled.div`
+export const S_HeaderContainer = styled.div`
+  max-width: 1830px;
   width: 100%;
-  max-width: 90vw;
+  display: flex;
+  align-items: center;
+  padding: 0 50px;
+  justify-content: space-between;
 `;
+
 export const S_HeaderContent = styled.div`
   ${RowFlex}
-  height: 70px;
   align-items: center;
   justify-content: space-between;
 `;
