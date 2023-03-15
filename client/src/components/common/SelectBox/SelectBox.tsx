@@ -5,15 +5,19 @@ import SelectBoxModal from './SelectBoxModal';
 
 function SelectBox() {
   const [isActiveSelect, setIsActiveSelect] = useState(false);
+  const [isSelect, setIsSelect] = useState('최신순');
+
   return (
     <S_SelectBoxWrap onClick={() => setIsActiveSelect(!isActiveSelect)}>
-      <S_SelectSpan>최신순</S_SelectSpan>
+      <S_SelectSpan>{isSelect}</S_SelectSpan>
       {isActiveSelect ? (
         <BiChevronDown className="selectbox-icons" />
       ) : (
         <BiChevronUp className="selectbox-icons" />
       )}
-      {isActiveSelect && <SelectBoxModal />}
+      {isActiveSelect && (
+        <SelectBoxModal isSelect={isSelect} setIsSelect={setIsSelect} />
+      )}
     </S_SelectBoxWrap>
   );
 }
