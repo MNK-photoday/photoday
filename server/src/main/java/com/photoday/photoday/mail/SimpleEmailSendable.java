@@ -1,4 +1,4 @@
-package com.photoday.photoday.user.mail;
+package com.photoday.photoday.mail;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
