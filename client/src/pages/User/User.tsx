@@ -6,6 +6,13 @@ import {
   S_UserFollowCount,
   S_UserFollow,
   S_UserInfoArea,
+  S_UserNameContainer,
+  S_UserName,
+  S_UserLikeAndReport,
+  S_UserDescription,
+  S_TextButtonWrap,
+  S_TextButton,
+  S_DeleteAccountText,
   S_UserPageTitle,
   S_UserPhotoContentBox,
   S_UserPhotoContent,
@@ -15,6 +22,8 @@ import { ContainerWrap, Container } from '../../styles/Layout';
 import oceanImage from '../../assets/imgs/image9.jpg';
 import kungyaImage from '../../assets/imgs/kungyaImage.png';
 import Button from '../../components/common/Button/Button';
+import { FaHeart } from 'react-icons/fa';
+import { MdReportProblem } from 'react-icons/md';
 
 // 나중에 데이터 받아올 때 쓸 interface
 interface DataType {
@@ -38,7 +47,7 @@ const data: DataType = {
   data: [
     {
       userId: 1,
-      name: 'test',
+      name: 'dkgus',
       profileImageUrl:
         'https://cdn.discordapp.com/attachments/1082610363712950272/1082610364371435540/userImage.png',
       description: '안녕하세요!',
@@ -90,11 +99,37 @@ function Users() {
             <Button variant="point" shape="default" size="large">
               Upload Image
             </Button>
-            <Button variant="point" shape="default" size="XLarge" disabled>
+            <Button variant="point" shape="default" size="XLarge">
               Remove Image
             </Button>
           </S_UserThumnailArea>
-          <S_UserInfoArea>user info</S_UserInfoArea>
+          <S_UserInfoArea>
+            <S_UserNameContainer>
+              <S_UserName>{data.data[0].name}</S_UserName>
+              <FaHeart size={18} className="likeicon" />
+              <S_UserLikeAndReport>
+                {data.data[0].likeCount}
+              </S_UserLikeAndReport>
+              <MdReportProblem size={20} className="reporticon" />
+              <S_UserLikeAndReport>
+                {data.data[0].reportCount}
+              </S_UserLikeAndReport>
+            </S_UserNameContainer>
+            <S_UserDescription>{data.data[0].description}</S_UserDescription>
+            <S_TextButtonWrap>
+              <S_TextButton isTextButtonType="modify">Modify</S_TextButton>
+              <S_TextButton isTextButtonType="changePassword">
+                Change Password
+              </S_TextButton>
+              <S_TextButton isTextButtonType="deleteAccount">
+                Delete account
+              </S_TextButton>
+              <S_DeleteAccountText>
+                Once you delete your account, there is no going back. Please be
+                certain.
+              </S_DeleteAccountText>
+            </S_TextButtonWrap>
+          </S_UserInfoArea>
         </S_UserSection>
         <S_UserPageTitle>
           <h3>{`${data.data[0].name}'s photoday`}</h3>
