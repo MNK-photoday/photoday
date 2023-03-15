@@ -214,6 +214,7 @@ const ResetCss = css`
   button {
     border: 0;
     background-color: transparent;
+    cursor: pointer;
   }
 `;
 
