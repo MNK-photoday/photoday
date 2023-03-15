@@ -14,7 +14,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import javax.validation.ConstraintViolationException;
 
 @Slf4j
-//@RestControllerAdvice
+@RestControllerAdvice
 public class ExceptionControllerAdvice {
     @ExceptionHandler
     public ResponseEntity handleCustomException(CustomException e) {

@@ -7,7 +7,7 @@ import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
-import com.photoday.photoday.security.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.mapper.TagMapper;
