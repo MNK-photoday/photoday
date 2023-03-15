@@ -14,6 +14,7 @@ import {
   S_TextButton,
   S_DeleteAccountText,
   S_UserPageTitle,
+  S_BookmarkButton,
   S_UserPhotoContentBox,
   S_UserPhotoContent,
   S_Pagination,
@@ -24,6 +25,7 @@ import kungyaImage from '../../assets/imgs/kungyaImage.png';
 import Button from '../../components/common/Button/Button';
 import { FaHeart } from 'react-icons/fa';
 import { MdReportProblem } from 'react-icons/md';
+import { FaRegBookmark } from 'react-icons/fa';
 
 // 나중에 데이터 받아올 때 쓸 interface
 interface DataType {
@@ -133,7 +135,9 @@ function Users() {
         </S_UserSection>
         <S_UserPageTitle>
           <h3>{`${data.data[0].name}'s photoday`}</h3>
-          <div>bookmark Icon</div>
+          <S_BookmarkButton>
+            <FaRegBookmark className="bookmarkIcon" />
+          </S_BookmarkButton>
         </S_UserPageTitle>
         <S_UserPhotoContentBox>
           <S_UserPhotoContent alt="photo" src={oceanImage} />
