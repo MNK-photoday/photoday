@@ -6,6 +6,7 @@ import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 import AccountRecovery from './pages/AccountRecovery/AccountRecovery';
 import Upload from './pages/Upload/Upload';
+import TagSearch from './pages/Search/Search';
 
 function App() {
   const router = createBrowserRouter([
@@ -21,6 +22,10 @@ function App() {
         {
           path: '/upload',
           element: <Upload />,
+        },
+        {
+          path: '/tags',
+          element: <TagSearch />,
         },
       ],
     },
