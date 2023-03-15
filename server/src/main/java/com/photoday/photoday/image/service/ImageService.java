@@ -1,11 +1,15 @@
 package com.photoday.photoday.image.service;
 
+import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
+import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.*;
+import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
-import com.photoday.photoday.image.repository.ReportRepository;
+import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
+import com.photoday.photoday.tag.mapper.TagMapper;
 import com.photoday.photoday.tag.service.TagService;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
@@ -36,8 +40,12 @@ public class ImageService {
     private final TagService tagService;
     private final S3Service s3Service;
     private final UserService userService;
+    private final ImageMapper imageMapper;
+    private final TagMapper tagMapper;
 
-    public Image createImage(List<Tag> tagList, MultipartFile multipartFile) throws IOException {
+    public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException {
+        List<Tag> tagList = tagMapper.dtoToTag(post);
+
         Long userId = userService.getLoginUserId();
 
         // S3에 이미지 저장하고 url을 받는다.
@@ -50,7 +58,8 @@ public class ImageService {
         List<ImageTag> imageTagList = tagListToImageTagList(tagList, image);
         image.setImageTagList(imageTagList);
 
-        return imageRepository.save(image);
+        Image save = imageRepository.save(image);
+        return imageMapper.imageToResponse(save);
     }
 
     private Image makeImage(String imageUrl, Long userId) {
@@ -63,7 +72,9 @@ public class ImageService {
         return image;
     }
 
-    public Image modifyImageTags(long imageId, List<Tag> tagList) {
+    public ImageDto.Response updateImageTags(long imageId, TagDto patch) {
+        List<Tag> tagList = tagMapper.dtoToTag(patch);
+
         Image image = findImage(imageId); // 이미지 존재하는지 검증
 
         Long userId = userService.getLoginUserId();
@@ -75,7 +86,9 @@ public class ImageService {
         List<ImageTag> imageTagList = tagListToImageTagList(tagList, image);
 
         image.getImageTagList().addAll(imageTagList);
-        return imageRepository.save(image);
+
+        Image save = imageRepository.save(image);
+        return imageMapper.imageToResponse(save);
     }
 
     private List<ImageTag> tagListToImageTagList(List<Tag> tagList, Image image) {
@@ -95,11 +108,11 @@ public class ImageService {
         return imageTag;
     }
 
-    public Image getImage(long imageId) {
+    public ImageDto.Response getImage(long imageId) {
         Image image = findImage(imageId);
         image.setViewCount(image.getViewCount()+1);
         Image save = imageRepository.save(image);
-        return save;
+        return imageMapper.imageToResponse(save);
     }
 
     public void deleteImage(long imageId) {
@@ -109,7 +122,7 @@ public class ImageService {
         imageRepository.deleteById(imageId);
     }
 
-    public Image updateBookmark(long imageId) {
+    public ImageDto.Response updateBookmark(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
         Long userId = userService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
@@ -129,17 +142,22 @@ public class ImageService {
         }
 
         Image save = imageRepository.save(image);
-        return save;
+        return imageMapper.imageToResponse(save);
     }
 
-    public Page<Image> getBookmarkImages(Pageable pageable) {
+    public MultiResponseDto getBookmarkImages(Pageable pageable) {
         Long userId = userService.getLoginUserId();
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
+
         Page<Image> page = imageRepository.findAllBookmarkImages(pageRequest, userId);
-        return page;
+        List<Image> imageList = page.getContent();
+        List<ImageDto.BookmarkAndSearchResponse> responses
+                = imageList.stream().map(i -> imageMapper.imageToBookmarkAndSearchResponse(i)).collect(Collectors.toList());
+
+        return new MultiResponseDto(responses, page);
     }
 
-    public Image createReport(long imageId) {
+    public ImageDto.Response createReport(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
         Long userId = userService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
@@ -170,11 +188,10 @@ public class ImageService {
         }
 
         Image save = imageRepository.save(image);
-
-        return save;
+        return imageMapper.imageToResponse(save);
     }
 
-    public Image updateLike(long imageId) {
+    public ImageDto.Response updateLike(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
         Long userId = userService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
@@ -193,7 +210,7 @@ public class ImageService {
         }
 
         Image save = imageRepository.save(image);
-        return save;
+        return imageMapper.imageToResponse(save);
     }
 
     private Image findImage(long imageId) {

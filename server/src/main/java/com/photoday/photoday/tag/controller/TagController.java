@@ -22,13 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TagController {
     private final TagService tagService;
-    private final ImageMapper imageMapper;
-    @GetMapping
+    @GetMapping//TODO endpoint에 search 추가하는 것 제안?
     public ResponseEntity searchByTags(@RequestBody @Valid TagDto tags, Pageable pageable) {
-        Page<Image> imagePage = tagService.searchByTags(tags, pageable);
-        List<Image> imageList = imagePage.getContent();
-        List<ImageDto.BookmarkAndSearchResponse> responses
-                = imageList.stream().distinct().map(i -> imageMapper.imageToBookmarkAndSearchResponse(i)).collect(Collectors.toList());
-        return new ResponseEntity(new MultiResponseDto(responses, imagePage), HttpStatus.OK);
+        MultiResponseDto responseDto = tagService.searchByTags(tags, pageable);
+        return new ResponseEntity(responseDto, HttpStatus.OK);
     }
 }
