@@ -6,6 +6,7 @@ import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.follow.mapper.FollowMapper;
 import com.photoday.photoday.follow.repository.FollowRepository;
 import com.photoday.photoday.follow.entity.Follow;
+import com.photoday.photoday.security.AuthUserService;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,10 @@ public class FollowService {
     private final UserService userService;
     private final FollowRepository followRepository;
     private final FollowMapper followMapper;
+    private final AuthUserService authUserService;
 
     public FollowDto.ResponseFollowUsers findFollowUser() {
-        Long loginUserId = userService.getLoginUserId();
+        Long loginUserId = authUserService.getLoginUserId();
 
         List<Follow> following = followRepository.findFollowByFollower_UserId(loginUserId);
         List<Follow> follower = followRepository.findFollowByFollowing_UserId(loginUserId);
@@ -45,7 +47,7 @@ public class FollowService {
     }
 
     public FollowDto.ResponseFollowUsers registerFollowUser(Long followingId) {
-        Long loginUserId = userService.getLoginUserId();
+        Long loginUserId = authUserService.getLoginUserId();
         if(followingId.equals(loginUserId)) {
             throw new CustomException(ExceptionCode.CANNOT_FOLLOW_MYSELF);
         }

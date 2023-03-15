@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         userService.checkBanTime(user);
 
         if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
-            throw new DisabledException("유저가 밴 상태입니다." + String.valueOf(user.getBanTime()) + " 이후에 서비스 이용이 가능합니다.");
+            throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());

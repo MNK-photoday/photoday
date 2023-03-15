@@ -2,9 +2,12 @@ package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
+import com.photoday.photoday.follow.entity.Follow;
+import com.photoday.photoday.follow.repository.FollowRepository;
 import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.image.service.S3Service;
+import com.photoday.photoday.security.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
@@ -39,6 +42,7 @@ public class UserService {
     private final CustomAuthorityUtils customAuthorityUtils;
     private final S3Service s3Service;
     private final UserMapper userMapper;
+    private final AuthUserService authUserService;
 
     public UserDto.Response createUser(UserDto.Post userPostDto) {
         User user = userMapper.userPostToUser(userPostDto);
@@ -73,7 +77,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDto.Response getUser(long userId) {
-        Long loginUserId = getLoginUserId();
+        Long loginUserId = authUserService.getLoginUserId();
         findVerifiedUser(loginUserId);
         User targetUser = findVerifiedUser(userId);
 
@@ -82,8 +86,8 @@ public class UserService {
 
     public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) throws IOException {
         User user = userMapper.userPatchToUser(userUpdateDto);
-        User verifiedUser = findVerifiedUser(getLoginUserId());
-        user.setUserId(getLoginUserId());
+        User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
+        user.setUserId(authUserService.getLoginUserId());
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
@@ -102,7 +106,7 @@ public class UserService {
     }
 
     public void deleteUser() {
-        Long loginUserId = getLoginUserId();
+        Long loginUserId = authUserService.getLoginUserId();
         userRepository.deleteById(loginUserId);
     }
 
@@ -110,27 +114,6 @@ public class UserService {
         Optional<User> user = userRepository.findById(userId);
         User verifiedUser = user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         return verifiedUser;
-    }
-
-    public Long getLoginUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
-        return user.getUserId();
-    }
-
-    public Long checkLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(userRepository.findByEmail(authentication.getName()).isPresent()) {
-            return userRepository.findByEmail(authentication.getName()).get().getUserId();
-        }
-        return null;
-    }
-
-    public String getLoginUserEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        return authentication.getName();
     }
 
     public void checkUserReportCount(Long userId) {
@@ -176,6 +159,5 @@ public class UserService {
         String name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
         return name;
     }
-
 
 }

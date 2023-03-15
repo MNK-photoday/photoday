@@ -2,10 +2,14 @@ package com.photoday.photoday.user.mapper;
 
 import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.follow.repository.FollowRepository;
+import com.photoday.photoday.follow.service.FollowService;
+import com.photoday.photoday.security.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -13,8 +17,8 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
+    private final AuthUserService authUserService;
     private final FollowRepository followRepository;
-    private final UserService userService;
 
     public User userPostToUser(UserDto.Post userPostDto) {
         if (userPostDto == null) {
@@ -47,12 +51,10 @@ public class UserMapper {
             return null;
         }
 
-        Long userId = userService.checkLogin();
+        Long userId = authUserService.checkLogin();
         boolean checkFollow = false;
         if(userId != null) {
-            User user = userService.findVerifiedUser(userId);
-            Optional<Follow> check = followRepository.findByFollowerAndFollowing(user, targetUser);
-
+            Optional<Follow> check = followRepository.findByFollower_UserIdAndFollowing_UserId(userId, targetUser.getUserId());
             if (check.isPresent()) {
                 checkFollow = true;
             }

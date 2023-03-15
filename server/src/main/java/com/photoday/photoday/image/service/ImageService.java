@@ -7,6 +7,7 @@ import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
+import com.photoday.photoday.security.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.mapper.TagMapper;
@@ -42,11 +43,12 @@ public class ImageService {
     private final UserService userService;
     private final ImageMapper imageMapper;
     private final TagMapper tagMapper;
+    private final AuthUserService authUserService;
 
     public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException {
         List<Tag> tagList = tagMapper.dtoToTag(post);
 
-        Long userId = userService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId();
 
         // S3에 이미지 저장하고 url을 받는다.
         String imageUrl = s3Service.saveImage(multipartFile);
@@ -77,7 +79,7 @@ public class ImageService {
 
         Image image = findImage(imageId); // 이미지 존재하는지 검증
 
-        Long userId = userService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId();
         if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
 
         image.getImageTagList().clear();
@@ -117,14 +119,14 @@ public class ImageService {
 
     public void deleteImage(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        Long userId = userService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId();
         if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
         imageRepository.deleteById(imageId);
     }
 
     public ImageDto.Response updateBookmark(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        Long userId = userService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
 
         // 북마크 했으면, 리스트에서 제거 , 안 했으면 리스트에 추가
@@ -146,7 +148,7 @@ public class ImageService {
     }
 
     public MultiResponseDto getBookmarkImages(Pageable pageable) {
-        Long userId = userService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId();
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
 
         Page<Image> page = imageRepository.findAllBookmarkImages(pageRequest, userId);
@@ -159,7 +161,7 @@ public class ImageService {
 
     public ImageDto.Response createReport(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        Long userId = userService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
         userService.checkUserReportCount(userId);
         //사용자가 이미 신고했으면 예외 터뜨리기.
@@ -193,7 +195,7 @@ public class ImageService {
 
     public ImageDto.Response updateLike(long imageId) {
         Image image = findImage(imageId); // 이미지 존재하는지 검증
-        Long userId = userService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
 
         //TODO 포스트맨에서는 1,1,0 으로 됨(등록,버그,취소). 프론트랑 연결해서 실험해봐야할 듯.
