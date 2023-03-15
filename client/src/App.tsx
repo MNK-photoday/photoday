@@ -5,6 +5,7 @@ import User from './pages/User/User';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 import AccountRecovery from './pages/AccountRecovery/AccountRecovery';
+import Upload from './pages/Upload/Upload';
 
 function App() {
   const router = createBrowserRouter([
@@ -16,6 +17,10 @@ function App() {
         {
           path: '/users',
           element: <User />,
+        },
+        {
+          path: '/upload',
+          element: <Upload />,
         },
       ],
     },
