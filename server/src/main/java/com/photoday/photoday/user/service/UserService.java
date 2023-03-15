@@ -2,8 +2,6 @@ package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
-import com.photoday.photoday.follow.entity.Follow;
-import com.photoday.photoday.follow.repository.FollowRepository;
 import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.image.service.S3Service;
@@ -12,6 +10,7 @@ import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,10 +48,24 @@ public class UserService {
 
         String name = getNameFromUser(user);
         user.setName(name);
-
+        user.setBanTime(LocalDateTime.now());
+        user.setStatus(User.UserStatus.USER_BANED);
         User createdUser = userRepository.save(user);
 
         return createdUser;
+    }
+
+    public User registerUserOAuth2(User user) {
+        Optional<User> findUser = userRepository.findByEmail(user.getEmail());
+        if(findUser.isPresent()) {
+            return findUser.get();
+        }
+        List<String> roles = customAuthorityUtils.createRoles(user.getEmail());
+        user.setRoles(roles);
+
+        User savedUser = userRepository.save(user);
+
+        return savedUser;
     }
 
     @Transactional(readOnly = true)
@@ -122,8 +135,26 @@ public class UserService {
         }
     }
 
+    public User findUserByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()) {
+            return user.get();
+        } else {
+            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
+        }
+    }
+
+    public void checkBanTime(User user) {
+        if(LocalDateTime.now().isAfter(user.getBanTime())) {
+            user.setBanTime(null);
+            user.setStatus(User.UserStatus.USER_ACTIVE);
+
+        }
+        userRepository.save(user);
+    }
+
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    private void resetTodayUserReportCount() {
+    protected void resetTodayUserReportCount() {
         log.info(String.valueOf(LocalDateTime.now()));
         userRepository.resetTodayReportCount();
     }

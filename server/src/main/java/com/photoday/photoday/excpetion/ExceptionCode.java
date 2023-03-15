@@ -10,7 +10,8 @@ public enum ExceptionCode {
     NOT_IMAGE_OWNER(HttpStatus.UNAUTHORIZED, "게시물 작성자가 아닙니다."),
     CANNOT_FOLLOW_MYSELF(HttpStatus.UNAUTHORIZED, "본인을 팔로우 할 수 없습니다"),
     ALREADY_REPORTED(HttpStatus.CONFLICT, "이미 신고한 게시물입니다."),
-    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지가 없습니다.");
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지가 없습니다."),
+    BANNED_USER(HttpStatus.FORBIDDEN, "정지된 회원입니다.");
 
     @Getter
     private HttpStatus httpStatus;

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -159,6 +160,7 @@ public class ImageService {
             image.getUser().setReportedCount(image.getUser().getReportedCount() + 1);
             if(image.getUser().getReportedCount() == 10) {
                 image.getUser().setStatus(User.UserStatus.USER_BANED);
+                image.getUser().setBanTime(LocalDateTime.now().plusWeeks(1));
             }
 
             //TODO 게시물 삭제 기능 -- 삭제 후 리턴 추후 확인 필요

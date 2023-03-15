@@ -44,6 +44,10 @@ public class ErrorResponse {
         return new ErrorResponse(httpStatus, httpStatus.getReasonPhrase());
     }
 
+    public static ErrorResponse of(HttpStatus httpStatus, String message) {
+        return new ErrorResponse(httpStatus, message);
+    }
+
     @Getter
     public static class FieldError {
         private String field;

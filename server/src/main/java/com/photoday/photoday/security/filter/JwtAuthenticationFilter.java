@@ -1,17 +1,23 @@
 package com.photoday.photoday.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.security.dto.LoginDto;
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CookieUtil;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.security.utils.UserDataResponder;
+import com.photoday.photoday.user.repository.UserRepository;
+import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -20,26 +26,36 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
     private final RedisService redisService;
     private final UserDataResponder userDataResponder;
 
     @SneakyThrows
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         ObjectMapper objectMapper = new ObjectMapper();
         LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+
+        User user = userService.findUserByEmail(loginDto.getEmail());
+        userService.checkBanTime(user);
+
+        if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
+            throw new DisabledException("유저가 밴 상태입니다." + String.valueOf(user.getBanTime()) + " 이후에 서비스 이용이 가능합니다.");
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
         return authenticationManager.authenticate(authenticationToken);
     }
 
-    protected  void successfulAuthentication(HttpServletRequest request,
+    protected void successfulAuthentication(HttpServletRequest request,
                                              HttpServletResponse response,
                                              FilterChain chain,
                                              Authentication authResult) throws ServletException, IOException {

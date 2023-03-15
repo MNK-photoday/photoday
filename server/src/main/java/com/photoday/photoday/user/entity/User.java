@@ -42,6 +42,7 @@ public class User {
     @Column(nullable = false)
     private UserStatus status = UserStatus.USER_ACTIVE; // 보류 -> 백업데이터 고려, DB 2개
 
+
     private LocalDateTime banTime; // 로직 고려
 
     private int reportedCount;
