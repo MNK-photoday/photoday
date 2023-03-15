@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 public class TagDto {
     @Size(min = 1)
-    private List<String> names;
+    private List<String> tags;
 }

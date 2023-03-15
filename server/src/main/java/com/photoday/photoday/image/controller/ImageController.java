@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/images")
@@ -71,7 +72,9 @@ public class ImageController {
     public ResponseEntity getBookmarkImages(Pageable pageable) {
         Page<Image> page = imageService.getBookmarkImages(pageable);
         List<Image> imageList = page.getContent();
-        return new ResponseEntity<>(new MultiResponseDto(imageList, page), HttpStatus.OK);
+        List<ImageDto.BookmarkAndSearchResponse> responses
+                = imageList.stream().map(i -> imageMapper.imageToBookmarkAndSearchResponse(i)).collect(Collectors.toList());
+        return new ResponseEntity<>(new MultiResponseDto(responses, page), HttpStatus.OK);
     }
 
     @PostMapping("/{imageId}/reports")

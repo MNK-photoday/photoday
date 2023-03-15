@@ -23,7 +23,7 @@ public class TagService {
 
     public Page<Image> searchByTags(TagDto tags, Pageable pageable){
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
-        return imageRepository.findAllByTag(tags, pageRequest);
+        return imageRepository.findAllByTag(tags.getTags(), pageRequest);
     }
 
     public Tag verifyTag(Tag tag) {

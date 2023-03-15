@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.photoday.photoday.excpetion.ExceptionCode.REPORT_COUNT_EXCEEDS_LIMIT;
 
@@ -65,9 +64,9 @@ public class UserService {
     }
 
     public User updateUser(User user, MultipartFile multipartFile) throws IOException {
-        //본인 아이디 확인
         User verifiedUser = findVerifiedUser(getLoginUserId());
         user.setUserId(getLoginUserId());
+
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
             try {

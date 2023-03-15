@@ -1,6 +1,5 @@
 package com.photoday.photoday.image.dto;
 
-import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +33,16 @@ public class ImageDto {
         private int viewCount;
         private List<String> tags;
         private LocalDateTime createdAt;
+    }
+
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    public static class BookmarkAndSearchResponse {
+        private Long imageId;
+        private String imageUrl;
+        private boolean like;
+        private int viewCount;
     }
 }
