@@ -8,7 +8,9 @@ import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
+import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
+import com.photoday.photoday.user.mapper.UserMapper;
 import com.photoday.photoday.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +39,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final S3Service s3Service;
+    private final UserMapper userMapper;
 
-    public User createUser(User user) {
+    public UserDto.Response createUser(UserDto.Post userPostDto) {
+        User user = userMapper.userPostToUser(userPostDto);
         verifyExistsEmail(user.getEmail());
 
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
@@ -51,19 +55,20 @@ public class UserService {
         user.setName(name);
 
         User createdUser = userRepository.save(user);
-
-        return createdUser;
+        return userMapper.userToUserResponse(createdUser);
     }
 
     @Transactional(readOnly = true)
-    public User getUser(long userId) {
+    public UserDto.Response getUser(long userId) {
         Long loginUserId = getLoginUserId();
         findVerifiedUser(loginUserId);
         User targetUser = findVerifiedUser(userId);
-        return targetUser;
+
+        return userMapper.userToUserResponse(targetUser);
     }
 
-    public User updateUser(User user, MultipartFile multipartFile) throws IOException {
+    public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) throws IOException {
+        User user = userMapper.userPatchToUser(userUpdateDto);
         User verifiedUser = findVerifiedUser(getLoginUserId());
         user.setUserId(getLoginUserId());
 
@@ -80,7 +85,7 @@ public class UserService {
         Optional.ofNullable(user.getPassword()).ifPresent(password -> verifiedUser.setPassword(passwordEncoder.encode(password)));
         Optional.ofNullable(user.getDescription()).ifPresent(description -> verifiedUser.setDescription(description));
 
-        return verifiedUser;
+        return userMapper.userToUserResponse(verifiedUser);
     }
 
     public void deleteUser() {
@@ -140,4 +145,6 @@ public class UserService {
         String name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
         return name;
     }
+
+
 }

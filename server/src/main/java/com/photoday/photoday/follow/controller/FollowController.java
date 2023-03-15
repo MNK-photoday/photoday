@@ -20,19 +20,16 @@ import java.util.Map;
 @Validated
 public class FollowController {
     private final FollowService followService;
-    private final FollowMapper followMapper;
 
     @GetMapping
     public ResponseEntity getFollowUsers() {
-        Map<String, List<User>> follow = followService.findFollowUser();
-        FollowDto.ResponseFollowUsers response = followMapper.followUserListToResponseFollowUsers(follow);
+        FollowDto.ResponseFollowUsers response = followService.findFollowUser();
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{followingId}")
     public ResponseEntity followingUser(@PathVariable long followingId) {
-        Map<String, List<User>> follow = followService.registerFollowUser(followingId);
-        FollowDto.ResponseFollowUsers response = followMapper.followUserListToResponseFollowUsers(follow);
+        FollowDto.ResponseFollowUsers response = followService.registerFollowUser(followingId);
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 }

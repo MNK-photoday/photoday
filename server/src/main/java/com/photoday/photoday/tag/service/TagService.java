@@ -1,6 +1,9 @@
 package com.photoday.photoday.tag.service;
 
+import com.photoday.photoday.dto.MultiResponseDto;
+import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
+import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
@@ -12,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -20,10 +25,17 @@ import java.util.Optional;
 public class TagService {
     private final ImageRepository imageRepository;
     private final TagRepository tagRepository;
+    private final ImageMapper imageMapper;
 
-    public Page<Image> searchByTags(TagDto tags, Pageable pageable){
+    public MultiResponseDto searchByTags(TagDto tags, Pageable pageable){ //TODO 다중 검색으로 구현하기
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
-        return imageRepository.findAllByTag(tags.getTags(), pageRequest);
+
+        Page<Image> imagePage = imageRepository.findAllByTag(tags.getTags(), pageRequest);
+        List<Image> imageList = imagePage.getContent();
+        List<ImageDto.BookmarkAndSearchResponse> responses
+                = imageList.stream().distinct().map(i -> imageMapper.imageToBookmarkAndSearchResponse(i)).collect(Collectors.toList());
+
+        return new MultiResponseDto(responses, imagePage);
     }
 
     public Tag verifyTag(Tag tag) {

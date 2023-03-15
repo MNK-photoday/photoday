@@ -2,6 +2,8 @@ package com.photoday.photoday.follow.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
+import com.photoday.photoday.follow.dto.FollowDto;
+import com.photoday.photoday.follow.mapper.FollowMapper;
 import com.photoday.photoday.follow.repository.FollowRepository;
 import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.user.entity.User;
@@ -22,8 +24,9 @@ import java.util.stream.Collectors;
 public class FollowService {
     private final UserService userService;
     private final FollowRepository followRepository;
+    private final FollowMapper followMapper;
 
-    public Map<String, List<User>> findFollowUser() {
+    public FollowDto.ResponseFollowUsers findFollowUser() {
         Long loginUserId = userService.getLoginUserId();
 
         List<Follow> following = followRepository.findFollowByFollower_UserId(loginUserId);
@@ -38,10 +41,10 @@ public class FollowService {
         follow.put("following", userFollowing);
         follow.put("follower", userFollower);
 
-        return follow;
+        return followMapper.followUserListToResponseFollowUsers(follow);
     }
 
-    public Map<String, List<User>> registerFollowUser(Long followingId) {
+    public FollowDto.ResponseFollowUsers registerFollowUser(Long followingId) {
         Long loginUserId = userService.getLoginUserId();
         if(followingId.equals(loginUserId)) {
             throw new CustomException(ExceptionCode.CANNOT_FOLLOW_MYSELF);
