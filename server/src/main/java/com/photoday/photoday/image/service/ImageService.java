@@ -4,6 +4,7 @@ import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.repository.ImageRepository;
+import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.service.TagService;
 import com.photoday.photoday.user.entity.User;
@@ -126,10 +127,11 @@ public class ImageService {
     }
 
     public Image createReport(long imageId) {
+
         Image image = findImage(imageId); // 이미지 존재하는지 검증
         Long userId = userService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
-
+        userService.checkUserReportCount(userId);
         //사용자가 이미 신고했으면 예외 터뜨리기.
         image.getReportList().stream().filter(r -> r.getUser().getUserId() == userId)
                 .findFirst().ifPresent(u -> new RuntimeException("이미 신고한 게시물입니다."));
@@ -138,6 +140,8 @@ public class ImageService {
         Report report = new Report();
         report.setUser(user);
         report.setImage(image);
+
+
 
         return imageRepository.save(image);
     }

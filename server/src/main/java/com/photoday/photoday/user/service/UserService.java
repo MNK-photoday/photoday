@@ -4,11 +4,15 @@ import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.follow.repository.FollowRepository;
+import com.photoday.photoday.image.entity.Report;
+import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,15 +21,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.photoday.photoday.excpetion.ExceptionCode.REPORT_COUNT_EXCEEDS_LIMIT;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
-    private final FollowRepository followRepository;
+    private final ReportRepository reportRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final S3Service s3Service;
@@ -56,8 +65,9 @@ public class UserService {
     }
 
     public User updateUser(User user, MultipartFile multipartFile) throws IOException {
-        User verifiedUser = findVerifiedUser(user.getUserId());
-
+        //본인 아이디 확인
+        User verifiedUser = findVerifiedUser(getLoginUserId());
+        user.setUserId(getLoginUserId());
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
             try {
@@ -85,6 +95,13 @@ public class UserService {
         return verifiedUser;
     }
 
+    public void checkUserReportCount(Long userId) {
+        List<Report> reportByUser = reportRepository.findReportByUser_UserId(userId);
+        if(reportByUser.size() >= 5) {
+            throw new CustomException(REPORT_COUNT_EXCEEDS_LIMIT);
+        }
+    }
+
     private void verifyExistsEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
 
@@ -105,9 +122,22 @@ public class UserService {
         return user.getUserId();
     }
 
+    public Long checkLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(userRepository.findByEmail(authentication.getName()).isPresent()) {
+            return userRepository.findByEmail(authentication.getName()).get().getUserId();
+        }
+        return null;
+    }
+
     public String getLoginUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return authentication.getName();
+    }
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    public void resetTodayUserReportCount() {
+        log.info(String.valueOf(LocalDateTime.now()));
+        userRepository.resetTodayReportCount();
     }
 }

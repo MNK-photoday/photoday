@@ -13,7 +13,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,30 +26,30 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity postUser(@RequestBody UserDto.Post userPostDto) {
+    public ResponseEntity<?> postUser(@Valid @RequestBody UserDto.Post userPostDto) {
         User user = userMapper.userPostToUser(userPostDto);
-        userService.createUser(user);
-        return ResponseEntity.ok().build(); //TODO created로 수정 + URI
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.created(URI.create("/api/users/" + createdUser.getUserId())).build();
     }
 
-    @GetMapping("/{userId}") //TODO API 업데이트
-    public ResponseEntity getUser(@PathVariable long userId) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable long userId) {
         User user = userService.getUser(userId);
         UserDto.Response response = userMapper.userToUserResponse(user);
-        return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PatchMapping
-    public ResponseEntity patchUser(@RequestPart UserDto.Patch userPatchDto,
-                                    @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
-        User user = userMapper.userPatchToUser(userPatchDto);
+    @PostMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestPart(required = false) UserDto.Update userUpdateDto,
+                                        @RequestPart(value = "file", required = false) MultipartFile multipartFile) throws IOException {
+        User user = userMapper.userPatchToUser(userUpdateDto);
         User updateUser = userService.updateUser(user, multipartFile);
         UserDto.Response response = userMapper.userToUserResponse(updateUser);
-        return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public ResponseEntity deleteUser() {
+    public ResponseEntity<?> deleteUser() {
         userService.deleteUser();
         return ResponseEntity.noContent().build();
     }

@@ -5,20 +5,24 @@ import com.photoday.photoday.user.entity.User;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface FollowMapper {
-    default FollowDto.ResponseFollowUsers followUserListToResponseFollowUsers(List<List<User>> followUsers) {
-        List<List<FollowDto.ResponseFollowUserData>> followUserDataList = followUsers.stream()
-                        .map(users -> users.stream()
-                            .map(userData -> new FollowDto.ResponseFollowUserData(userData.getUserId(), userData.getName()))
-                            .collect(Collectors.toList()))
-                        .collect(Collectors.toList());
+    default FollowDto.ResponseFollowUsers followUserListToResponseFollowUsers(Map<String, List<User>> followUsers) {
+        List<User> following = followUsers.get("following");
+        List<User> follower = followUsers.get("follower");
+
+        List<FollowDto.ResponseFollowUserData> followingData = following.stream().map(user -> new FollowDto.ResponseFollowUserData(user.getUserId(), user.getName())).collect(Collectors.toList());
+        List<FollowDto.ResponseFollowUserData> followerData = follower.stream().map(user -> new FollowDto.ResponseFollowUserData(user.getUserId(), user.getName())).collect(Collectors.toList());
+
 
         FollowDto.ResponseFollowUsers responseFollowUserDataList =
-                new FollowDto.ResponseFollowUsers(followUserDataList.get(0), followUserDataList.get(1), followUserDataList.get(0).size(), followUserDataList.get(1).size());
+                new FollowDto.ResponseFollowUsers(followingData, followerData, following.size(), follower.size());
 
         return responseFollowUserDataList;
     }
+
+
 }

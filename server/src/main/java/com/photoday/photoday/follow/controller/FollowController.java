@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/follows")
@@ -23,14 +24,14 @@ public class FollowController {
 
     @GetMapping //TODO API 수정
     public ResponseEntity getFollowUsers() {
-        List<List<User>> follow = followService.findFollowUser();
+        Map<String, List<User>> follow = followService.findFollowUser();
         FollowDto.ResponseFollowUsers response = followMapper.followUserListToResponseFollowUsers(follow);
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{followingId}") //TODO API 수정
     public ResponseEntity followingUser(@PathVariable long followingId) {
-        List<List<User>> follow = followService.registerFollowUser(followingId);
+        Map<String, List<User>> follow = followService.registerFollowUser(followingId);
         FollowDto.ResponseFollowUsers response = followMapper.followUserListToResponseFollowUsers(follow);
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }

@@ -29,7 +29,7 @@ public class UserMapper {
         return user;
     }
 
-    public User userPatchToUser(UserDto.Patch userPatchDto) {
+    public User userPatchToUser(UserDto.Update userPatchDto) {
         if (userPatchDto == null) {
             return null;
         }
@@ -47,12 +47,15 @@ public class UserMapper {
             return null;
         }
 
-        Long userId = userService.getLoginUserId();
-        User user = userService.findVerifiedUser(userId);
-        Optional<Follow> check = followRepository.findByFollowerAndFollowing(user, targetUser);
+        Long userId = userService.checkLogin();
         boolean checkFollow = false;
-        if (check.isPresent()) {
-            checkFollow = true;
+        if(userId != null) {
+            User user = userService.findVerifiedUser(userId);
+            Optional<Follow> check = followRepository.findByFollowerAndFollowing(user, targetUser);
+
+            if (check.isPresent()) {
+                checkFollow = true;
+            }
         }
 
         UserDto.Response response = new UserDto.Response();

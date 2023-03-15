@@ -6,6 +6,7 @@ import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CookieUtil;
 import com.photoday.photoday.user.entity.User;
+import com.photoday.photoday.user.utils.UserDataResponder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RedisService redisService;
+    private final UserDataResponder userDataResponder;
 
     @SneakyThrows
     @Override
@@ -52,8 +54,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(refreshTokenCookie);
-        response.setHeader("userId", user.getUserId().toString());
-
+        userDataResponder.sendUserDataResponse(user.getUserId(), response);
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
