@@ -10,14 +10,14 @@ import {
   S_DeleteAccountText,
   S_PostImageButton,
 } from './UserInfoArea.styles';
-import { FaHeart } from 'react-icons/fa';
-import { MdReportProblem } from 'react-icons/md';
-import { BsFillImageFill } from 'react-icons/bs';
-import { DataType } from '../../../pages/User/User';
 import {
   UserInfoTextarea,
   SetPasswordInput,
 } from './UserInfoInput/UserInfoInput';
+import { FaHeart } from 'react-icons/fa';
+import { MdReportProblem } from 'react-icons/md';
+import { BsFillImageFill } from 'react-icons/bs';
+import { DataType } from '../../../pages/User/User';
 
 interface IProps {
   userdata: DataType;
@@ -33,10 +33,6 @@ function UserInfoArea({ userdata }: IProps) {
 
   const clickChangePassWordHandler = () => {
     setIsChangePassWord(!isChangePassWord);
-  };
-
-  const clickDeleteAccountHandler = () => {
-    alert('이메일 주소에 @를 입력해주세요');
   };
 
   return (
@@ -59,15 +55,9 @@ function UserInfoArea({ userdata }: IProps) {
         {isEdit ? <UserInfoTextarea /> : userdata.data[0].description}
       </S_UserDescription>
       <S_TextButtonWrap>
-        {/*
-        //! 내용 바꾼댄다
-        */}
         <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
           {isEdit ? 'Save edits' : 'Edit'}
         </S_TextButton>
-        {/*
-        //! 비밀번호 바꾼댄다
-        */}
         {isChangePassWord && (
           <>
             <SetPasswordInput />
@@ -79,9 +69,6 @@ function UserInfoArea({ userdata }: IProps) {
         >
           {isChangePassWord ? 'Save Password' : 'Change Password'}
         </S_TextButton>
-        {/*
-        //! 계정 삭제한댄다
-         */}
         <S_TextButton
           isTextButtonType="deleteAccount"
           onClick={() => alert('정말로 탈퇴하시겠습니까?')}

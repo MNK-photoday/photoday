@@ -1,5 +1,5 @@
-import { Content } from '../../../styles/Layout';
 import styled, { css } from 'styled-components';
+import { Content } from '../../../styles/Layout';
 
 export const S_UserInfoArea = styled(Content)`
   display: flex;
@@ -90,6 +90,7 @@ export const S_PostImageButton = styled.button`
   border: 1px solid var(--color-primary-gray30);
   position: absolute;
   right: 17%;
+
   .postImageButton {
     margin-right: 10px;
     color: var(--color-primary-green);
