@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_HeaderModalWrap = styled.div`
@@ -9,9 +10,8 @@ export const S_HeaderModalWrap = styled.div`
   top: 45px;
   right: 0;
   z-index: 1;
-  border-radius: 2px;
+  border-radius: 5px;
   background-color: var(--color-primary-gray10);
-  box-shadow: rgb(0 0 0 / 10%) 0px 0px 8px;
 
   &::after {
     content: ' ';
@@ -22,7 +22,7 @@ export const S_HeaderModalWrap = styled.div`
     border-top-width: 0;
     border-bottom-color: var(--color-primary-gray10);
     top: -12px;
-    right: 23px;
+    right: 20px;
     z-index: -1;
   }
 `;
@@ -40,10 +40,11 @@ export const S_ModalNavBox = styled.div`
     }
   }
 
-  .mypage-icon {
+  .users-icon {
     font-size: 15px;
   }
   .logout-icon {
+    margin-top: 3px;
     font-size: 19px;
   }
 `;
