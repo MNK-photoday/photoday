@@ -46,6 +46,7 @@ public class UserMapper {
         if (targetUser == null) {
             return null;
         }
+
         Long userId = userService.checkLogin();
         boolean checkFollow = false;
         if(userId != null) {
@@ -69,6 +70,4 @@ public class UserMapper {
 
         return response;
     }
-
-
 }
