@@ -1,4 +1,5 @@
 import {
+  S_UserPageContainer,
   S_UserSection,
   S_UserThumnailArea,
   S_UserProfileIamge,
@@ -13,7 +14,9 @@ import {
   S_TextButtonWrap,
   S_TextButton,
   S_DeleteAccountText,
+  S_UserPageTitleWrap,
   S_UserPageTitle,
+  S_UserPageTitlePoint,
   S_BookmarkButton,
   S_UserPhotoContentBox,
   S_UserPhotoContent,
@@ -77,7 +80,7 @@ const data: DataType = {
 function Users() {
   return (
     <ContainerWrap>
-      <Container>
+      <S_UserPageContainer>
         <S_UserSection>
           <S_UserThumnailArea>
             <S_UserProfileIamge
@@ -133,12 +136,17 @@ function Users() {
             </S_TextButtonWrap>
           </S_UserInfoArea>
         </S_UserSection>
-        <S_UserPageTitle>
-          <h3>{`${data.data[0].name}'s photoday`}</h3>
+        <S_UserPageTitleWrap>
+          <S_UserPageTitle>
+            {`${data.data[0].name}'s pho`}
+            <S_UserPageTitlePoint>to</S_UserPageTitlePoint>
+            day
+          </S_UserPageTitle>
           <S_BookmarkButton>
+            {/* 북마크 버튼 누르면 유저가 북마크한 게시물 나옴 */}
             <FaRegBookmark className="bookmarkIcon" />
           </S_BookmarkButton>
-        </S_UserPageTitle>
+        </S_UserPageTitleWrap>
         <S_UserPhotoContentBox>
           <S_UserPhotoContent alt="photo" src={oceanImage} />
           <S_UserPhotoContent alt="photo" src={kungyaImage} />
@@ -149,7 +157,7 @@ function Users() {
         </S_UserPhotoContentBox>
         {/* 페이지 네이션 추가 후, 수정 */}
         <S_Pagination>1 2 3 4 5 6</S_Pagination>
-      </Container>
+      </S_UserPageContainer>
     </ContainerWrap>
   );
 }

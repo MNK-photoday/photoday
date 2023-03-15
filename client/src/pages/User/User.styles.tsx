@@ -1,7 +1,10 @@
 import styled, { css } from 'styled-components';
-import { Content } from '../../styles/Layout';
+import { Container, Content } from '../../styles/Layout';
 import { Flex, RowFlex, ColFlex } from '../../styles/GlobalStyles';
-import Button from '../../components/common/Button/Button';
+
+export const S_UserPageContainer = styled(Container)`
+  flex-direction: column;
+`;
 
 export const S_UserSection = styled.section`
   ${RowFlex}
@@ -72,11 +75,20 @@ export const S_UserLikeAndReport = styled.span`
   font-size: var(--font-size-sm);
 `;
 
-export const S_UserPageTitle = styled.div`
+export const S_UserPageTitleWrap = styled.div`
   display: flex;
   align-items: center;
   margin: 5% 0 2% 5%;
   height: 5%;
+  color: var(--color-primary-black);
+`;
+
+export const S_UserPageTitle = styled.h2`
+  margin-right: 30px;
+`;
+
+export const S_UserPageTitlePoint = styled.span`
+  color: var(--color-primary-green);
 `;
 
 export const S_UserPhotoContentBox = styled.article`
