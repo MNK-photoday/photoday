@@ -40,9 +40,11 @@ public class User {
     private String description = "안녕하세요!";
 
     @Column(nullable = false)
-    private MemberStatus status = MemberStatus.MEMBER_ACTIVE; // 보류 -> 백업데이터 고려, DB 2개
+    private UserStatus status = UserStatus.USER_ACTIVE; // 보류 -> 백업데이터 고려, DB 2개
 
     private LocalDateTime banTime; // 로직 고려
+
+    private int reportedCount;
 
     private int todayReportCount; // 보류 -> 로직 고려
 
@@ -114,14 +116,14 @@ public class User {
         }
     }
 
-    public enum MemberStatus {
-        MEMBER_ACTIVE("활동중"),
-        MEMBER_BANED("정지회원");
+    public enum UserStatus {
+        USER_ACTIVE("활동중"),
+        USER_BANED("정지회원");
 
         @Getter
         private String status;
 
-        MemberStatus(String status) {
+        UserStatus(String status) {
             this.status = status;
         }
     }

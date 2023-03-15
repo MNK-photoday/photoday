@@ -1,7 +1,6 @@
-package com.photoday.photoday.user.utils;
+package com.photoday.photoday.security.utils;
 
 import com.google.gson.Gson;
-import com.photoday.photoday.excpetion.ErrorResponse;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;

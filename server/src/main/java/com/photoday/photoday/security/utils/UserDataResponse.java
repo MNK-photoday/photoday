@@ -1,4 +1,4 @@
-package com.photoday.photoday.user.utils;
+package com.photoday.photoday.security.utils;
 
 import lombok.AllArgsConstructor;
 

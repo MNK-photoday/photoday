@@ -6,7 +6,7 @@ import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CookieUtil;
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.utils.UserDataResponder;
+import com.photoday.photoday.security.utils.UserDataResponder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;

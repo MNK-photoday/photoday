@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class FollowService {
     private final UserService userService;
     private final FollowRepository followRepository;
+
     public Map<String, List<User>> findFollowUser() {
         Long loginUserId = userService.getLoginUserId();
 

@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.photoday.photoday.excpetion.ExceptionCode.ALREADY_REPORTED;
+import static com.photoday.photoday.excpetion.ExceptionCode.IMAGE_NOT_FOUND;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -144,13 +147,24 @@ public class ImageService {
         Optional<Report> optionalReport = image.getReportList().stream().filter(r -> r.getUser().getUserId() == userId).findFirst();
 
         if (optionalReport.isPresent()) {
-            throw new RuntimeException("이미 신고한 게시물");
+            throw new CustomException(ALREADY_REPORTED);
         } else {
             //아니면 신고 목록에 추가 및 저장
             Report report = new Report();
             report.setUser(user);
             report.setImage(image);
             image.getReportList().add(report);
+
+            //회원 정지 기능
+            image.getUser().setReportedCount(image.getUser().getReportedCount() + 1);
+            if(image.getUser().getReportedCount() == 10) {
+                image.getUser().setStatus(User.UserStatus.USER_BANED);
+            }
+
+            //TODO 게시물 삭제 기능 -- 삭제 후 리턴 추후 확인 필요
+            if(image.getReportList().size() >= 5 ) {
+                imageRepository.deleteById(imageId);
+            }
         }
 
         Image save = imageRepository.save(image);
@@ -182,6 +196,6 @@ public class ImageService {
 
     private Image findImage(long imageId) {
         Optional<Image> optionalImage = imageRepository.findById(imageId);
-        return optionalImage.orElseThrow(() -> new RuntimeException("이미지 없음"));
+        return optionalImage.orElseThrow(() -> new CustomException(IMAGE_NOT_FOUND));
     }
 }

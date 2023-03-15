@@ -94,26 +94,6 @@ public class UserService {
         return verifiedUser;
     }
 
-    public void checkUserReportCount(Long userId) {
-        List<Report> reportByUser = reportRepository.findReportByUser_UserId(userId);
-        if(reportByUser.size() >= 5) {
-            throw new CustomException(REPORT_COUNT_EXCEEDS_LIMIT);
-        }
-    }
-
-    private void verifyExistsEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-
-        if (user.isPresent()) {
-            throw new CustomException(ExceptionCode.USER_ALREADY_EXISTS);
-        }
-    }
-
-    private String getNameFromUser(User user) {
-        String name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
-        return name;
-    }
-
     public Long getLoginUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName())
@@ -134,9 +114,30 @@ public class UserService {
 
         return authentication.getName();
     }
+
+    public void checkUserReportCount(Long userId) {
+        List<Report> reportByUser = reportRepository.findReportByUser_UserId(userId);
+        if(reportByUser.size() >= 5) {
+            throw new CustomException(REPORT_COUNT_EXCEEDS_LIMIT);
+        }
+    }
+
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    public void resetTodayUserReportCount() {
+    private void resetTodayUserReportCount() {
         log.info(String.valueOf(LocalDateTime.now()));
         userRepository.resetTodayReportCount();
+    }
+
+    private void verifyExistsEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent()) {
+            throw new CustomException(ExceptionCode.USER_ALREADY_EXISTS);
+        }
+    }
+
+    private String getNameFromUser(User user) {
+        String name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
+        return name;
     }
 }

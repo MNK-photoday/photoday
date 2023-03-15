@@ -22,14 +22,14 @@ public class FollowController {
     private final FollowService followService;
     private final FollowMapper followMapper;
 
-    @GetMapping //TODO API 수정
+    @GetMapping
     public ResponseEntity getFollowUsers() {
         Map<String, List<User>> follow = followService.findFollowUser();
         FollowDto.ResponseFollowUsers response = followMapper.followUserListToResponseFollowUsers(follow);
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PatchMapping("/{followingId}") //TODO API 수정
+    @PatchMapping("/{followingId}")
     public ResponseEntity followingUser(@PathVariable long followingId) {
         Map<String, List<User>> follow = followService.registerFollowUser(followingId);
         FollowDto.ResponseFollowUsers response = followMapper.followUserListToResponseFollowUsers(follow);

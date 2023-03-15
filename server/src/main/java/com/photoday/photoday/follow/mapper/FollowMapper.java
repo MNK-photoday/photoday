@@ -17,12 +17,9 @@ public interface FollowMapper {
         List<FollowDto.ResponseFollowUserData> followingData = following.stream().map(user -> new FollowDto.ResponseFollowUserData(user.getUserId(), user.getName())).collect(Collectors.toList());
         List<FollowDto.ResponseFollowUserData> followerData = follower.stream().map(user -> new FollowDto.ResponseFollowUserData(user.getUserId(), user.getName())).collect(Collectors.toList());
 
-
         FollowDto.ResponseFollowUsers responseFollowUserDataList =
                 new FollowDto.ResponseFollowUsers(followingData, followerData, following.size(), follower.size());
 
         return responseFollowUserDataList;
     }
-
-
 }

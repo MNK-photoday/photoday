@@ -4,6 +4,7 @@ import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.mapper.UserMapper;
+import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,6 @@ public class ImageMapper {
         return image.getImageTagList().stream()
                 .map(imageTag -> imageTag.getTag().getName())
                 .collect(Collectors.toList());
-
     }
 
     private boolean hasBookmarked(Image image) {
