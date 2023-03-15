@@ -37,7 +37,7 @@ public class UserEventListener {
         try {
             String[] to = new String[]{user.getEmail()};
             String message = user.getEmail() + " 님 안녕하세요.\n" + "Photoday 임시비밀번호 안내 관련 이메일입니다.\n" + "회원님의 임시 비밀번호는 "
-                    + newPassword + " 입니다.\n" + " 로그인 후에 비밀번호를 변경해주세요";
+                    + newPassword + " 입니다.\n" + " 로그인 후에 비밀번호를 변경해주세요.";
             emailSender.sendEmail(to, subject, message);
         } catch (MailSendException e) {
             e.printStackTrace();
