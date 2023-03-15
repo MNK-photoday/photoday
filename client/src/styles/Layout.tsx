@@ -1,16 +1,18 @@
 import styled from 'styled-components';
-import { ColFlex } from './GlobalStyles';
+import { RowFlex } from './GlobalStyles';
 
 /*최상위 컨테이너 */
-export const ContainerWrap = styled.div`
-  display: flex;
+export const ContainerWrap = styled.main`
+  ${RowFlex}
   justify-content: center;
 `;
 
 /* 컨텐츠 컨테이너 */
 export const Container = styled.div`
+  max-width: 1830px;
   width: 100%;
-  max-width: 90vw;
+  ${RowFlex}
+  padding: 0 50px;
 `;
 
 /* 컨텐츠 컨테이너 + flex */
