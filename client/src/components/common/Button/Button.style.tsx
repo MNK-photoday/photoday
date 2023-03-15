@@ -63,6 +63,7 @@ const sizeCSS = {
   XLarge: css`
     padding: 10px 20px;
     font-size: var(--font-size-sm);
+    background-color: var(--color-primary-gray30);
   `,
   XXLarge: css`
     /* padding: 10px 10px; */
