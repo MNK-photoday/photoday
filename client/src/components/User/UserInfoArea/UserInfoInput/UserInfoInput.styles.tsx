@@ -17,10 +17,15 @@ export const S_UserInfoTextarea = styled.textarea`
   resize: none;
 `;
 
-export const S_SetPasswordInput = styled.input<{ isCurrentInput: boolean }>`
+export const S_SetPasswordInputLabel = styled.label`
+  font-size: var(--font-size-sm);
+  color: var(--color-primary-black);
+  margin: 20px 0 8px;
+`;
+
+export const S_SetPasswordInput = styled.input`
   ${BorderCss}
   width: 300px;
   height: 35px;
   padding-left: 8px;
-  margin: ${({ isCurrentInput }) => isCurrentInput && '20px 0'};
 `;
