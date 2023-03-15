@@ -11,8 +11,8 @@ function HeaderModal() {
   return (
     <S_HeaderModalWrap>
       <S_ModalNavBox>
-        <FaHouseUser className="mypage-icon" />
-        <S_ModalNavLink to="/mypage">MyPage</S_ModalNavLink>
+        <FaHouseUser className="users-icon" />
+        <S_ModalNavLink to="/users">MyPage</S_ModalNavLink>
       </S_ModalNavBox>
       <S_ModalNavBox>
         <IoLogOut className="logout-icon" />
