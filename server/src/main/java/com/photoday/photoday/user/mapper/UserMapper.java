@@ -2,14 +2,10 @@ package com.photoday.photoday.user.mapper;
 
 import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.follow.repository.FollowRepository;
-import com.photoday.photoday.follow.service.FollowService;
-import com.photoday.photoday.security.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -40,7 +36,6 @@ public class UserMapper {
 
         User user = new User();
 
-        user.setPassword(userPatchDto.getPassword());
         user.setDescription(userPatchDto.getDescription());
 
         return user;
@@ -72,4 +67,6 @@ public class UserMapper {
 
         return response;
     }
+
+
 }

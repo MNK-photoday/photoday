@@ -2,12 +2,10 @@ package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
-import com.photoday.photoday.follow.entity.Follow;
-import com.photoday.photoday.follow.repository.FollowRepository;
 import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.image.service.S3Service;
-import com.photoday.photoday.security.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
@@ -15,10 +13,7 @@ import com.photoday.photoday.user.mapper.UserMapper;
 import com.photoday.photoday.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.Advice;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.photoday.photoday.excpetion.ExceptionCode.PASSWORD_NOT_MATCH;
 import static com.photoday.photoday.excpetion.ExceptionCode.REPORT_COUNT_EXCEEDS_LIMIT;
 
 @Service
@@ -69,6 +65,7 @@ public class UserService {
         }
         List<String> roles = customAuthorityUtils.createRoles(user.getEmail());
         user.setRoles(roles);
+        user.setName(getNameFromUser(user));
 
         User savedUser = userRepository.save(user);
 
@@ -98,11 +95,19 @@ public class UserService {
             }
             verifiedUser.setProfileImageUrl(url);
         });
-
-        Optional.ofNullable(user.getPassword()).ifPresent(password -> verifiedUser.setPassword(passwordEncoder.encode(password)));
         Optional.ofNullable(user.getDescription()).ifPresent(description -> verifiedUser.setDescription(description));
 
         return userMapper.userToUserResponse(verifiedUser);
+    }
+
+    public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
+        if(updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
+            User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
+            verifiedUser.setPassword(updateUserPasswordDto.getPassword());
+            return userMapper.userToUserResponse(verifiedUser);
+        } else {
+            throw new CustomException(PASSWORD_NOT_MATCH);
+        }
     }
 
     public void deleteUser() {
