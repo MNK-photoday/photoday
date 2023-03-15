@@ -1,7 +1,6 @@
-package com.photoday.photoday.user.mail;
+package com.photoday.photoday.mail;
 
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
