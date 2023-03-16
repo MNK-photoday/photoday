@@ -53,8 +53,6 @@ public class UserService {
 
         String name = getNameFromUser(user);
         user.setName(name);
-        user.setBanTime(LocalDateTime.now());
-        user.setStatus(User.UserStatus.USER_BANED);
         User createdUser = userRepository.save(user);
         Long loginUserId = authUserService.checkLogin();
         return userMapper.userToUserResponse(createdUser, loginUserId);

@@ -1,9 +1,7 @@
 package com.photoday.photoday.image.entity;
 
 import com.photoday.photoday.user.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class Image { // 메타데이터 필드 추가
     @Id
