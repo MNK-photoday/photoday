@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 interface ButtonProps {
   variant: 'primary' | 'point';
   shape: 'default' | 'round';
-  size: 'small' | 'medium' | 'large';
+  size: 'small' | 'medium' | 'large' | 'XLarge' | 'XXLarge';
   fullWidth: boolean;
   disabled: boolean;
   children: React.ReactNode;
@@ -55,7 +55,19 @@ const sizeCSS = {
     font-size: var(--font-size-sm);
   `,
   large: css`
-    padding: 10px 80px;
+    /* padding: 10px 10px; */
+    padding: 10px 22px;
+    font-size: var(--font-size-sm);
+    margin: 15px 0;
+  `,
+  XLarge: css`
+    padding: 10px 20px;
+    font-size: var(--font-size-sm);
+    background-color: var(--color-primary-gray30);
+  `,
+  XXLarge: css`
+    /* padding: 10px 10px; */
+    padding: 10px;
     font-size: var(--font-size-m);
   `,
 };
