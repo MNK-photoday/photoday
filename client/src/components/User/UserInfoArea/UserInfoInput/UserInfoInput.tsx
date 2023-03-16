@@ -1,24 +1,16 @@
-import {
-  S_UserInfoTextarea,
-  S_SetPasswordInputLabel,
-  S_SetPasswordInput,
-} from './UserInfoInput.styles';
+import { S_Textarea, S_InputLabel, S_Input } from './UserInfoInput.styles';
 
 export function UserInfoTextarea() {
-  return <S_UserInfoTextarea name="user description" />;
+  return <S_Textarea name="user description" />;
 }
 
 export function SetPasswordInput() {
   return (
     <>
-      <S_SetPasswordInputLabel htmlFor="password">
-        New password
-      </S_SetPasswordInputLabel>
-      <S_SetPasswordInput type="password" />
-      <S_SetPasswordInputLabel htmlFor="email">
-        Confirm new password
-      </S_SetPasswordInputLabel>
-      <S_SetPasswordInput type="password" />
+      <S_InputLabel htmlFor="password">New password</S_InputLabel>
+      <S_Input type="password" />
+      <S_InputLabel htmlFor="email">Confirm new password</S_InputLabel>
+      <S_Input type="password" />
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   S_LinkTo,
   S_ImgContainer,
@@ -14,78 +15,40 @@ import {
   PasswordInput,
   CheckBox,
 } from '../../components/Login/Input/Input';
-import {
-  validateEmail,
-  validatePassword,
-} from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
-import { useEffect, useState } from 'react';
 import Button from '../../components/common/Button/Button';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
+import { validationLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+
+export interface LoginFormType {
+  email: string;
+  password: string;
+}
+
+export interface ValidationsType {
+  isValidEmail: boolean;
+  isValidPassword: boolean;
+}
 
 function Login() {
   const [isSigned, setIsSigned] = useState(false);
-  const [loginForm, setLoginForm] = useState({
+  const [loginForm, setLoginForm] = useState<LoginFormType>({
     email: '',
     password: '',
   });
-  const [isAllValid, setIsAllValid] = useState({
-    email: true,
-    password: true,
+  const [validations, setValidations] = useState<ValidationsType>({
+    isValidEmail: true,
+    isValidPassword: true,
   });
 
   useEffect(() => {
-    const emailIdentifier = setTimeout(() => {
-      if (loginForm.email) {
-        setIsAllValid((state) => {
-          return {
-            ...state,
-            email: validateEmail(loginForm.email),
-          };
-        });
-      }
-    }, 500);
-
-    const passwordIdentifier = setTimeout(() => {
-      if (loginForm.password) {
-        setIsAllValid((state) => {
-          return {
-            ...state,
-            password: validatePassword(loginForm.password),
-          };
-        });
-      }
-    }, 500);
-
-    // 작성 후, 다 지웠을 때 변화를 위해서 추가
-    if (!loginForm.email) {
-      setIsAllValid((state) => {
-        return {
-          ...state,
-          email: true,
-        };
-      });
-    }
-    if (!loginForm.password) {
-      setIsAllValid((state) => {
-        return {
-          ...state,
-          password: true,
-        };
-      });
-    }
-
-    return () => {
-      clearTimeout(emailIdentifier);
-      clearTimeout(passwordIdentifier);
-    };
+    validationLogin({ loginForm, setValidations });
   }, [loginForm]);
 
   const changeEmailAndPasswordValueHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    e.preventDefault();
     const inputType = e.target.type;
     const value = e.target.value;
 
@@ -121,9 +84,9 @@ function Login() {
               emailValue={loginForm.email}
               changeEventHandler={changeEmailAndPasswordValueHandler}
             />
-            {!isAllValid.email && (
+            {!validations.isValidEmail && (
               <S_InvalidMessage
-                isShowMessage={!isAllValid.email ? 'show' : 'hide'}
+                isShowMessage={!validations.isValidEmail ? 'show' : 'hide'}
               >
                 {`${loginForm.email} is not a valid email address.`}
               </S_InvalidMessage>
@@ -132,9 +95,9 @@ function Login() {
               passwordValue={loginForm.password}
               changeEventHandler={changeEmailAndPasswordValueHandler}
             />
-            {!isAllValid.password && (
+            {!validations.isValidPassword && (
               <S_InvalidMessage
-                isShowMessage={!isAllValid.password ? 'show' : 'hide'}
+                isShowMessage={!validations.isValidPassword ? 'show' : 'hide'}
               >
                 Passwords must contain 8 to 16 characters in English, numbers,
                 and special characters.
@@ -156,7 +119,9 @@ function Login() {
               shape="default"
               size="XXLarge"
               fullWidth
-              disabled={!isAllValid.email || !isAllValid.password}
+              disabled={
+                !validations.isValidEmail || !validations.isValidPassword
+              }
             >
               Log in
             </Button>
