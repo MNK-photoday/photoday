@@ -55,8 +55,8 @@ public class UserService {
         user.setBanTime(LocalDateTime.now());
         user.setStatus(User.UserStatus.USER_BANED);
         User createdUser = userRepository.save(user);
-        Long currentUserId = authUserService.checkLogin();
-        return userMapper.userToUserResponse(createdUser, currentUserId);
+        Long loginUserId = authUserService.checkLogin();
+        return userMapper.userToUserResponse(createdUser, loginUserId);
     }
 
     public User registerUserOAuth2(User user) {
@@ -68,9 +68,7 @@ public class UserService {
         user.setRoles(roles);
         user.setName(getNameFromUser(user));
 
-        User savedUser = userRepository.save(user);
-
-        return savedUser;
+        return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
@@ -78,8 +76,7 @@ public class UserService {
         Long loginUserId = authUserService.getLoginUserId();
         findVerifiedUser(loginUserId);
         User targetUser = findVerifiedUser(userId);
-        Long currentUserId = authUserService.checkLogin();
-        return userMapper.userToUserResponse(targetUser, currentUserId);
+        return userMapper.userToUserResponse(targetUser, loginUserId);
     }
 
     public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) throws IOException {
@@ -97,16 +94,16 @@ public class UserService {
             verifiedUser.setProfileImageUrl(url);
         });
         Optional.ofNullable(user.getDescription()).ifPresent(description -> verifiedUser.setDescription(description));
-        Long currentUserId = authUserService.checkLogin();
-        return userMapper.userToUserResponse(verifiedUser, currentUserId);
+        Long loginUserId = authUserService.checkLogin();
+        return userMapper.userToUserResponse(verifiedUser, loginUserId);
     }
 
     public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
         if(updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
             User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
             verifiedUser.setPassword(updateUserPasswordDto.getPassword());
-            Long currentUserId = authUserService.checkLogin();
-            return userMapper.userToUserResponse(verifiedUser, currentUserId);
+            Long loginUserId = authUserService.checkLogin();
+            return userMapper.userToUserResponse(verifiedUser, loginUserId);
         } else {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
