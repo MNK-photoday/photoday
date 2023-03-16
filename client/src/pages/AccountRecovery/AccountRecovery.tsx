@@ -40,12 +40,9 @@ function AccountRecovery() {
   }, [emailValue]);
 
   const changeEmailValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
     const value = e.target.value;
     setEmailValue(value);
   };
-
-  console.log(isEmailValid);
 
   return (
     <S_LoginContainerWrap>

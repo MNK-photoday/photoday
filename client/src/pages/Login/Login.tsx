@@ -85,7 +85,6 @@ function Login() {
   const changeEmailAndPasswordValueHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    e.preventDefault();
     const inputType = e.target.type;
     const value = e.target.value;
 
