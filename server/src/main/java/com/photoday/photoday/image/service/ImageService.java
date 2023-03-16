@@ -215,7 +215,7 @@ public class ImageService {
         return imageMapper.imageToResponse(save);
     }
 
-    private Image findImage(long imageId) {
+    public Image findImage(long imageId) {
         Optional<Image> optionalImage = imageRepository.findById(imageId);
         return optionalImage.orElseThrow(() -> new CustomException(IMAGE_NOT_FOUND));
     }

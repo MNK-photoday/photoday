@@ -52,8 +52,6 @@ public class UserService {
 
         String name = getNameFromUser(user);
         user.setName(name);
-        user.setBanTime(LocalDateTime.now());
-        user.setStatus(User.UserStatus.USER_BANED);
         User createdUser = userRepository.save(user);
         return userMapper.userToUserResponse(createdUser);
     }
@@ -138,10 +136,9 @@ public class UserService {
     }
 
     public void checkBanTime(User user) {
-        if(LocalDateTime.now().isAfter(user.getBanTime())) {
+        if(user.getBanTime() != null && LocalDateTime.now().isAfter(user.getBanTime())) {
             user.setBanTime(null);
             user.setStatus(User.UserStatus.USER_ACTIVE);
-
         }
         userRepository.save(user);
     }
