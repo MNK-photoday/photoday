@@ -31,6 +31,9 @@ public class Image { // 메타데이터 필드 추가
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private String imageHashValue;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

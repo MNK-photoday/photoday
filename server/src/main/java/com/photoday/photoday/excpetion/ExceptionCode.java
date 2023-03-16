@@ -12,7 +12,9 @@ public enum ExceptionCode {
     ALREADY_REPORTED(HttpStatus.CONFLICT, "이미 신고한 게시물입니다."),
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지가 없습니다."),
     ACCOUNT_SUSPENDED(HttpStatus.FORBIDDEN, "부적절한 이용으로 계정이 일시 정지되었습니다."),
-    PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+    PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
+    FILE_NOT_IMAGE(HttpStatus.BAD_REQUEST, "이미지 타입의 파일이 아닙니다."),
+    DUPLICATE_IMAGE(HttpStatus.CONFLICT, "중복된 이미지 입니다.");
 
     @Getter
     private HttpStatus httpStatus;

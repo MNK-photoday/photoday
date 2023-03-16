@@ -1,5 +1,6 @@
 package com.photoday.photoday.image.service;
 
+import com.drew.imaging.ImageProcessingException;
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
@@ -23,7 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +49,16 @@ public class ImageService {
     private final TagMapper tagMapper;
     private final AuthUserService authUserService;
 
-    public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException {
+    public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, ImageProcessingException, NoSuchAlgorithmException {
+        if (!multipartFile.getContentType().equals("image/jpeg")) {
+            throw new CustomException(ExceptionCode.FILE_NOT_IMAGE);
+        }
+
+        String imageHashValue = s3Service.getMd5Hash(multipartFile);
+        if(imageRepository.existsByImageHashValue(imageHashValue)) {
+            throw new CustomException(ExceptionCode.DUPLICATE_IMAGE);
+        }
+
         List<Tag> tagList = tagMapper.dtoToTag(post);
 
         Long userId = authUserService.getLoginUserId();
@@ -55,6 +68,7 @@ public class ImageService {
 
         // Image 객체를 생성하는 중 >> mapper에서 만들어 오지 않았기 때문에
         Image image = makeImage(imageUrl, userId);
+        image.setImageHashValue(imageHashValue);
 
         // Tag를 id값이 있는 객체로 바꾸고 imageTag에 연관관계를 맺는다.
         List<ImageTag> imageTagList = tagListToImageTagList(tagList, image);

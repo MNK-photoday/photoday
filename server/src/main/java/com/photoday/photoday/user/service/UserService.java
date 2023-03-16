@@ -1,5 +1,6 @@
 package com.photoday.photoday.user.service;
 
+import com.drew.imaging.ImageProcessingException;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.Report;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -92,6 +94,10 @@ public class UserService {
                 url = s3Service.saveImage(multipartFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (ImageProcessingException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
             }
             verifiedUser.setProfileImageUrl(url);
         });
@@ -138,10 +144,9 @@ public class UserService {
     }
 
     public void checkBanTime(User user) {
-        if(LocalDateTime.now().isAfter(user.getBanTime())) {
+        if(user.getBanTime() != null && LocalDateTime.now().isAfter(user.getBanTime())) {
             user.setBanTime(null);
             user.setStatus(User.UserStatus.USER_ACTIVE);
-
         }
         userRepository.save(user);
     }

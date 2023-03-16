@@ -1,5 +1,6 @@
 package com.photoday.photoday.image.controller;
 
+import com.drew.imaging.ImageProcessingException;
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.dto.SingleResponseDto;
 import com.photoday.photoday.image.dto.ImageDto;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/api/images")
@@ -25,7 +27,7 @@ public class ImageController {
 
     @PostMapping
     public ResponseEntity createImage(@RequestPart TagDto post,
-                                      @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
+                                      @RequestPart(value = "file") MultipartFile multipartFile) throws IOException, ImageProcessingException, NoSuchAlgorithmException {
         ImageDto.Response response = imageService.createImage(post, multipartFile);
         return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
     }
