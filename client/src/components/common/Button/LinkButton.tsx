@@ -1,37 +1,37 @@
 import React from 'react';
-import { S_Button } from './Button.style';
+import { S_LinkButton } from './Button.style';
 
-interface ButtonProps {
+interface LinkButtonProps {
   variant: 'primary' | 'point';
   shape: 'default' | 'round';
-  size: 'small' | 'medium' | 'large' | 'XLarge' | 'XXLarge';
+  size: 'small' | 'medium' | 'large';
   disabled?: boolean;
   fullWidth?: boolean;
   children: React.ReactNode;
-  clickEventHandler?: () => void;
+  url: string;
 }
 
-function Button({
+function LinkButton({
   variant,
   shape,
   size,
   disabled = false,
   fullWidth = false,
-  clickEventHandler,
   children,
-}: ButtonProps) {
+  url,
+}: LinkButtonProps) {
   return (
-    <S_Button
+    <S_LinkButton
       variant={variant}
       shape={shape}
       size={size}
       fullWidth={fullWidth}
       disabled={disabled}
-      onClick={clickEventHandler}
+      to={url}
     >
       {children}
-    </S_Button>
+    </S_LinkButton>
   );
 }
 
-export default Button;
+export default LinkButton;
