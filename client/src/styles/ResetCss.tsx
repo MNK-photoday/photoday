@@ -130,7 +130,9 @@ const ResetCss = css`
   body {
     width: 100%;
     height: 100%;
+  }
 
+  body {
     &::-webkit-scrollbar {
       width: 8px;
     }
