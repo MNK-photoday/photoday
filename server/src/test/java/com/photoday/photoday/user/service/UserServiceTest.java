@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import static com.photoday.photoday.helper.snippets.RestDocsSnippets.getMockMultipartFile;
 import static org.junit.jupiter.api.Assertions.*;
@@ -129,7 +130,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("updateUser: description, profileImageUrl")
-    void updateUserTest() throws IOException {
+    void updateUserTest() throws IOException, NoSuchAlgorithmException {
         // given
         User user = User.builder()
                 .email("default@mail.com")

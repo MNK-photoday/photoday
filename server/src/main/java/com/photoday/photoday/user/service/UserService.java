@@ -1,6 +1,5 @@
 package com.photoday.photoday.user.service;
 
-import com.drew.imaging.ImageProcessingException;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.Report;
@@ -91,8 +90,6 @@ public class UserService {
             try {
                 url = s3Service.saveImage(multipartFile);
             } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ImageProcessingException e) {
                 throw new RuntimeException(e);
             } catch (NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
