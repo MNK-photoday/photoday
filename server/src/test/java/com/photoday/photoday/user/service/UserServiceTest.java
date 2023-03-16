@@ -3,6 +3,7 @@ package com.photoday.photoday.user.service;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
+import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,33 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("registerUserOAuth2: OAuth 회원가입")
     void registerUserOAuth2Test() {
+        // given
+        User user = new User();
+        user.setEmail("test@email.com");
+        user.setPassword("@265sx*vS^&ax&#DE#");
+
+        // when
+        User resultUser = userService.registerUserOAuth2(user);
+
+        // then
+        assertNotNull(resultUser.getUserId());
+    }
+
+    @Test
+    @DisplayName("registerUserOAuth2: OAuth 로그인")
+    void registerUserOAuth2LoginTest() {
+        // given
+        User user = new User();
+        user.setEmail("test@email.com");
+        user.setPassword("@265sx*vS^&ax&#DE#");
+        User registeredUser = userService.registerUserOAuth2(user);
+        // when
+        User loginUser = userService.registerUserOAuth2(user);
+
+        // then
+        assertEquals(registeredUser.getUserId(), loginUser.getUserId());
     }
 
     @Test
