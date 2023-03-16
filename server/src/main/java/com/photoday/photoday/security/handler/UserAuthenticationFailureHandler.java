@@ -2,13 +2,12 @@ package com.photoday.photoday.security.handler;
 
 import com.google.gson.Gson;
 import com.photoday.photoday.excpetion.ErrorResponse;
-import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import javax.servlet.ServletException;
@@ -22,13 +21,15 @@ public class UserAuthenticationFailureHandler implements AuthenticationFailureHa
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.error("인증 실패: {}", exception.getMessage());
 
-        sendErrorResponse(request, response, exception);
+        sendErrorResponse(response, exception);
     }
 
-    private void sendErrorResponse(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+    private void sendErrorResponse(HttpServletResponse response, AuthenticationException exception) throws IOException {
         Gson gson = new Gson();
         ErrorResponse errorResponse;
         if (exception instanceof DisabledException) {
+            errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
+        } else if (exception instanceof UsernameNotFoundException){
             errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
         } else {
             errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED);

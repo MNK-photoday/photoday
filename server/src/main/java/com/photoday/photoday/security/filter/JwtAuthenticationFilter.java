@@ -18,6 +18,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -43,11 +44,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         ObjectMapper objectMapper = new ObjectMapper();
         LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
 
-        User user = userService.findUserByEmail(loginDto.getEmail());
-        userService.checkBanTime(user);
-
-        if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
-            throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
+        try {
+            User user = userService.findUserByEmail(loginDto.getEmail());
+            userService.checkBanTime(user);
+            if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
+                throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
+            }
+        } catch (CustomException e) {
+            throw new UsernameNotFoundException("회원 정보를 찾을 수 없습니다.");
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
