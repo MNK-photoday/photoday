@@ -6,12 +6,12 @@ import {
   S_Label,
 } from './Input.styles';
 
-interface emailProps {
+interface EmailProps {
   emailValue: string;
   changeEventHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function EmailInput({ emailValue, changeEventHandler }: emailProps) {
+export function EmailInput({ emailValue, changeEventHandler }: EmailProps) {
   return (
     <>
       <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
@@ -25,7 +25,7 @@ export function EmailInput({ emailValue, changeEventHandler }: emailProps) {
   );
 }
 
-interface passwordProps {
+interface PasswordProps {
   passwordValue: string;
   changeEventHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -33,7 +33,7 @@ interface passwordProps {
 export function PasswordInput({
   passwordValue,
   changeEventHandler,
-}: passwordProps) {
+}: PasswordProps) {
   return (
     <>
       <S_LoginInputLabel htmlFor="password">password</S_LoginInputLabel>
@@ -56,13 +56,13 @@ export function AccountRecovery() {
   );
 }
 
-interface IProps {
+interface CheckBoxProps {
   isChecked: boolean;
   children: React.ReactNode;
   onClickEvent: () => void;
 }
 
-export function CheckBox({ isChecked, children, onClickEvent }: IProps) {
+export function CheckBox({ isChecked, children, onClickEvent }: CheckBoxProps) {
   return (
     <>
       <S_CheckBox
