@@ -1,6 +1,7 @@
 package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
@@ -11,8 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
+import static com.photoday.photoday.helper.snippets.RestDocsSnippets.getMockMultipartFile;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
@@ -24,6 +30,8 @@ class UserServiceTest {
     UserRepository userRepository;
     @MockBean
     AuthUserService authUserService;
+    @MockBean
+    S3Service s3Service;
     @Test
     @DisplayName("createUser: 정상 입력")
     void createUserTest() {
@@ -120,7 +128,27 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserTest() {
+    @DisplayName("updateUser: description, profileImageUrl")
+    void updateUserTest() throws IOException {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        UserDto.Update userUpdateDto = new UserDto.Update("edited!");
+        MultipartFile multipartFile = getMockMultipartFile("multipartFile", "multipartFile");
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://changedProfileImageUrl.jpg");
+
+        // when
+        UserDto.Response response = userService.updateUser(userUpdateDto, multipartFile);
+
+        // then
+        assertEquals("edited!", response.getDescription());
+        assertEquals("http://changedProfileImageUrl.jpg", response.getProfileImageUrl());
     }
 
     @Test
