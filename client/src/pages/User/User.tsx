@@ -63,10 +63,10 @@ function Users() {
     <ContainerWrap>
       <S_UserPageContainer>
         <S_UserSection>
-          <UserThumnailArea userdata={data} />
-          <UserInfoArea userdata={data} />
+          <UserThumnailArea userData={data} />
+          <UserInfoArea userData={data} />
         </S_UserSection>
-        <UserPageSubTitle username={data.data[0].name} />
+        <UserPageSubTitle userName={data.data[0].name} />
         <S_UserPhotoContentBox>
           {/* Photo Content 컴포넌트 만들어지면 수정 */}
           <S_UserPhotoContent alt="photo" src={oceanImage} />
