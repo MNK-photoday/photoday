@@ -36,7 +36,7 @@ class UserServiceTest {
         UserDto.Response userDtoResponse = userService.createUser(post);
 
         //then
-        assertEquals(1L, userDtoResponse.getUserId());
+        assertNotNull(userDtoResponse.getUserId());
         assertEquals("test", userDtoResponse.getName());
         assertEquals(defaultProfileImageUrl, userDtoResponse.getProfileImageUrl());
         assertEquals("안녕하세요!", userDtoResponse.getDescription());
@@ -51,9 +51,7 @@ class UserServiceTest {
     @DisplayName("createUser: 중복 이메일 입력")
     void createUserExistedEmail() {
         // given
-        UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
-        given(authUserService.checkLogin()).willReturn(null);
-        userService.createUser(post);
+        UserDto.Post post = new UserDto.Post("default@email.com", "123456a!");
 
         // when
         CustomException exception = assertThrows(CustomException.class, () -> userService.createUser(post));
@@ -66,7 +64,7 @@ class UserServiceTest {
     void registerUserOAuth2Test() {
         // given
         User user = new User();
-        user.setEmail("test@email.com");
+        user.setEmail("oauth@email.com");
         user.setPassword("@265sx*vS^&ax&#DE#");
 
         // when
@@ -81,7 +79,7 @@ class UserServiceTest {
     void registerUserOAuth2LoginTest() {
         // given
         User user = new User();
-        user.setEmail("test@email.com");
+        user.setEmail("oauth@email.com");
         user.setPassword("@265sx*vS^&ax&#DE#");
         User registeredUser = userService.registerUserOAuth2(user);
         // when
@@ -92,7 +90,33 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("getUser: 정상 입력")
     void getUserTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+
+        UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
+        UserDto.Response ExpectedResponse = userService.createUser(post);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        // when
+        UserDto.Response actualResponse = userService.getUser(ExpectedResponse.getUserId());
+
+        // then
+        assertEquals(ExpectedResponse.getUserId(), actualResponse.getUserId());
+        assertEquals(ExpectedResponse.getName(), actualResponse.getName());
+        assertEquals(ExpectedResponse.getProfileImageUrl(), actualResponse.getProfileImageUrl());
+        assertEquals(ExpectedResponse.getDescription(), actualResponse.getDescription());
+        assertEquals(ExpectedResponse.getLikeCount(), actualResponse.getLikeCount());
+        assertEquals(ExpectedResponse.getReportCount(), actualResponse.getReportCount());
+        assertEquals(ExpectedResponse.getFollowerCount(), actualResponse.getFollowerCount());
+        assertEquals(ExpectedResponse.getFollowingCount(), actualResponse.getFollowingCount());
+        assertEquals(ExpectedResponse.isCheckFollow(), actualResponse.isCheckFollow());
     }
 
     @Test
