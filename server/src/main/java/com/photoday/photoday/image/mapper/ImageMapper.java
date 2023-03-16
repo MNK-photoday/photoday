@@ -2,6 +2,7 @@ package com.photoday.photoday.image.mapper;
 
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
+import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImageMapper {
     private final UserMapper userMapper;
+    private final AuthUserService authUserService;
 
     public ImageDto.BookmarkAndSearchResponse imageToBookmarkAndSearchResponse(Image image){
         return ImageDto.BookmarkAndSearchResponse.builder()
@@ -75,6 +77,7 @@ public class ImageMapper {
     }
 
     private UserDto.Response getOwner(Image image) {
-        return userMapper.userToUserResponse(image.getUser());
+        Long currentUserId = authUserService.checkLogin();
+        return userMapper.userToUserResponse(image.getUser(), currentUserId);
     }
 }

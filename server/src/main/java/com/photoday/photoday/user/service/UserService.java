@@ -55,7 +55,8 @@ public class UserService {
         user.setBanTime(LocalDateTime.now());
         user.setStatus(User.UserStatus.USER_BANED);
         User createdUser = userRepository.save(user);
-        return userMapper.userToUserResponse(createdUser);
+        Long currentUserId = authUserService.checkLogin();
+        return userMapper.userToUserResponse(createdUser, currentUserId);
     }
 
     public User registerUserOAuth2(User user) {
@@ -77,8 +78,8 @@ public class UserService {
         Long loginUserId = authUserService.getLoginUserId();
         findVerifiedUser(loginUserId);
         User targetUser = findVerifiedUser(userId);
-
-        return userMapper.userToUserResponse(targetUser);
+        Long currentUserId = authUserService.checkLogin();
+        return userMapper.userToUserResponse(targetUser, currentUserId);
     }
 
     public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) throws IOException {
@@ -96,15 +97,16 @@ public class UserService {
             verifiedUser.setProfileImageUrl(url);
         });
         Optional.ofNullable(user.getDescription()).ifPresent(description -> verifiedUser.setDescription(description));
-
-        return userMapper.userToUserResponse(verifiedUser);
+        Long currentUserId = authUserService.checkLogin();
+        return userMapper.userToUserResponse(verifiedUser, currentUserId);
     }
 
     public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
         if(updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
             User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
             verifiedUser.setPassword(updateUserPasswordDto.getPassword());
-            return userMapper.userToUserResponse(verifiedUser);
+            Long currentUserId = authUserService.checkLogin();
+            return userMapper.userToUserResponse(verifiedUser, currentUserId);
         } else {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
