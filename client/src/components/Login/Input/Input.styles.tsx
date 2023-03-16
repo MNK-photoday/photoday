@@ -11,13 +11,13 @@ export const S_InputContainerWrap = styled.form`
   flex-direction: column;
 `;
 
-export const S_LoginInputLabel = styled.label`
+export const S_InputLabel = styled.label`
   margin-bottom: 10px;
   font-size: var(--font-size-m);
   color: var(--color-primary-black);
 `;
 
-export const S_EmailAndPasswordInput = styled.input`
+export const S_Input = styled.input`
   ${BorderCSS}
   height: 40px;
   padding-left: 15px;

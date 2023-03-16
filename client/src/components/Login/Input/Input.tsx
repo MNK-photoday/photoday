@@ -1,7 +1,7 @@
 import {
   S_InputContainerWrap,
-  S_LoginInputLabel,
-  S_EmailAndPasswordInput,
+  S_InputLabel,
+  S_Input,
   S_CheckBox,
   S_Label,
 } from './Input.styles';
@@ -14,8 +14,8 @@ interface EmailProps {
 export function EmailInput({ emailValue, changeEventHandler }: EmailProps) {
   return (
     <>
-      <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
-      <S_EmailAndPasswordInput
+      <S_InputLabel htmlFor="email">email</S_InputLabel>
+      <S_Input
         type="email"
         id="email"
         value={emailValue}
@@ -36,8 +36,8 @@ export function PasswordInput({
 }: PasswordProps) {
   return (
     <>
-      <S_LoginInputLabel htmlFor="password">password</S_LoginInputLabel>
-      <S_EmailAndPasswordInput
+      <S_InputLabel htmlFor="password">password</S_InputLabel>
+      <S_Input
         type="password"
         id="password"
         value={passwordValue}
@@ -50,8 +50,8 @@ export function PasswordInput({
 export function AccountRecovery() {
   return (
     <S_InputContainerWrap>
-      <S_LoginInputLabel htmlFor="email">email</S_LoginInputLabel>
-      <S_EmailAndPasswordInput type="text" id="email" />
+      <S_InputLabel htmlFor="email">email</S_InputLabel>
+      <S_Input type="text" id="email" />
     </S_InputContainerWrap>
   );
 }
