@@ -1,8 +1,8 @@
 package com.photoday.photoday.security.controller;
 
-import com.photoday.photoday.security.AuthUserService;
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.redis.service.RedisService;
+import com.photoday.photoday.security.service.AuthUserService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

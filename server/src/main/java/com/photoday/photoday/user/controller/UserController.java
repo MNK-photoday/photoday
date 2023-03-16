@@ -40,6 +40,12 @@ public class UserController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    @PostMapping("/password")
+    public ResponseEntity<?> updateUserPassword(@RequestBody UserDto.UpdateUserPassword updateUserPasswordDto) {
+        UserDto.Response response = userService.updateUserPassword(updateUserPasswordDto);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
     @DeleteMapping
     public ResponseEntity<?> deleteUser() {
         userService.deleteUser();

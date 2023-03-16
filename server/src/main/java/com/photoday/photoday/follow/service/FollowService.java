@@ -6,7 +6,7 @@ import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.follow.mapper.FollowMapper;
 import com.photoday.photoday.follow.repository.FollowRepository;
 import com.photoday.photoday.follow.entity.Follow;
-import com.photoday.photoday.security.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;

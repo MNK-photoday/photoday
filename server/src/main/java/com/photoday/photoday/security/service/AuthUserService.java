@@ -1,4 +1,4 @@
-package com.photoday.photoday.security;
+package com.photoday.photoday.security.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;

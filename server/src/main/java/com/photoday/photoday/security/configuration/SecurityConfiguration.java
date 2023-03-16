@@ -2,9 +2,7 @@ package com.photoday.photoday.security.configuration;
 
 import com.photoday.photoday.security.filter.JwtAuthenticationFilter;
 import com.photoday.photoday.security.filter.JwtVerificationFilter;
-import com.photoday.photoday.security.handler.OAuth2SuccessHandler;
-import com.photoday.photoday.security.handler.UserAuthenticationFailureHandler;
-import com.photoday.photoday.security.handler.UserAuthenticationSuccessHandler;
+import com.photoday.photoday.security.handler.*;
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.principaldetails.PrincipalDetailsService;
@@ -14,10 +12,13 @@ import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,6 +37,7 @@ public class SecurityConfiguration {
     private final PrincipalDetailsService principalDetailsService;
     private final UserDataResponder userDataResponder;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,13 +50,18 @@ public class SecurityConfiguration {
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new UserAuthenticationEntryPoint())
+                .accessDeniedHandler(new UserAccessDeniedHandler())
+                .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
+                        .antMatchers(HttpMethod.GET, "/*/users/**").hasRole("USER")
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService)));
+                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder)));
 
         return http.build();
     }
@@ -83,11 +90,12 @@ public class SecurityConfiguration {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new UserAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new UserAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtProvider, customAuthorityUtils, principalDetailsService);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtProvider, customAuthorityUtils, principalDetailsService, userService);
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+
         }
     }
 }
