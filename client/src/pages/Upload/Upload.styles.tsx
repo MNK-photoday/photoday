@@ -69,32 +69,6 @@ export const S_TagInput = styled.input`
   }
 `;
 
-export const S_TagBox = styled.div`
-  ${RowFlex}
-`;
-export const S_Tag = styled.button`
-  ${RowFlex}
-  margin-right: 5px;
-  padding: 9px 7px 7px;
-  border: var(--color-tag-line);
-  border-radius: 40px;
-  font-size: var(--font-size-sm);
-
-  &:hover {
-    background-color: var(--color-primary-green);
-    color: #fff;
-    border: 1px solid var(--color-primary-green);
-    cursor: pointer;
-    > .close-icon {
-      display: inline-block;
-      color: #fff;
-    }
-  }
-  .close-icon {
-    display: none;
-  }
-`;
-
 export const S_ButtonContainer = styled.div`
   ${ColFlex}
 

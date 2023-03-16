@@ -1,12 +1,9 @@
-import { IoClose } from 'react-icons/io5';
 import { useRef, useState } from 'react';
 
 import Button from '../../components/common/Button/Button';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import {
   S_FileBox,
-  S_Tag,
-  S_TagBox,
   S_TagInput,
   S_UploadBottom,
   S_TagContainer,
@@ -14,6 +11,7 @@ import {
   S_UploadBox,
   S_UploadTitle,
 } from './Upload.styles';
+import TagList from '../../components/Upload/Tag/TagList';
 
 type UploadImage = {
   file: File;
@@ -21,10 +19,19 @@ type UploadImage = {
   type: string;
 };
 
+export type Tags = {
+  id: number;
+  name: string;
+};
+
 function Upload() {
   const chooseFileRef = useRef<HTMLInputElement>(null);
 
   const [imagefile, setImagefile] = useState<UploadImage | null>(null);
+
+  const [tags, setTags] = useState<Tags[]>([]);
+  const [tagCount, setTagCount] = useState<number>(0);
+  const [inputValue, setInputValue] = useState('');
 
   const fileInputClickHandler = () => {
     chooseFileRef.current?.click();
@@ -43,7 +50,6 @@ function Upload() {
 
   const handleDrop = (event: React.DragEvent<HTMLInputElement>) => {
     event.preventDefault();
-    event.stopPropagation();
     const fileList = event.dataTransfer.files;
     setImagefile({
       file: fileList[0],
@@ -54,12 +60,23 @@ function Upload() {
 
   const handleDragOver = (event: React.DragEvent<HTMLInputElement>) => {
     event.preventDefault();
-    event.stopPropagation();
   };
 
   const inputTagHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
+    setInputValue(event.target.value);
   };
+
+  const createTagHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && inputValue !== '') {
+      setTags([...tags, { id: tagCount, name: inputValue }]);
+      setTagCount(tagCount + 1);
+      setInputValue('');
+    }
+  };
+  const removeTagHandler = (id: number) => {
+    setTags(tags.filter((tag) => tag.id !== id));
+  };
+
   return (
     <ContainerWrap>
       <Container>
@@ -86,13 +103,11 @@ function Upload() {
               <S_TagInput
                 placeholder="add to tag"
                 type="text"
+                value={inputValue}
                 onChange={inputTagHandler}
+                onKeyPress={createTagHandler}
               ></S_TagInput>
-              <S_TagBox>
-                <S_Tag>
-                  임시태그 <IoClose className="close-icon" />
-                </S_Tag>
-              </S_TagBox>
+              <TagList tags={tags} onRemove={removeTagHandler} />
             </S_TagContainer>
             <S_ButtonContainer>
               <Button
