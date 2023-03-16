@@ -8,13 +8,13 @@ import com.photoday.photoday.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
     private final AuthUserService authUserService;
-    private final FollowRepository followRepository;
 
     public User userPostToUser(UserDto.Post userPostDto) {
         if (userPostDto == null) {
@@ -47,13 +47,8 @@ public class UserMapper {
         }
 
         Long userId = authUserService.checkLogin();
-        boolean checkFollow = false;
-        if(userId != null) {
-            Optional<Follow> check = followRepository.findByFollower_UserIdAndFollowing_UserId(userId, targetUser.getUserId());
-            if (check.isPresent()) {
-                checkFollow = true;
-            }
-        }
+
+        boolean checkFollow = userId != null && targetUser.getFollowing().stream().anyMatch(fw -> Objects.equals(fw.getFollower().getUserId(), userId));
 
         UserDto.Response response = new UserDto.Response();
 
@@ -67,6 +62,4 @@ public class UserMapper {
 
         return response;
     }
-
-
 }

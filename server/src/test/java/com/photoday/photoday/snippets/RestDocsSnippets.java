@@ -54,7 +54,7 @@ public class RestDocsSnippets {
     }
 
     public static String getUpdateUserJsonBody(String password, String description) {
-        UserDto.Update patch = new UserDto.Update(password, description);
+        UserDto.Update patch = new UserDto.Update(password);
         return gson.toJson(patch);
     }
 
