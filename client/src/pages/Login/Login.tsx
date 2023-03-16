@@ -30,18 +30,18 @@ function Login() {
     email: '',
     password: '',
   });
-  const [isAllValid, setIsAllValid] = useState({
-    email: true,
-    password: true,
+  const [validations, setValidations] = useState({
+    isValidEmail: true,
+    isValidPassword: true,
   });
 
   useEffect(() => {
     const emailIdentifier = setTimeout(() => {
       if (loginForm.email) {
-        setIsAllValid((state) => {
+        setValidations((state) => {
           return {
             ...state,
-            email: validateEmail(loginForm.email),
+            isValidEmail: validateEmail(loginForm.email),
           };
         });
       }
@@ -49,10 +49,10 @@ function Login() {
 
     const passwordIdentifier = setTimeout(() => {
       if (loginForm.password) {
-        setIsAllValid((state) => {
+        setValidations((state) => {
           return {
             ...state,
-            password: validatePassword(loginForm.password),
+            isValidPassword: validatePassword(loginForm.password),
           };
         });
       }
@@ -60,18 +60,18 @@ function Login() {
 
     // 작성 후, 다 지웠을 때 변화를 위해서 추가
     if (!loginForm.email) {
-      setIsAllValid((state) => {
+      setValidations((state) => {
         return {
           ...state,
-          email: true,
+          isValidEmail: true,
         };
       });
     }
     if (!loginForm.password) {
-      setIsAllValid((state) => {
+      setValidations((state) => {
         return {
           ...state,
-          password: true,
+          isValidPassword: true,
         };
       });
     }
@@ -120,9 +120,9 @@ function Login() {
               emailValue={loginForm.email}
               changeEventHandler={changeEmailAndPasswordValueHandler}
             />
-            {!isAllValid.email && (
+            {!validations.isValidEmail && (
               <S_InvalidMessage
-                isShowMessage={!isAllValid.email ? 'show' : 'hide'}
+                isShowMessage={!validations.isValidEmail ? 'show' : 'hide'}
               >
                 {`${loginForm.email} is not a valid email address.`}
               </S_InvalidMessage>
@@ -131,9 +131,9 @@ function Login() {
               passwordValue={loginForm.password}
               changeEventHandler={changeEmailAndPasswordValueHandler}
             />
-            {!isAllValid.password && (
+            {!validations.isValidPassword && (
               <S_InvalidMessage
-                isShowMessage={!isAllValid.password ? 'show' : 'hide'}
+                isShowMessage={!validations.isValidPassword ? 'show' : 'hide'}
               >
                 Passwords must contain 8 to 16 characters in English, numbers,
                 and special characters.
@@ -155,7 +155,9 @@ function Login() {
               shape="default"
               size="XXLarge"
               fullWidth
-              disabled={!isAllValid.email || !isAllValid.password}
+              disabled={
+                !validations.isValidEmail || !validations.isValidPassword
+              }
             >
               Log in
             </Button>

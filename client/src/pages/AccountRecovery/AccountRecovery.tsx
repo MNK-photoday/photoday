@@ -16,12 +16,12 @@ import { validateEmail } from '../../components/Login/LoginValidationLogic/Login
 
 function AccountRecovery() {
   const [emailValue, setEmailValue] = useState('');
-  const [isEmailValid, setEmailValid] = useState(true);
+  const [validEmail, setValidEmail] = useState(true);
 
   useEffect(() => {
     const emailIdentifier = setTimeout(() => {
       if (emailValue) {
-        setEmailValid((state) => {
+        setValidEmail((state) => {
           return (state = validateEmail(emailValue));
         });
       }
@@ -29,7 +29,7 @@ function AccountRecovery() {
 
     // 작성 후, 다 지웠을 때 변화를 위해서 추가
     if (!emailValue) {
-      setEmailValid((state) => {
+      setValidEmail((state) => {
         return (state = true);
       });
     }
@@ -56,8 +56,8 @@ function AccountRecovery() {
               changeEventHandler={changeEmailValueHandler}
             />
           </S_InputContainerWrap>
-          {!isEmailValid && (
-            <S_InvalidMessage isShowMessage={!isEmailValid ? 'show' : 'hide'}>
+          {!validEmail && (
+            <S_InvalidMessage isShowMessage={!validEmail ? 'show' : 'hide'}>
               {`${emailValue} is not a valid email address.`}
             </S_InvalidMessage>
           )}
@@ -71,7 +71,7 @@ function AccountRecovery() {
               shape="default"
               size="XXLarge"
               fullWidth
-              disabled={!isEmailValid}
+              disabled={!validEmail}
             >
               Send recovery email
             </Button>
