@@ -52,8 +52,6 @@ function UserInfoArea({ userData }: IProps) {
     const value = e.target.value;
     setconfirmInputValue(value);
   };
-  console.log('하고 싶은 비밀번호', inputValue);
-  console.log('확인할 비밀번호', confirminputValue);
 
   const clickChangePassWordHandler = () => {
     setIsChangePassWord(!isChangePassWord);
