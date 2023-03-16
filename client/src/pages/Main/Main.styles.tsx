@@ -46,6 +46,14 @@ export const S_SearchImgBox = styled.div`
   transition: 1s;
   overflow-y: scroll;
   margin: 10px 0;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: var(--color-primary-gray20);
+  }
 `;
 export const S_ContentImgBox = styled.div`
   display: grid;
