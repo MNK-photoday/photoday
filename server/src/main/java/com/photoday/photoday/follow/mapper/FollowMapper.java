@@ -2,15 +2,15 @@ package com.photoday.photoday.follow.mapper;
 
 import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.user.entity.User;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface FollowMapper {
-    default FollowDto.ResponseFollowUsers followUserListToResponseFollowUsers(Map<String, List<User>> followUsers) {
+@Component
+public class FollowMapper {
+    public FollowDto.ResponseFollowUsers followUserListToResponseFollowUsers(Map<String, List<User>> followUsers) {
         List<User> following = followUsers.get("following");
         List<User> follower = followUsers.get("follower");
 

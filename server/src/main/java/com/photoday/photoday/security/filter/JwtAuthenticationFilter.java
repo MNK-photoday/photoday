@@ -2,14 +2,12 @@ package com.photoday.photoday.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.security.dto.LoginDto;
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CookieUtil;
-import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.security.utils.UserDataResponder;
-import com.photoday.photoday.user.repository.UserRepository;
+import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,8 +25,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -44,15 +40,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         ObjectMapper objectMapper = new ObjectMapper();
         LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
 
-        try {
-            User user = userService.findUserByEmail(loginDto.getEmail());
-            userService.checkBanTime(user);
-            if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
-                throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
-            }
-        } catch (CustomException e) {
-            throw new UsernameNotFoundException("회원 정보를 찾을 수 없습니다.");
-        }
+        checkUserStatus(loginDto.getEmail());
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
@@ -60,9 +48,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     protected void successfulAuthentication(HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             FilterChain chain,
-                                             Authentication authResult) throws ServletException, IOException {
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult) throws ServletException, IOException {
         User user = (User) authResult.getPrincipal();
 
         String accessToken = jwtProvider.delegateAccessToken(user);
@@ -79,4 +67,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 
+    private void checkUserStatus(String email) {
+        try {
+            User user = userService.findUserByEmail(email);
+            userService.checkBanTime(user);
+            if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
+                throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
+            }
+        } catch (CustomException e) {
+            throw new UsernameNotFoundException("회원 정보를 찾을 수 없습니다.");
+        }
+    }
 }

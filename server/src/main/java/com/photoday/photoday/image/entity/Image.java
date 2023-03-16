@@ -16,8 +16,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class)
-public class Image { // 메타데이터 필드 추가
+@EntityListeners(AuditingEntityListener.class) //TODO setter, construct 접근제어자 고려 후 수정
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long imageId;

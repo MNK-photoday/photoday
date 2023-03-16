@@ -13,7 +13,7 @@ import java.util.List;
 public class ImageDto {
     @Getter
     public static class Patch {
-        @Size(min =1, max = 5)
+        @Size(min = 1, max = 20) //TODO 프론트와 상의해서 태그 max 늘려도 좋을 것 같음
         List<String> tags;
     }
 

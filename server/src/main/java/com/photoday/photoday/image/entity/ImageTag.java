@@ -26,14 +26,14 @@ public class ImageTag {
 
     public void setTag(Tag tag) {
         this.tag = tag;
-        if(tag.getImageTagList().contains(this)){
+        if (!tag.getImageTagList().contains(this)) {
             tag.getImageTagList().add(this);
         }
     }
 
     public void setImage(Image image) {
         this.image = image;
-        if(image.getImageTagList().contains(this)){
+        if (!image.getImageTagList().contains(this)) {
             image.getImageTagList().add(this);
         }
     }

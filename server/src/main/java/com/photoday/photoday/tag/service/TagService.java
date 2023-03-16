@@ -14,11 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -28,12 +29,12 @@ public class TagService {
     private final TagRepository tagRepository;
     private final ImageMapper imageMapper;
 
-    public MultiResponseDto searchByTags(TagDto tags, Pageable pageable) {
+    public MultiResponseDto searchByTags(@RequestBody @Valid TagDto tags, Pageable pageable) {
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         Page<Image> page = imageRepository.findAllByTag(tags.getTags(), pageRequest);
         List<ImageDto.BookmarkAndSearchResponse> responses = page.stream()
-                .map(i -> imageMapper.imageToBookmarkAndSearchResponse(i)).collect(Collectors.toList());
+                .map(imageMapper::imageToBookmarkAndSearchResponse).collect(Collectors.toList());
 
         return new MultiResponseDto(responses, page);
     }

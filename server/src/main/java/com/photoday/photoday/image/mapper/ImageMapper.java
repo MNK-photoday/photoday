@@ -18,7 +18,7 @@ public class ImageMapper {
     private final UserMapper userMapper;
     private final AuthUserService authUserService;
 
-    public ImageDto.BookmarkAndSearchResponse imageToBookmarkAndSearchResponse(Image image){
+    public ImageDto.BookmarkAndSearchResponse imageToBookmarkAndSearchResponse(Image image){ //TODO imageListToImageResponseList 로 메서드 이름 변경?
         return ImageDto.BookmarkAndSearchResponse.builder()
                 .imageId(image.getImageId())
                 .imageUrl(image.getImageUrl())
@@ -77,7 +77,7 @@ public class ImageMapper {
     }
 
     private UserDto.Response getOwner(Image image) {
-        Long currentUserId = authUserService.checkLogin();
-        return userMapper.userToUserResponse(image.getUser(), currentUserId);
+        Long loginUserId = authUserService.checkLogin();
+        return userMapper.userToUserResponse(image.getUser(), loginUserId);
     }
 }

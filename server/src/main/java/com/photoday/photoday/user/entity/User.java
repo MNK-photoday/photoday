@@ -36,7 +36,7 @@ public class User {
 
     @Column(nullable = false)
     @Default
-    private String profileImageUrl = "https://cdn.discordapp.com/attachments/1082610363712950272/1082610364371435540/userImage.png";
+    private String profileImageUrl = "https://ifh.cc/g/zPrPfv.png";
 
     @Column
     @Default
@@ -46,11 +46,11 @@ public class User {
     @Default
     private UserStatus status = UserStatus.USER_ACTIVE; // 보류 -> 백업데이터 고려, DB 2개
 
-    private LocalDateTime banTime; // 로직 고려
+    private LocalDateTime banTime;
 
     private int reportedCount;
 
-    private int todayReportCount; // 보류 -> 로직 고려
+    private int todayReportCount;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Default
@@ -68,13 +68,13 @@ public class User {
     @Default
     private List<Follow> follower = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @Default
-    private List<Report> reports = new ArrayList<>();
+    private List<Report> reports = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @Default
-    private List<Like> likes = new ArrayList<>();
+    private List<Like> likes = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Default

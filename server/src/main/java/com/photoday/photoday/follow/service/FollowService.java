@@ -3,9 +3,9 @@ package com.photoday.photoday.follow.service;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.follow.dto.FollowDto;
+import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.follow.mapper.FollowMapper;
 import com.photoday.photoday.follow.repository.FollowRepository;
-import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
@@ -35,9 +35,9 @@ public class FollowService {
         List<Follow> follower = followRepository.findFollowByFollowing_UserId(loginUserId);
 
         //사용자가 팔로우한 사람
-        List<User> userFollowing = following.stream().map(follow -> follow.getFollowing()).collect(Collectors.toList());
+        List<User> userFollowing = following.stream().map(Follow::getFollowing).collect(Collectors.toList());
         //사용자를 팔로우한 사람
-        List<User> userFollower = follower.stream().map(follow -> follow.getFollower()).collect(Collectors.toList());
+        List<User> userFollower = follower.stream().map(Follow::getFollower).collect(Collectors.toList());
 
         Map<String, List<User>> follow = new HashMap<>();
         follow.put("following", userFollowing);

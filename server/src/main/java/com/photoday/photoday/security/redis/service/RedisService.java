@@ -14,7 +14,7 @@ public class RedisService {
 
     public void setValues(String key, String value){
         ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(key, value, Duration.ofMinutes(1));
+        values.set(key, value, Duration.ofMinutes(1)); //TODO 배포 전에 시간 수정 or yml에 설정하기.
     }
 
     public String getValues(String key) {

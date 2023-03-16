@@ -1,6 +1,5 @@
 package com.photoday.photoday.image.service;
 
-import com.drew.imaging.ImageProcessingException;
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
@@ -24,8 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -49,9 +46,10 @@ public class ImageService {
     private final TagMapper tagMapper;
     private final AuthUserService authUserService;
 
-    public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, ImageProcessingException, NoSuchAlgorithmException {
-        if (!multipartFile.getContentType().equals("image/jpeg")) {
-            throw new CustomException(ExceptionCode.FILE_NOT_IMAGE);
+    public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
+        if (!List.of("image/jpeg", "image/pjpeg", "image/tiff" ,"image/png", "image/bmp", "image/x-windows-bmp")
+                .contains(multipartFile.getContentType())) {
+            throw new CustomException(ExceptionCode.IMAGE_FILE_ONLY);
         }
 
         String imageHashValue = s3Service.getMd5Hash(multipartFile);
@@ -91,7 +89,7 @@ public class ImageService {
     public ImageDto.Response updateImageTags(long imageId, TagDto patch) {
         List<Tag> tagList = tagMapper.dtoToTag(patch);
 
-        Image image = findImage(imageId); // 이미지 존재하는지 검증
+        Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
 
         Long userId = authUserService.getLoginUserId();
         if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
@@ -111,10 +109,7 @@ public class ImageService {
         return tagList.stream()
                 .map(tagService::verifyTag)
                 .map(this::tagToImageTag)
-                .map(tag -> {
-                    tag.setImage(image);
-                    return tag;
-                })
+                .peek(tag -> tag.setImage(image))
                 .collect(Collectors.toList());
     }
 
@@ -125,21 +120,21 @@ public class ImageService {
     }
 
     public ImageDto.Response getImage(long imageId) {
-        Image image = findImage(imageId);
+        Image image = findVerifiedImage(imageId);
         image.setViewCount(image.getViewCount()+1);
         Image save = imageRepository.save(image);
         return imageMapper.imageToResponse(save);
     }
 
     public void deleteImage(long imageId) {
-        Image image = findImage(imageId); // 이미지 존재하는지 검증
+        Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
         Long userId = authUserService.getLoginUserId();
         if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
         imageRepository.deleteById(imageId);
     }
 
     public ImageDto.Response updateBookmark(long imageId) {
-        Image image = findImage(imageId); // 이미지 존재하는지 검증
+        Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
         Long userId = authUserService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
 
@@ -150,11 +145,10 @@ public class ImageService {
 
         if (bookmark.isPresent()) {
             image.getBookmarkList().remove(bookmark.get());
-        } else {
+        } else { //TODO 레포지토리 파서 쿼리로 ...
             Bookmark newBookmark = new Bookmark();
             newBookmark.setUser(user);
             newBookmark.setImage(image);
-            image.getBookmarkList().add(newBookmark);
         }
 
         Image save = imageRepository.save(image);
@@ -168,13 +162,13 @@ public class ImageService {
         Page<Image> page = imageRepository.findAllBookmarkImages(pageRequest, userId);
         List<Image> imageList = page.getContent();
         List<ImageDto.BookmarkAndSearchResponse> responses
-                = imageList.stream().map(i -> imageMapper.imageToBookmarkAndSearchResponse(i)).collect(Collectors.toList());
+                = imageList.stream().map(imageMapper::imageToBookmarkAndSearchResponse).collect(Collectors.toList());
 
         return new MultiResponseDto(responses, page);
     }
 
     public ImageDto.Response createReport(long imageId) {
-        Image image = findImage(imageId); // 이미지 존재하는지 검증
+        Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
         Long userId = authUserService.getLoginUserId();
         User user = userService.findVerifiedUser(userId);
         userService.checkUserReportCount(userId);
@@ -188,9 +182,8 @@ public class ImageService {
             Report report = new Report();
             report.setUser(user);
             report.setImage(image);
-            image.getReportList().add(report);
 
-            //회원 정지 기능
+            //회원 정지 기능 //TODO 회원 서비스로 빼기
             image.getUser().setReportedCount(image.getUser().getReportedCount() + 1);
             if(image.getUser().getReportedCount() == 10) {
                 image.getUser().setStatus(User.UserStatus.USER_BANED);
@@ -208,11 +201,11 @@ public class ImageService {
     }
 
     public ImageDto.Response updateLike(long imageId) {
-        Image image = findImage(imageId); // 이미지 존재하는지 검증
-        Long userId = authUserService.getLoginUserId();
+        Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
+        Long userId = authUserService.getLoginUserId(); //TODO 리팩토링 필요
         User user = userService.findVerifiedUser(userId);
 
-        //TODO 포스트맨에서는 1,1,0 으로 됨(등록,버그,취소). 프론트랑 연결해서 실험해봐야할 듯.
+        //TODO 포스트맨에서는 1,1,0 으로 됨(등록,버그,취소). //TODO 레포지토리 파서 쿼리로 ...
         Optional<Like> like = image.getLikeList().stream()
                 .filter(l -> l.getUser().getUserId() == userId)
                 .findFirst();
@@ -229,7 +222,7 @@ public class ImageService {
         return imageMapper.imageToResponse(save);
     }
 
-    public Image findImage(long imageId) {
+    public Image findVerifiedImage(long imageId) {
         Optional<Image> optionalImage = imageRepository.findById(imageId);
         return optionalImage.orElseThrow(() -> new CustomException(IMAGE_NOT_FOUND));
     }

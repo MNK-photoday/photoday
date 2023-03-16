@@ -34,7 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         User user = saveUser(email);
-        redirect(request, response, user);
+        redirect(request, response, user); //TODO 밴처리 후 에러 처리
     }
 
     private User saveUser(String email) {
@@ -44,7 +44,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         return userService.registerUserOAuth2(user);
     }
 
-    private String generateRandomString(int length) {
+    private String generateRandomString(int length) { //TODO 이메일 발송 로직에 있긴한디
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         Random random = new Random();
         char[] text = new char[length];
@@ -55,7 +55,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, User user)
-            throws IOException, IOException {
+            throws IOException {
         String accessToken = jwtProvider.delegateAccessToken(user);
         String refreshToken = jwtProvider.delegateRefreshToken(user);
 

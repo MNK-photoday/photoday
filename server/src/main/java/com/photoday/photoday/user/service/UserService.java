@@ -54,8 +54,7 @@ public class UserService {
         String name = getNameFromUser(user);
         user.setName(name);
         User createdUser = userRepository.save(user);
-        Long loginUserId = authUserService.checkLogin();
-        return userMapper.userToUserResponse(createdUser, loginUserId);
+        return userMapper.userToUserResponse(createdUser, null);
     }
 
     public User registerUserOAuth2(User user) {
@@ -73,15 +72,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto.Response getUser(long userId) {
         Long loginUserId = authUserService.getLoginUserId();
-        findVerifiedUser(loginUserId);
         User targetUser = findVerifiedUser(userId);
         return userMapper.userToUserResponse(targetUser, loginUserId);
     }
 
-    public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) throws IOException {
+    public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) {
         User user = userMapper.userPatchToUser(userUpdateDto);
-        User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
-        user.setUserId(authUserService.getLoginUserId());
+        Long loginUserId = authUserService.getLoginUserId();
+        User verifiedUser = findVerifiedUser(loginUserId);
+        user.setUserId(loginUserId);
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
@@ -94,16 +93,15 @@ public class UserService {
             }
             verifiedUser.setProfileImageUrl(url);
         });
-        Optional.ofNullable(user.getDescription()).ifPresent(description -> verifiedUser.setDescription(description));
-        Long loginUserId = authUserService.checkLogin();
+        Optional.ofNullable(user.getDescription()).ifPresent(verifiedUser::setDescription);
         return userMapper.userToUserResponse(verifiedUser, loginUserId);
     }
 
     public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
         if(updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
-            User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
-            verifiedUser.setPassword(updateUserPasswordDto.getPassword());
-            Long loginUserId = authUserService.checkLogin();
+            Long loginUserId = authUserService.getLoginUserId();
+            User verifiedUser = findVerifiedUser(loginUserId);
+            verifiedUser.setPassword(passwordEncoder.encode(updateUserPasswordDto.getPassword()));
             return userMapper.userToUserResponse(verifiedUser, loginUserId);
         } else {
             throw new CustomException(PASSWORD_NOT_MATCH);
@@ -117,8 +115,7 @@ public class UserService {
 
     public User findVerifiedUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        User verifiedUser = user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
-        return verifiedUser;
+        return user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
     }
 
     public void checkUserReportCount(Long userId) {
@@ -145,7 +142,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul") //TODO 자정에 에러 뜸
     protected void resetTodayUserReportCount() {
         log.info(String.valueOf(LocalDateTime.now()));
         userRepository.resetTodayReportCount();
@@ -160,8 +157,7 @@ public class UserService {
     }
 
     private String getNameFromUser(User user) {
-        String name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
-        return name;
+        return user.getEmail().substring(0, user.getEmail().indexOf("@"));
     }
 
 }
