@@ -12,31 +12,14 @@ import Button from '../../components/common/Button/Button';
 import { EmailInput } from '../../components/Login/Input/Input';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
-import { validateEmail } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import { validationEmail } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 
 function AccountRecovery() {
   const [emailValue, setEmailValue] = useState('');
   const [validEmail, setValidEmail] = useState(true);
 
   useEffect(() => {
-    const emailIdentifier = setTimeout(() => {
-      if (emailValue) {
-        setValidEmail((state) => {
-          return (state = validateEmail(emailValue));
-        });
-      }
-    }, 500);
-
-    // 작성 후, 다 지웠을 때 변화를 위해서 추가
-    if (!emailValue) {
-      setValidEmail((state) => {
-        return (state = true);
-      });
-    }
-
-    return () => {
-      clearTimeout(emailIdentifier);
-    };
+    validationEmail({ emailValue, setValidEmail });
   }, [emailValue]);
 
   const changeEmailValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

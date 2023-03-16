@@ -15,71 +15,35 @@ import {
   PasswordInput,
   CheckBox,
 } from '../../components/Login/Input/Input';
-import {
-  validateEmail,
-  validatePassword,
-} from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 import Button from '../../components/common/Button/Button';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
+import { validationLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+
+export interface LoginFormType {
+  email: string;
+  password: string;
+}
+
+export interface ValidationsType {
+  isValidEmail: boolean;
+  isValidPassword: boolean;
+}
 
 function Login() {
   const [isSigned, setIsSigned] = useState(false);
-  const [loginForm, setLoginForm] = useState({
+  const [loginForm, setLoginForm] = useState<LoginFormType>({
     email: '',
     password: '',
   });
-  const [validations, setValidations] = useState({
+  const [validations, setValidations] = useState<ValidationsType>({
     isValidEmail: true,
     isValidPassword: true,
   });
 
   useEffect(() => {
-    const emailIdentifier = setTimeout(() => {
-      if (loginForm.email) {
-        setValidations((state) => {
-          return {
-            ...state,
-            isValidEmail: validateEmail(loginForm.email),
-          };
-        });
-      }
-    }, 500);
-
-    const passwordIdentifier = setTimeout(() => {
-      if (loginForm.password) {
-        setValidations((state) => {
-          return {
-            ...state,
-            isValidPassword: validatePassword(loginForm.password),
-          };
-        });
-      }
-    }, 500);
-
-    // 작성 후, 다 지웠을 때 변화를 위해서 추가
-    if (!loginForm.email) {
-      setValidations((state) => {
-        return {
-          ...state,
-          isValidEmail: true,
-        };
-      });
-    }
-    if (!loginForm.password) {
-      setValidations((state) => {
-        return {
-          ...state,
-          isValidPassword: true,
-        };
-      });
-    }
-
-    return () => {
-      clearTimeout(emailIdentifier);
-      clearTimeout(passwordIdentifier);
-    };
+    validationLogin({ loginForm, setValidations });
   }, [loginForm]);
 
   const changeEmailAndPasswordValueHandler = (
