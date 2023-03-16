@@ -51,11 +51,7 @@ function UserInfoArea({ userdata }: IProps) {
         <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
           {isEdit ? 'Save edits' : 'Edit'}
         </S_TextButton>
-        {isChangePassWord && (
-          <>
-            <SetPasswordInput />
-          </>
-        )}
+        {isChangePassWord && <SetPasswordInput />}
         <S_TextButton
           isTextButtonType="changePassword"
           onClick={clickChangePassWordHandler}
