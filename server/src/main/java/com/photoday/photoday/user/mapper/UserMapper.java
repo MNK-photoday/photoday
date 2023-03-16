@@ -1,21 +1,15 @@
 package com.photoday.photoday.user.mapper;
 
-import com.photoday.photoday.follow.entity.Follow;
-import com.photoday.photoday.follow.repository.FollowRepository;
-import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
-    private final AuthUserService authUserService;
-
     public User userPostToUser(UserDto.Post userPostDto) {
         if (userPostDto == null) {
             return null;
@@ -41,13 +35,10 @@ public class UserMapper {
         return user;
     }
 
-    public UserDto.Response userToUserResponse(User targetUser) {
+    public UserDto.Response userToUserResponse(User targetUser, Long userId) {
         if (targetUser == null) {
             return null;
         }
-
-        Long userId = authUserService.checkLogin();
-
         boolean checkFollow = userId != null && targetUser.getFollowing().stream().anyMatch(fw -> Objects.equals(fw.getFollower().getUserId(), userId));
 
         UserDto.Response response = new UserDto.Response();
@@ -59,6 +50,8 @@ public class UserMapper {
         response.setCheckFollow(checkFollow);
         response.setLikeCount(targetUser.getLikes() != null ? targetUser.getLikes().size() : 0);
         response.setReportCount(targetUser.getReports() != null ? targetUser.getReports().size() : 0);
+        response.setFollowerCount(targetUser.getFollower() != null ? targetUser.getFollower().size() : 0);
+        response.setFollowingCount(targetUser.getFollowing() != null ? targetUser.getFollowing().size() : 0);
 
         return response;
     }

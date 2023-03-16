@@ -1,7 +1,6 @@
 package com.photoday.photoday.image.repository;
 
 import com.photoday.photoday.image.entity.Image;
-import com.photoday.photoday.image.entity.ImageTag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

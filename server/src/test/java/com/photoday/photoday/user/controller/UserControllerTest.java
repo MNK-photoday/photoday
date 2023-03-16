@@ -1,5 +1,6 @@
 package com.photoday.photoday.user.controller;
 
+import com.photoday.photoday.helper.security.SecurityTestHelper;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.mapper.UserMapper;
@@ -18,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.photoday.photoday.snippets.RestDocsSnippets.*;
+import java.util.List;
+
+import static com.photoday.photoday.helper.snippets.RestDocsSnippets.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -35,6 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private SecurityTestHelper helper;
     @MockBean
     private UserService userService;
     @MockBean
@@ -126,7 +131,7 @@ class UserControllerTest {
     @DisplayName("updateUser: 정상 입력")
     void updateUser() throws Exception {
         // given
-        String userUpdateDto = getUpdateUserJsonBody("123456a!", "짱구");
+        String userUpdateDto = getUpdateUserJsonBody("짱구");
         MockMultipartFile content = getMockMultipartFile("userUpdateDto", userUpdateDto);
         UserDto.Response response = getUserDtoResponse();
 
@@ -155,32 +160,9 @@ class UserControllerTest {
 
     @Test
     @DisplayName("updateUser: description만 수정")
-    void updateUserUpdateOnlyPassword() throws Exception {
-        // given
-        String userPatchDto = getUpdateUserJsonBody("123456a!", null);
-        MockMultipartFile content = getMockMultipartFile("userUpdateDto", userPatchDto);
-        UserDto.Response response = getUserDtoResponse();
-
-        given(userService.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
-
-        // when
-        ResultActions actions = mvc.perform(
-                multipart("/api/users/update")
-                        .file(content)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType("multipart/form-data")
-                        .characterEncoding("UTF-8"));
-
-        // then
-        actions
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("updateUser: description만 수정")
     void updateUserUpdateOnlyDescription() throws Exception {
         // given
-        String userPatchDto = getUpdateUserJsonBody(null, "짱구입니다.");
+        String userPatchDto = getUpdateUserJsonBody("짱구입니다.");
         MockMultipartFile content = getMockMultipartFile("userUpdateDto", userPatchDto);
         UserDto.Response response = getUserDtoResponse();
 
@@ -227,12 +209,14 @@ class UserControllerTest {
         // given
         long userId = 1L;
         UserDto.Response response = getUserDtoResponse();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
         given(userService.getUser(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
                 get("/api/users/{userId}", userId)
+                        .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON));
 
         // then

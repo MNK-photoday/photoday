@@ -3,10 +3,8 @@ package com.photoday.photoday.tag.service;
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
-import com.photoday.photoday.image.entity.ImageTag;
 import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
-import com.photoday.photoday.image.service.ImageService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.repository.TagRepository;
@@ -20,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -29,8 +28,8 @@ public class TagService {
     private final TagRepository tagRepository;
     private final ImageMapper imageMapper;
 
-    public MultiResponseDto searchByTags(TagDto tags, Pageable pageable){
-        Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
+    public MultiResponseDto searchByTags(TagDto tags, Pageable pageable) {
+        Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         Page<Image> page = imageRepository.findAllByTag(tags.getTags(), pageRequest);
         List<ImageDto.BookmarkAndSearchResponse> responses = page.stream()

@@ -1,4 +1,4 @@
-package com.photoday.photoday.snippets;
+package com.photoday.photoday.helper.snippets;
 
 import com.google.gson.Gson;
 import com.photoday.photoday.dto.MultiResponseDto;
@@ -31,14 +31,12 @@ import java.util.List;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 
 public class RestDocsSnippets {
 
-    static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     public static OperationRequestPreprocessor getRequestPreprocessor() {
         return preprocessRequest(prettyPrint());
@@ -53,8 +51,8 @@ public class RestDocsSnippets {
         return gson.toJson(post);
     }
 
-    public static String getUpdateUserJsonBody(String password, String description) {
-        UserDto.Update patch = new UserDto.Update(password);
+    public static String getUpdateUserJsonBody(String description) {
+        UserDto.Update patch = new UserDto.Update(description);
         return gson.toJson(patch);
     }
 

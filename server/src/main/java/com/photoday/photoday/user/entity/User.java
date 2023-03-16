@@ -5,9 +5,7 @@ import com.photoday.photoday.image.entity.Bookmark;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.image.entity.Like;
 import com.photoday.photoday.image.entity.Report;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,6 +17,8 @@ import java.util.List;
 @Setter
 @Table(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
