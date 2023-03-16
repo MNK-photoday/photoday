@@ -114,7 +114,7 @@ function Upload() {
                 variant={'primary'}
                 shape={'round'}
                 size={'medium'}
-                buttonClickEvent={fileInputClickHandler}
+                clickEventHandler={fileInputClickHandler}
               >
                 Choose file
               </Button>
