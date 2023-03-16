@@ -7,6 +7,7 @@ import Signup from './pages/Signup/Signup';
 import AccountRecovery from './pages/AccountRecovery/AccountRecovery';
 import Upload from './pages/Upload/Upload';
 import TagSearch from './pages/Search/Search';
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 function App() {
   const router = createBrowserRouter([
@@ -26,6 +27,10 @@ function App() {
         {
           path: '/tags',
           element: <TagSearch />,
+        },
+        {
+          path: '/*',
+          element: <ErrorPage />,
         },
       ],
     },
