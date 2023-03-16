@@ -20,6 +20,7 @@ export const S_InputLabel = styled.label`
 export const S_Input = styled.input`
   ${BorderCSS}
   height: 40px;
+  width: 335px;
   padding-left: 15px;
   margin-bottom: 15px;
   &:focus {
