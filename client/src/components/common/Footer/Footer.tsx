@@ -1,16 +1,18 @@
-import * as style from './Footer.styles';
+import {
+  S_FooterContainer,
+  S_FooterContainerWrap,
+  S_FooterSpan,
+} from './Footer.styles';
 
 function Footer() {
   return (
-    <style.FooterContainerWrap>
-      <style.FooterContainerFlex>
-        <style.FooterContent>
-          <style.FooterSpan>
-            © 2023 GJS photoday Team. All rights reserved.
-          </style.FooterSpan>
-        </style.FooterContent>
-      </style.FooterContainerFlex>
-    </style.FooterContainerWrap>
+    <S_FooterContainerWrap>
+      <S_FooterContainer>
+        <S_FooterSpan>
+          © 2023 MNK-photoday Team. All rights reserved.
+        </S_FooterSpan>
+      </S_FooterContainer>
+    </S_FooterContainerWrap>
   );
 }
 

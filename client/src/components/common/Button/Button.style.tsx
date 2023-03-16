@@ -1,12 +1,12 @@
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-interface ButtonProps {
+interface ButtonStyleProps {
   variant: 'primary' | 'point';
   shape: 'default' | 'round';
-  size: 'small' | 'medium' | 'large';
+  size: 'small' | 'medium' | 'large' | 'XLarge' | 'XXLarge';
   fullWidth: boolean;
   disabled: boolean;
-  children: React.ReactNode;
 }
 const variantCSS = {
   point: css`
@@ -55,12 +55,33 @@ const sizeCSS = {
     font-size: var(--font-size-sm);
   `,
   large: css`
-    padding: 10px 80px;
+    padding: 10px 22px;
+    font-size: var(--font-size-sm);
+    margin: 15px 0;
+  `,
+  XLarge: css`
+    padding: 10px 20px;
+    font-size: var(--font-size-sm);
+    background-color: var(--color-primary-gray30);
+  `,
+  XXLarge: css`
+    padding: 10px;
     font-size: var(--font-size-m);
   `,
 };
 
-export const S_ButtonBox = styled.button<ButtonProps>`
+export const S_LinkButton = styled(Link)<ButtonStyleProps>`
+  ${({ variant }) => variantCSS[variant]}
+  ${({ size }) => sizeCSS[size]}
+  ${({ shape }) => shapeCSS[shape]}
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+  border: none;
+  transition: all 0.3s ease 0s;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+`;
+
+export const S_Button = styled.button<ButtonStyleProps>`
   ${({ variant }) => variantCSS[variant]}
   ${({ size }) => sizeCSS[size]}
   ${({ shape }) => shapeCSS[shape]}
