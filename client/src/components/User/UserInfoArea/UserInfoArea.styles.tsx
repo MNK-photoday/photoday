@@ -80,19 +80,3 @@ export const S_DeleteAccountText = styled.p`
   font-size: var(--font-size-sm);
   color: var(--color-primary-black);
 `;
-
-export const S_PostImageButton = styled.button`
-  display: flex;
-  width: 150px;
-  padding: 8px 22px;
-  font-size: var(--font-size-sm);
-  border-radius: var(--box-radius-3);
-  border: 1px solid var(--color-primary-gray30);
-  position: absolute;
-  right: 17%;
-
-  .postImageButton {
-    margin-right: 10px;
-    color: var(--color-primary-green);
-  }
-`;

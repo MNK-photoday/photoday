@@ -8,7 +8,6 @@ import {
   S_TextButtonWrap,
   S_TextButton,
   S_DeleteAccountText,
-  S_PostImageButton,
 } from './UserInfoArea.styles';
 import {
   UserInfoTextarea,
@@ -16,7 +15,6 @@ import {
 } from './UserInfoInput/UserInfoInput';
 import { FaHeart } from 'react-icons/fa';
 import { MdReportProblem } from 'react-icons/md';
-import { BsFillImageFill } from 'react-icons/bs';
 import { DataType } from '../../../pages/User/User';
 
 interface IProps {
@@ -45,11 +43,6 @@ function UserInfoArea({ userdata }: IProps) {
         <S_UserLikeAndReport>
           {userdata.data[0].reportCount}
         </S_UserLikeAndReport>
-        {/* 버튼 꼭 필요한지 물어보기 */}
-        <S_PostImageButton>
-          <BsFillImageFill size={18} className="postImageButton" />
-          Post Images
-        </S_PostImageButton>
       </S_UserNameContainer>
       <S_UserDescription isEdit={isEdit}>
         {isEdit ? <UserInfoTextarea /> : userdata.data[0].description}
