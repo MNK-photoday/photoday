@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   S_LoginContainerWrap,
   S_ImgContainer,
@@ -6,12 +8,10 @@ import {
   S_PasswordGuide,
   S_InvalidMessage,
 } from '../Login/Login.styles';
-import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import Button from '../../components/common/Button/Button';
 import { EmailInput } from '../../components/Login/Input/Input';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
+import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateEmail } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 
 function AccountRecovery() {

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   S_LinkTo,
   S_ImgContainer,
@@ -18,7 +19,6 @@ import {
   validateEmail,
   validatePassword,
 } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
-import { useEffect, useState } from 'react';
 import Button from '../../components/common/Button/Button';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
