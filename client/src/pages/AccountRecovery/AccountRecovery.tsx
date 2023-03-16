@@ -72,7 +72,7 @@ function AccountRecovery() {
             <Button
               variant="point"
               shape="default"
-              size="large"
+              size="XXLarge"
               fullWidth
               disabled={!isEmailValid}
             >

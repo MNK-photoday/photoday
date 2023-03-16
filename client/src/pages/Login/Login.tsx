@@ -154,7 +154,7 @@ function Login() {
             <Button
               variant="point"
               shape="default"
-              size="large"
+              size="XXLarge"
               fullWidth
               disabled={!isAllValid.email || !isAllValid.password}
             >

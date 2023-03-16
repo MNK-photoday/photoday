@@ -4,7 +4,7 @@ import { S_ButtonBox } from './Button.style';
 interface ButtonProps {
   variant: 'primary' | 'point';
   shape: 'default' | 'round';
-  size: 'small' | 'medium' | 'large';
+  size: 'small' | 'medium' | 'large' | 'XLarge' | 'XXLarge';
   disabled?: boolean;
   fullWidth?: boolean;
   children: React.ReactNode;
