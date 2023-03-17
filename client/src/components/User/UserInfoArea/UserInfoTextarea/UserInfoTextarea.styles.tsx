@@ -16,16 +16,3 @@ export const S_Textarea = styled.textarea`
   padding: 10px;
   resize: none;
 `;
-
-export const S_InputLabel = styled.label`
-  font-size: var(--font-size-sm);
-  color: var(--color-primary-black);
-  margin: 20px 0 8px;
-`;
-
-export const S_Input = styled.input`
-  ${BorderCss}
-  width: 300px;
-  height: 35px;
-  padding-left: 8px;
-`;

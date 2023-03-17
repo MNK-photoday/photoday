@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { LoginFormType, ValidationsType } from '../../../pages/Login/Login';
 
 // 이메일 정규 표현식 => 일치 시 true 반환
@@ -74,31 +73,41 @@ export function validationLogin({
   };
 }
 
-interface ValidationEmailIProps {
-  emailValue: string;
-  setValidEmail: React.Dispatch<React.SetStateAction<boolean>>;
+interface ValidationIProps {
+  inputValue: string;
+  setValidValue: React.Dispatch<React.SetStateAction<boolean>>;
+  valueType: string;
 }
 
-export function validationEmail({
-  emailValue,
-  setValidEmail,
-}: ValidationEmailIProps) {
-  const emailIdentifier = setTimeout(() => {
-    if (emailValue) {
-      setValidEmail((state) => {
-        return (state = validateEmail(emailValue));
-      });
+export function validationValue({
+  inputValue,
+  setValidValue,
+  valueType,
+}: ValidationIProps) {
+  const valueIdentifier = setTimeout(() => {
+    if (inputValue) {
+      switch (valueType) {
+        case 'email':
+          setValidValue((state) => {
+            return (state = validateEmail(inputValue));
+          });
+          break;
+        case 'password':
+          setValidValue((state) => {
+            return (state = validatePassword(inputValue));
+          });
+          break;
+      }
     }
   }, 500);
 
-  // 작성 후, 다 지웠을 때 변화를 위해서 추가
-  if (!emailValue) {
-    setValidEmail((state) => {
+  if (!inputValue) {
+    setValidValue((state) => {
       return (state = true);
     });
 
     return () => {
-      clearTimeout(emailIdentifier);
+      clearTimeout(valueIdentifier);
     };
   }
 }

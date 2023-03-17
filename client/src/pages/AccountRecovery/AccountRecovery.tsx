@@ -12,19 +12,20 @@ import Button from '../../components/common/Button/Button';
 import { EmailInput } from '../../components/Login/Input/Input';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
-import { validationEmail } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import { validationValue } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 
 function AccountRecovery() {
-  const [emailValue, setEmailValue] = useState('');
-  const [validEmail, setValidEmail] = useState(true);
+  const [inputValue, setInputValue] = useState('');
+  const [validValue, setValidValue] = useState(true);
+  const valueType = 'email';
 
   useEffect(() => {
-    validationEmail({ emailValue, setValidEmail });
-  }, [emailValue]);
+    validationValue({ inputValue, setValidValue, valueType });
+  }, [inputValue]);
 
   const changeEmailValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setEmailValue(value);
+    setInputValue(value);
   };
 
   return (
@@ -35,13 +36,13 @@ function AccountRecovery() {
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
-              emailValue={emailValue}
+              emailValue={inputValue}
               changeEventHandler={changeEmailValueHandler}
             />
           </S_InputContainerWrap>
-          {!validEmail && (
-            <S_InvalidMessage isShowMessage={!validEmail ? 'show' : 'hide'}>
-              {`${emailValue} is not a valid email address.`}
+          {!validValue && (
+            <S_InvalidMessage isShowMessage={!validValue ? 'show' : 'hide'}>
+              {`${inputValue} is not a valid email address.`}
             </S_InvalidMessage>
           )}
           <S_PasswordGuide>
@@ -54,7 +55,7 @@ function AccountRecovery() {
               shape="default"
               size="XXLarge"
               fullWidth
-              disabled={!validEmail}
+              disabled={!validValue}
             >
               Send recovery email
             </Button>
