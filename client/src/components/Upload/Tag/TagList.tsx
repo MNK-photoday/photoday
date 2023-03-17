@@ -6,12 +6,12 @@ import { Tags } from '../../../pages/Upload/Upload';
 const TagListWrap = styled.div`
   ${RowFlex}
 `;
-type tagListProps = {
+type TagListProps = {
   tags: Tags[];
-  onRemove: (id: number) => void;
+  onRemove?: (id: number) => void;
 };
 
-function TagList({ tags, onRemove }: tagListProps) {
+function TagList({ tags, onRemove }: TagListProps) {
   return (
     <TagListWrap>
       {tags.map((tag) => (

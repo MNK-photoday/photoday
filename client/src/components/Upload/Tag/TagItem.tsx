@@ -28,14 +28,14 @@ const TagItemWrap = styled.button`
   }
 `;
 
-type tagProps = {
+type TagItemProps = {
   tag: Tags;
-  onRemove: (id: number) => void;
+  onRemove?: (id: number) => void;
 };
 
-function TagItem({ tag, onRemove }: tagProps) {
+function TagItem({ tag, onRemove }: TagItemProps) {
   return (
-    <TagItemWrap onClick={() => onRemove(tag.id)}>
+    <TagItemWrap onClick={() => onRemove?.(tag.id)}>
       {tag.name} <IoClose className="close-icon" />
     </TagItemWrap>
   );
