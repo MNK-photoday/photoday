@@ -27,7 +27,7 @@ public class UserDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Update {
-        @Pattern(regexp = "^.{1,200}$", message = "자기소래란은 1자 이상 200자 이하여야 합니다.")
+        @Pattern(regexp = "^.{1,200}$", message = "자기소개란은 1자 이상 200자 이하여야 합니다.")
         private String description;
     }
 
