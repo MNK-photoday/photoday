@@ -246,11 +246,21 @@ class UserServiceTest {
     }
 
     @Test
-    void checkUserReportCountTest() {
-    }
-
-    @Test
+    @DisplayName("findUserByEmail: 존재하는 유저 검색")
     void findUserByEmailTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User registeredUser = userRepository.save(user);
+
+        // when
+        User responseUser = userService.findUserByEmail(registeredUser.getEmail());
+
+        // then
+        assertEquals(registeredUser.getUserId(), responseUser.getUserId());
     }
 
     @Test
