@@ -205,7 +205,15 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("updateUserPassword: 비밀번호 불일치")
     void updateUserPasswordTest() {
+        // given
+        UserDto.UpdateUserPassword userDto = new UserDto.UpdateUserPassword("123456a@", "123456a#");
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.updateUserPassword(userDto));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
+        assertEquals("비밀번호가 일치하지 않습니다.", exception.getExceptionCode().getMessage());
     }
 
     @Test
