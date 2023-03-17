@@ -138,8 +138,8 @@ public class UserService {
         if(user.getBanTime() != null && LocalDateTime.now().isAfter(user.getBanTime())) {
             user.setBanTime(null);
             user.setStatus(User.UserStatus.USER_ACTIVE);
+            userRepository.save(user);
         }
-        userRepository.save(user);
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul") //TODO 자정에 에러 뜸

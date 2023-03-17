@@ -294,4 +294,23 @@ class UserServiceTest {
         assertNotNull(bannedUser.getBanTime());
     }
 
+    @Test
+    @DisplayName("checkBanTime: 밴 타임 만료")
+    void checkBanTimeExpiredTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .banTime(LocalDateTime.now())
+                .build();
+        User bannedUser = userRepository.save(user);
+
+        // when
+        userService.checkBanTime(bannedUser);
+
+        // then
+        assertNull(bannedUser.getBanTime());
+    }
+
 }
