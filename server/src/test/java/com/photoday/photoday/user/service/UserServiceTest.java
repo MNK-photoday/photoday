@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 import static com.photoday.photoday.helper.snippets.RestDocsSnippets.getMockMultipartFile;
 import static org.junit.jupiter.api.Assertions.*;
@@ -275,10 +276,22 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("checkBanTime: 밴 타임 남아 있음")
     void checkBanTimeTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .banTime(LocalDateTime.now().plusDays(1L))
+                .build();
+        User bannedUser = userRepository.save(user);
+
+        // when
+        userService.checkBanTime(bannedUser);
+
+        // then
+        assertNotNull(bannedUser.getBanTime());
     }
 
-    @Test
-    void resetTodayUserReportCountTest() {
-    }
 }
