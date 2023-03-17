@@ -7,6 +7,7 @@ import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
+import com.photoday.photoday.image.repository.LikeRepository;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +47,7 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final TagMapper tagMapper;
     private final AuthUserService authUserService;
+    private final LikeRepository likeRepository;
 
     public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
         if (!List.of("image/jpeg", "image/pjpeg", "image/tiff" ,"image/png", "image/bmp", "image/x-windows-bmp")
@@ -145,14 +148,14 @@ public class ImageService {
 
         if (bookmark.isPresent()) {
             image.getBookmarkList().remove(bookmark.get());
-        } else { //TODO 레포지토리 파서 쿼리로 ...
+
+        } else {
             Bookmark newBookmark = new Bookmark();
             newBookmark.setUser(user);
             newBookmark.setImage(image);
         }
 
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
     }
 
     public MultiResponseDto getBookmarkImages(Pageable pageable) {
@@ -205,21 +208,20 @@ public class ImageService {
         Long userId = authUserService.getLoginUserId(); //TODO 리팩토링 필요
         User user = userService.findVerifiedUser(userId);
 
-        //TODO 포스트맨에서는 1,1,0 으로 됨(등록,버그,취소). //TODO 레포지토리 파서 쿼리로 ...
         Optional<Like> like = image.getLikeList().stream()
                 .filter(l -> l.getUser().getUserId() == userId)
                 .findFirst();
 
         if (like.isPresent()) {
             image.getLikeList().remove(like.get());
+            likeRepository.deleteAllByIdInBatch(Collections.singleton(like.get().getLikeId()));
         } else {
             Like newLike = new Like();
             newLike.setUser(user);
             newLike.setImage(image);
         }
 
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
     }
 
     public Image findVerifiedImage(long imageId) {
