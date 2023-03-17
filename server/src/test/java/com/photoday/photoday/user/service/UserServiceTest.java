@@ -235,6 +235,17 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("findVerifiedUser: 존재하지 않는 유저")
+    void findVerifiedUserNotFoundTest() {
+        // given
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.findVerifiedUser(1L));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
+        assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
     void checkUserReportCountTest() {
     }
 
