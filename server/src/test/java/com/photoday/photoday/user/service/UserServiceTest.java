@@ -6,6 +6,7 @@ import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +34,18 @@ class UserServiceTest {
     AuthUserService authUserService;
     @MockBean
     S3Service s3Service;
+
+    @BeforeEach
+    void dropRepository() {
+        userRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("createUser: 정상 입력")
     void createUserTest() {
         // given
         UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
-        String defaultProfileImageUrl = "https://cdn.discordapp.com/attachments/1082610363712950272/1082610364371435540/userImage.png";
+        String defaultProfileImageUrl = "https://ifh.cc/g/zPrPfv.png";
         given(authUserService.checkLogin()).willReturn(null);
 
         // when
@@ -61,6 +68,7 @@ class UserServiceTest {
     void createUserExistedEmail() {
         // given
         UserDto.Post post = new UserDto.Post("default@email.com", "123456a!");
+        userService.createUser(post);
 
         // when
         CustomException exception = assertThrows(CustomException.class, () -> userService.createUser(post));
