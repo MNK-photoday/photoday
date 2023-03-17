@@ -264,6 +264,17 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("findUserByEmail: 존재하지 않는 유저 검색")
+    void findUserByEmailTestNotFound() {
+        // given
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.findUserByEmail("notRegistered@email.com"));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
+        assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
     void checkBanTimeTest() {
     }
 
