@@ -1,5 +1,6 @@
 package com.photoday.photoday.image.service;
 
+import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -58,6 +60,19 @@ class ImageServiceTest {
 
         // then
         assertNotNull(image.getImageId());
+    }
+
+    @Test
+    @DisplayName("createImage: 다른 형식의 파일 입력")
+    void createImageTestWrongContentType() {
+        // given
+        TagDto tagDto = new TagDto(List.of("background", "blue"));
+        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "application/pdf", "multipartFile".getBytes());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.createImage(tagDto, multipartFile));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getExceptionCode().getHttpStatus());
+        assertEquals("이미지 타입의 파일이 아닙니다.", exception.getExceptionCode().getMessage());
     }
 
     @Test
