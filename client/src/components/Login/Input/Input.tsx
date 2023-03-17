@@ -25,21 +25,22 @@ export function EmailInput({ emailValue, changeEventHandler }: EmailProps) {
   );
 }
 
-interface PasswordProps {
+export interface PasswordProps {
+  labelValue: string;
   passwordValue: string;
   changeEventHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function PasswordInput({
+  labelValue,
   passwordValue,
   changeEventHandler,
 }: PasswordProps) {
   return (
     <>
-      <S_InputLabel htmlFor="password">password</S_InputLabel>
+      <S_InputLabel htmlFor="password">{labelValue}</S_InputLabel>
       <S_Input
         type="password"
-        id="password"
         value={passwordValue}
         onChange={changeEventHandler}
       />

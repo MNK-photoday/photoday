@@ -92,6 +92,7 @@ function Login() {
               </S_InvalidMessage>
             )}
             <PasswordInput
+              labelValue="password"
               passwordValue={loginForm.password}
               changeEventHandler={changeEmailAndPasswordValueHandler}
             />

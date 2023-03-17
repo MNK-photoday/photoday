@@ -10,26 +10,26 @@ import Button from '../../common/Button/Button';
 import { DataType } from '../../../pages/User/User';
 
 interface IProps {
-  userdata: DataType;
+  userData: DataType;
 }
 
-function UserThumnailArea({ userdata }: IProps) {
+function UserThumnailArea({ userData }: IProps) {
   return (
     <S_UserThumnailArea>
       <S_UserProfileIamge
         alt="user profile"
-        src={userdata.data[0].profileImageUrl}
+        src={userData.data[0].profileImageUrl}
       />
       <S_UserFollowContainer>
         <div>
           <S_UserFollowCount>
-            {userdata.data[0].followerCount}
+            {userData.data[0].followerCount}
           </S_UserFollowCount>
           <S_UserFollow>Follower</S_UserFollow>
         </div>
         <div>
           <S_UserFollowCount>
-            {userdata.data[0].followingCount}
+            {userData.data[0].followingCount}
           </S_UserFollowCount>
           <S_UserFollow>Following</S_UserFollow>
         </div>

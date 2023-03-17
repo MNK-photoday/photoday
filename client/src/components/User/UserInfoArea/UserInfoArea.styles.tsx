@@ -17,7 +17,7 @@ export const S_UserNameContainer = styled.div`
   }
 
   .reporticon {
-    color: #f5f261;
+    color: var(--color-primary-black);
     margin-right: 15px;
   }
 `;
@@ -44,11 +44,12 @@ export const S_TextButtonWrap = styled.div`
   flex-direction: column;
 `;
 
-type TextButtonType = 'edit' | 'changePassword' | 'deleteAccount';
+type TextButtonType = 'edit' | 'changePassword' | 'deleteAccount' | 'Cancel';
 
 const TextButtonCss = {
   edit: css`
     color: var(--color-primary-black);
+    margin-bottom: 20px;
 
     &:hover {
       color: #919191;
@@ -56,11 +57,18 @@ const TextButtonCss = {
   `,
   changePassword: css`
     color: var(--color-primary-red);
-    margin: 20px 0;
   `,
 
   deleteAccount: css`
+    margin-top: 20px;
     color: var(--color-primary-red);
+  `,
+
+  Cancel: css`
+    color: var(--color-primary-black);
+    position: relative;
+    top: 17.5px;
+    left: 100px;
   `,
 };
 
@@ -79,4 +87,23 @@ export const S_TextButton = styled.button<{ isTextButtonType: TextButtonType }>`
 export const S_DeleteAccountText = styled.p`
   font-size: var(--font-size-sm);
   color: var(--color-primary-black);
+`;
+
+export const S_InputWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+
+  label {
+    color: var(--color-primary-black);
+    font-size: var(--font-size-sm);
+  }
+
+  input {
+    margin-bottom: 10px;
+  }
+
+  p {
+    bottom: 0px;
+  }
 `;
