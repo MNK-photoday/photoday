@@ -100,12 +100,9 @@ public class ImageService {
         image.getImageTagList().clear();
 
         //새로운 태그들을 tag -> imageTag로 변환해서 저장.
-        List<ImageTag> imageTagList = tagListToImageTagList(tagList, image);
+        tagListToImageTagList(tagList, image);
 
-        image.getImageTagList().addAll(imageTagList);
-
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
     }
 
     private List<ImageTag> tagListToImageTagList(List<Tag> tagList, Image image) {
@@ -176,7 +173,8 @@ public class ImageService {
         User user = userService.findVerifiedUser(userId);
         userService.checkUserReportCount(userId);
         //사용자가 이미 신고했으면 예외 터뜨리기.
-        Optional<Report> optionalReport = image.getReportList().stream().filter(r -> r.getUser().getUserId() == userId).findFirst();
+        Optional<Report> optionalReport = image.getReportList().stream()
+                .filter(r -> r.getUser().getUserId() == userId).findFirst();
 
         if (optionalReport.isPresent()) {
             throw new CustomException(ALREADY_REPORTED);
@@ -199,8 +197,7 @@ public class ImageService {
             }
         }
 
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
     }
 
     public ImageDto.Response updateLike(long imageId) {
