@@ -217,11 +217,21 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserTest() {
-    }
-
-    @Test
+    @DisplayName("findVerifiedUser: 존재하는 유저")
     void findVerifiedUserTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User registeredUser = userRepository.save(user);
+
+        // when
+        User verifiedUser = userService.findVerifiedUser(registeredUser.getUserId());
+
+        // then
+        assertEquals(registeredUser.getUserId(), verifiedUser.getUserId());
     }
 
     @Test
