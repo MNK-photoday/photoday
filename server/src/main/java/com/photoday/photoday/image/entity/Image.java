@@ -2,6 +2,7 @@ package com.photoday.photoday.image.entity;
 
 import com.photoday.photoday.user.entity.User;
 import lombok.*;
+import lombok.Builder.Default;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -39,15 +40,19 @@ public class Image {
     private User user;
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<ImageTag> imageTagList = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<Like> likeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<Report> reportList = new ArrayList<>();
 
     public void setUser(User user) {

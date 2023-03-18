@@ -44,10 +44,6 @@ class ImageMapperTest {
                 .imageUrl("imageUrl")
                 .user(new User())
                 .viewCount(3)
-                .imageTagList(new ArrayList<>())
-                .bookmarkList(new ArrayList<>())
-                .likeList(new ArrayList<>())
-                .reportList(new ArrayList<>())
                 .build();
 
 //        private method test 접근
@@ -59,13 +55,13 @@ class ImageMapperTest {
         given(userMapper.userToUserResponse(Mockito.any(User.class), Mockito.anyLong())).willReturn(new UserDto.Response());
 
         // when
-        ImageDto.BookmarkAndSearchResponse bookmarkAndSearchResponse = imageMapper.imageToBookmarkAndSearchResponse(image);
+        ImageDto.PageResponse pageResponse = imageMapper.imageToPageResponse(image);
 
         // then
-        assertEquals(bookmarkAndSearchResponse.getImageId(), image.getImageId());
-        assertEquals(bookmarkAndSearchResponse.isLike(), false);
-        assertEquals(bookmarkAndSearchResponse.getImageUrl(), image.getImageUrl());
-        assertEquals(bookmarkAndSearchResponse.getViewCount(), image.getViewCount());
+        assertEquals(pageResponse.getImageId(), image.getImageId());
+        assertEquals(pageResponse.isLike(), false);
+        assertEquals(pageResponse.getImageUrl(), image.getImageUrl());
+        assertEquals(pageResponse.isBookmark(), false);
     }
 
     @Test
