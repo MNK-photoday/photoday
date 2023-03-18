@@ -33,6 +33,7 @@ function UserInfoArea({ userData }: User) {
   const [isChangePassWord, setIsChangePassWord] = useState(false);
   const VALUE_TYPE = 'password';
   const user = userData.data[0];
+  const confirmValue = inputValue !== confirminputValue;
 
   useEffect(() => {
     validateValue({ inputValue, setValidValue, VALUE_TYPE });
@@ -97,8 +98,8 @@ function UserInfoArea({ userData }: User) {
               passwordValue={confirminputValue}
               changeEventHandler={changeConfirmPasswordHandler}
             />
-            {!(inputValue === confirminputValue) && (
-              <S_InvalidMessage isShowMessage={!validValue ? 'show' : 'hide'}>
+            {confirmValue && (
+              <S_InvalidMessage isShowMessage={confirmValue ? 'show' : 'hide'}>
                 Passwords do not match.
               </S_InvalidMessage>
             )}
