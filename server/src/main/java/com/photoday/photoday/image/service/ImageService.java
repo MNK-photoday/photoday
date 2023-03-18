@@ -161,8 +161,8 @@ public class ImageService {
 
         Page<Image> page = imageRepository.findAllBookmarkImages(pageRequest, userId);
         List<Image> imageList = page.getContent();
-        List<ImageDto.BookmarkAndSearchResponse> responses
-                = imageList.stream().map(imageMapper::imageToBookmarkAndSearchResponse).collect(Collectors.toList());
+        List<ImageDto.PageResponse> responses
+                = imageList.stream().map(imageMapper::imageToPageResponse).collect(Collectors.toList());
 
         return new MultiResponseDto(responses, page);
     }
@@ -170,6 +170,9 @@ public class ImageService {
     public ImageDto.Response createReport(long imageId) {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
         Long userId = authUserService.getLoginUserId();
+
+        if(image.getUser().getUserId()==userId) throw new CustomException(ExceptionCode.CANNOT_REPORT_MYSELF); // 본인 신고 불가
+
         User user = userService.findVerifiedUser(userId);
         userService.checkUserReportCount(userId);
         //사용자가 이미 신고했으면 예외 터뜨리기.
@@ -219,6 +222,17 @@ public class ImageService {
         }
 
         return imageMapper.imageToResponse(image);
+    }
+
+    public MultiResponseDto getUserImages(long userId, Pageable pageable) {
+        Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
+
+        Page<Image> page = imageRepository.findAllUserImages(pageRequest, userId);
+        List<Image> imageList = page.getContent();
+        List<ImageDto.PageResponse> responses
+                = imageList.stream().map(imageMapper::imageToPageResponse).collect(Collectors.toList());
+
+        return new MultiResponseDto(responses, page);
     }
 
     public Image findVerifiedImage(long imageId) {
