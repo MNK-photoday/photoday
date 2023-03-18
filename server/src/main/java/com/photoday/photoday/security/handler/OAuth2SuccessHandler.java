@@ -1,12 +1,16 @@
 package com.photoday.photoday.security.handler;
 
+import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.mail.UserEventListener;
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.utils.CookieUtil;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -27,6 +31,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtProvider jwtProvider;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserEventListener userEventListener;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -34,24 +39,17 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         User user = saveUser(email);
+
+        checkUserStatus(user);
+
         redirect(request, response, user); //TODO 밴처리 후 에러 처리
     }
 
     private User saveUser(String email) {
         User user = new User();
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(generateRandomString(20)));
+        user.setPassword(passwordEncoder.encode(userEventListener.getTempPassword()));
         return userService.registerUserOAuth2(user);
-    }
-
-    private String generateRandomString(int length) { //TODO 이메일 발송 로직에 있긴한디
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-        Random random = new Random();
-        char[] text = new char[length];
-        for (int i = 0; i < length; i++) {
-            text[i] = characters.charAt(random.nextInt(characters.length()));
-        }
-        return new String(text);
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, User user)
@@ -80,5 +78,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .queryParams(queryParams)
                 .build()
                 .toUri();
+    }
+
+    private void checkUserStatus(User user) {
+        try {
+            userService.checkBanTime(user);
+            if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
+                throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
+            }
+        } catch (CustomException e) {
+            throw new UsernameNotFoundException("회원 정보를 찾을 수 없습니다.");
+        }
     }
 }

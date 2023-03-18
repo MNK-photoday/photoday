@@ -1,5 +1,6 @@
 package com.photoday.photoday.security.configuration;
 
+import com.photoday.photoday.mail.UserEventListener;
 import com.photoday.photoday.security.filter.JwtAuthenticationFilter;
 import com.photoday.photoday.security.filter.JwtVerificationFilter;
 import com.photoday.photoday.security.handler.*;
@@ -38,6 +39,7 @@ public class SecurityConfiguration {
     private final UserDataResponder userDataResponder;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserEventListener userEventListener;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -61,7 +63,8 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder)));
+                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder, userEventListener))
+                        .failureHandler(new OAuth2FailureHandler()));
 
         return http.build();
     }
