@@ -13,16 +13,16 @@ function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
     <S_SelectModalWrap>
       <S_SelectModalContainer>
         <S_SelectModalSpan
-          onClick={() => setIsSelect('최신순')}
-          active={isSelect === '최신순'}
+          onClick={() => setIsSelect('Newest')}
+          active={isSelect === 'Newest'}
         >
-          최신순
+          Newest
         </S_SelectModalSpan>
         <S_SelectModalSpan
-          onClick={() => setIsSelect('인기순')}
-          active={isSelect === '인기순'}
+          onClick={() => setIsSelect('Popular')}
+          active={isSelect === 'Popular'}
         >
-          인기순
+          Popular
         </S_SelectModalSpan>
       </S_SelectModalContainer>
     </S_SelectModalWrap>
