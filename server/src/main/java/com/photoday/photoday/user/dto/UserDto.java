@@ -31,6 +31,8 @@ public class UserDto {
         private String description;
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Getter
     public static class UpdateUserPassword {
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$", message = "비밀번호는 영문과 특수문자, 숫자를 포함하여 8자 이상이고 20자 이하여야 합니다.")

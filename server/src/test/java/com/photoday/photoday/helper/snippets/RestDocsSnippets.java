@@ -148,7 +148,7 @@ public class RestDocsSnippets {
         return new FollowDto.ResponseFollowUsers(List.of(followingUserData), List.of(followerUserData), 1, 1);
     }
 
-    public static MultiResponseDto<?> getMultiResponseDtoBookMarkAndSearchResponse() {
+    public static MultiResponseDto getMultiResponseDtoPageResponse() {
         ImageDto.PageResponse responseDto = new ImageDto.PageResponse(1L, "http://image.jpg", false, false);
         Page<ImageDto.PageResponse> page = new PageImpl<>(List.of(responseDto), PageRequest.of(0, 12), 1324);
         List<ImageDto.PageResponse> content = page.getContent();
@@ -230,7 +230,7 @@ public class RestDocsSnippets {
                 fieldWithPath("data[].imageId").type(JsonFieldType.NUMBER).description("이미지 식별자"),
                 fieldWithPath("data[].imageUrl").type(JsonFieldType.STRING).description("이미지 URL"),
                 fieldWithPath("data[].like").type(JsonFieldType.BOOLEAN).description("현재 유저의 이미지 좋아요 여부"),
-                fieldWithPath("data[].viewCount").type(JsonFieldType.NUMBER).description("이미지 조회수"),
+                fieldWithPath("data[].bookmark").type(JsonFieldType.BOOLEAN).description("현재 유저의 이미지 북마크 여부"),
                 fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이징 데이터"),
                 fieldWithPath("pageInfo.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
                 fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 별 이미지 수"),
