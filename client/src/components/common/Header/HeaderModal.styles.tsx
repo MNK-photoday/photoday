@@ -53,4 +53,5 @@ export const S_ModalNavLink = styled(Link)`
   font-size: var(--font-size-sm);
   color: var(--color-primary-black);
   padding: 5px 10px;
+  flex: 1;
 `;
