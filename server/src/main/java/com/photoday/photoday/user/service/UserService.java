@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -138,11 +139,11 @@ public class UserService {
         if(user.getBanTime() != null && LocalDateTime.now().isAfter(user.getBanTime())) {
             user.setBanTime(null);
             user.setStatus(User.UserStatus.USER_ACTIVE);
+            userRepository.save(user);
         }
-        userRepository.save(user);
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul") //TODO 자정에 에러 뜸
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     protected void resetTodayUserReportCount() {
         log.info(String.valueOf(LocalDateTime.now()));
         userRepository.resetTodayReportCount();
