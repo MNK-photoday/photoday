@@ -149,9 +149,9 @@ public class RestDocsSnippets {
     }
 
     public static MultiResponseDto<?> getMultiResponseDtoBookMarkAndSearchResponse() {
-        ImageDto.BookmarkAndSearchResponse responseDto = new ImageDto.BookmarkAndSearchResponse(1L, "http://image.jpg", false, 0);
-        Page<ImageDto.BookmarkAndSearchResponse> page = new PageImpl<>(List.of(responseDto), PageRequest.of(0, 12), 1324);
-        List<ImageDto.BookmarkAndSearchResponse> content = page.getContent();
+        ImageDto.PageResponse responseDto = new ImageDto.PageResponse(1L, "http://image.jpg", false, false);
+        Page<ImageDto.PageResponse> page = new PageImpl<>(List.of(responseDto), PageRequest.of(0, 12), 1324);
+        List<ImageDto.PageResponse> content = page.getContent();
         return new MultiResponseDto<>(content, page);
     }
 

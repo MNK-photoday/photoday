@@ -23,15 +23,10 @@ public class UserMapper {
         return user;
     }
 
-    public User userPatchToUser(UserDto.Update userPatchDto) {
-        if (userPatchDto == null) {
-            return null;
-        }
-
+    public User userUpdateToUser(UserDto.Update userUpdateDto) {
         User user = new User();
-
-        user.setDescription(userPatchDto.getDescription());
-
+        String description = userUpdateDto != null ? userUpdateDto.getDescription() : null;
+        user.setDescription(description);
         return user;
     }
 

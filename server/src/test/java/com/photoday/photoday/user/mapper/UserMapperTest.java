@@ -46,7 +46,7 @@ class UserMapperTest {
         UserDto.Update updateDto = new UserDto.Update(description);
 
         // when
-        User user = userMapper.userPatchToUser(updateDto);
+        User user = userMapper.userUpdateToUser(updateDto);
 
         // then
         assertNotNull(user);

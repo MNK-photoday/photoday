@@ -73,4 +73,10 @@ public class ImageController {
         ImageDto.Response response = imageService.updateLike(imageId);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserImages(@PathVariable @Positive Long userId, Pageable pageable) {
+        MultiResponseDto userImages = imageService.getUserImages(userId, pageable);
+        return new ResponseEntity<>(userImages, HttpStatus.OK);
+    }
 }

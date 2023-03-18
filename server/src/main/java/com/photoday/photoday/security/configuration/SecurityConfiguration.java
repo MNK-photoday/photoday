@@ -9,6 +9,7 @@ import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.security.utils.UserDataResponder;
 import com.photoday.photoday.user.service.UserService;
+import com.photoday.photoday.util.TempPassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +39,7 @@ public class SecurityConfiguration {
     private final UserDataResponder userDataResponder;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final TempPassword tempPassword;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -61,7 +63,7 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder)));
+                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder, tempPassword)));
 
         return http.build();
     }
