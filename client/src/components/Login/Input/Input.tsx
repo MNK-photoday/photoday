@@ -40,6 +40,7 @@ export function PasswordInput({
     <>
       <S_InputLabel htmlFor="password">{labelValue}</S_InputLabel>
       <S_Input
+        id="password"
         type="password"
         value={passwordValue}
         onChange={changeEventHandler}
