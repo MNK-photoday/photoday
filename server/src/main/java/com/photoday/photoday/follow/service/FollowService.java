@@ -31,19 +31,19 @@ public class FollowService {
     public FollowDto.ResponseFollowUsers findFollowUser() {
         Long loginUserId = authUserService.getLoginUserId();
 
-        List<Follow> following = followRepository.findFollowByFollower_UserId(loginUserId);
-        List<Follow> follower = followRepository.findFollowByFollowing_UserId(loginUserId);
+        List<Follow> follower = followRepository.findFollowByFollower_UserId(loginUserId);
+        List<Follow> following = followRepository.findFollowByFollowing_UserId(loginUserId);
 
         //사용자가 팔로우한 사람
-        List<User> userFollowing = following.stream().map(Follow::getFollowing).collect(Collectors.toList());
+        List<User> userFollowing = following.stream().map(Follow::getFollower).collect(Collectors.toList());
         //사용자를 팔로우한 사람
-        List<User> userFollower = follower.stream().map(Follow::getFollower).collect(Collectors.toList());
+        List<User> userFollower = follower.stream().map(Follow::getFollowing).collect(Collectors.toList());
 
         Map<String, List<User>> follow = new HashMap<>();
         follow.put("following", userFollowing);
         follow.put("follower", userFollower);
 
-        return followMapper.followUserListToResponseFollowUsers(follow);
+        return followMapper.followUserListToResponseFollowUsers(follow, loginUserId);
     }
 
     public FollowDto.ResponseFollowUsers registerFollowUser(Long followingId) {
@@ -51,24 +51,25 @@ public class FollowService {
         if(followingId.equals(loginUserId)) {
             throw new CustomException(ExceptionCode.CANNOT_FOLLOW_MYSELF);
         }
-        User follower = userService.findVerifiedUser(loginUserId);
-        User following = userService.findVerifiedUser(followingId);
+        User user = userService.findVerifiedUser(loginUserId);
+        User targetUser = userService.findVerifiedUser(followingId);
 
-        Optional<Follow> check = followRepository.findByFollowerAndFollowing(follower, following);
+        Optional<Follow> check = followRepository.findByFollowerAndFollowing(targetUser, user);
 
         if(check.isPresent()) {
-            follower.getFollowing().remove(check.get());
-            following.getFollower().remove(check.get());
+            user.getFollowing().remove(check.get());
+            targetUser.getFollower().remove(check.get());
 
             followRepository.delete(check.get());
         } else {
             Follow follow = new Follow();
-            follow.setFollower(follower);
-            follow.setFollowing(following);
+            follow.setFollower(targetUser);
+            follow.setFollowing(user);
 
             followRepository.save(follow);
         }
 
         return findFollowUser();
     }
+
 }
