@@ -6,6 +6,7 @@ import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 import static com.photoday.photoday.helper.snippets.RestDocsSnippets.getMockMultipartFile;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,12 +35,18 @@ class UserServiceTest {
     AuthUserService authUserService;
     @MockBean
     S3Service s3Service;
+
+    @BeforeEach
+    void dropRepository() {
+        userRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("createUser: 정상 입력")
     void createUserTest() {
         // given
         UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
-        String defaultProfileImageUrl = "https://cdn.discordapp.com/attachments/1082610363712950272/1082610364371435540/userImage.png";
+        String defaultProfileImageUrl = "https://ifh.cc/g/zPrPfv.png";
         given(authUserService.checkLogin()).willReturn(null);
 
         // when
@@ -61,6 +69,7 @@ class UserServiceTest {
     void createUserExistedEmail() {
         // given
         UserDto.Post post = new UserDto.Post("default@email.com", "123456a!");
+        userService.createUser(post);
 
         // when
         CustomException exception = assertThrows(CustomException.class, () -> userService.createUser(post));
@@ -153,30 +162,155 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("updateUser: description만 변경")
+    void updateUserDescriptionOnlyTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        UserDto.Update userUpdateDto = new UserDto.Update("edited!");
+
+        // when
+        UserDto.Response response = userService.updateUser(userUpdateDto, null);
+
+        // then
+        assertEquals("edited!", response.getDescription());
+        assertEquals(loginUser.getProfileImageUrl(), response.getProfileImageUrl());
+    }
+
+    @Test
+    @DisplayName("updateUser: profileImage만 변경")
+    void updateUserProfileImageUrlOnlyTest() throws IOException, NoSuchAlgorithmException {
+//        // given
+//        User user = User.builder()
+//                .email("default@mail.com")
+//                .name("default")
+//                .password("123456a!")
+//                .build();
+//        User loginUser = userRepository.save(user);
+//        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+//
+//        MultipartFile multipartFile = getMockMultipartFile("multipartFile", "multipartFile");
+//        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://changedProfileImageUrl.jpg");
+//
+//        // when
+//        UserDto.Response response = userService.updateUser(null, multipartFile);
+//
+//        // then
+//        assertEquals("http://changedProfileImageUrl.jpg", response.getProfileImageUrl());
+    }
+
+    @Test
+    @DisplayName("updateUserPassword: 비밀번호 불일치")
     void updateUserPasswordTest() {
+        // given
+        UserDto.UpdateUserPassword userDto = new UserDto.UpdateUserPassword("123456a@", "123456a#");
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.updateUserPassword(userDto));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
+        assertEquals("비밀번호가 일치하지 않습니다.", exception.getExceptionCode().getMessage());
     }
 
     @Test
-    void deleteUserTest() {
-    }
-
-    @Test
+    @DisplayName("findVerifiedUser: 존재하는 유저")
     void findVerifiedUserTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User registeredUser = userRepository.save(user);
+
+        // when
+        User verifiedUser = userService.findVerifiedUser(registeredUser.getUserId());
+
+        // then
+        assertEquals(registeredUser.getUserId(), verifiedUser.getUserId());
     }
 
     @Test
-    void checkUserReportCountTest() {
+    @DisplayName("findVerifiedUser: 존재하지 않는 유저")
+    void findVerifiedUserNotFoundTest() {
+        // given
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.findVerifiedUser(1L));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
+        assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
     }
 
     @Test
+    @DisplayName("findUserByEmail: 존재하는 유저 검색")
     void findUserByEmailTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User registeredUser = userRepository.save(user);
+
+        // when
+        User responseUser = userService.findUserByEmail(registeredUser.getEmail());
+
+        // then
+        assertEquals(registeredUser.getUserId(), responseUser.getUserId());
     }
 
     @Test
+    @DisplayName("findUserByEmail: 존재하지 않는 유저 검색")
+    void findUserByEmailTestNotFound() {
+        // given
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.findUserByEmail("notRegistered@email.com"));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
+        assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
+    @DisplayName("checkBanTime: 밴 타임 남아 있음")
     void checkBanTimeTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .banTime(LocalDateTime.now().plusDays(1L))
+                .build();
+        User bannedUser = userRepository.save(user);
+
+        // when
+        userService.checkBanTime(bannedUser);
+
+        // then
+        assertNotNull(bannedUser.getBanTime());
     }
 
     @Test
-    void resetTodayUserReportCountTest() {
+    @DisplayName("checkBanTime: 밴 타임 만료")
+    void checkBanTimeExpiredTest() {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .banTime(LocalDateTime.now())
+                .build();
+        User bannedUser = userRepository.save(user);
+
+        // when
+        userService.checkBanTime(bannedUser);
+
+        // then
+        assertNull(bannedUser.getBanTime());
     }
+
 }

@@ -78,10 +78,9 @@ public class UserService {
     }
 
     public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) {
-        User user = userMapper.userPatchToUser(userUpdateDto);
+        User user = userMapper.userUpdateToUser(userUpdateDto);
         Long loginUserId = authUserService.getLoginUserId();
         User verifiedUser = findVerifiedUser(loginUserId);
-        user.setUserId(loginUserId);
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;

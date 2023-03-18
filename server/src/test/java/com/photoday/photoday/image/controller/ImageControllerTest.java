@@ -177,7 +177,7 @@ class ImageControllerTest {
     void getBookmarkImages() throws Exception {
         // given
         MultiValueMap<String, String> params = getParams("createAt,desc");
-        MultiResponseDto<?> response = getMultiResponseDtoBookMarkAndSearchResponse();
+        MultiResponseDto response = getMultiResponseDtoPageResponse();
 
         given(imageService.getBookmarkImages(any(Pageable.class))).willReturn(response);
 

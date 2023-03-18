@@ -41,13 +41,13 @@ class TagControllerTest {
         // given
         String content = getTagDto();
         MultiValueMap<String, String> params = getParams("createdAt,desc");
-        MultiResponseDto<?> response = getMultiResponseDtoBookMarkAndSearchResponse();
+        MultiResponseDto<?> response = getMultiResponseDtoPageResponse();
 
         given(tagService.searchByTags(any(TagDto.class), any(Pageable.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
-                get("/api/tags")
+                get("/api/tags/search")
                         .params(params)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)

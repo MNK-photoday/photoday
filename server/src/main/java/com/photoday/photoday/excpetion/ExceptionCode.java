@@ -14,7 +14,8 @@ public enum ExceptionCode { //TODO 3 단어로 맞추기?
     ACCOUNT_SUSPENDED(HttpStatus.FORBIDDEN, "부적절한 이용으로 계정이 일시 정지되었습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
     IMAGE_FILE_ONLY(HttpStatus.BAD_REQUEST, "이미지 타입의 파일이 아닙니다."),
-    DUPLICATE_IMAGE(HttpStatus.CONFLICT, "중복된 이미지 입니다.");
+    DUPLICATE_IMAGE(HttpStatus.CONFLICT, "중복된 이미지 입니다."),
+    CANNOT_REPORT_MYSELF(HttpStatus.UNAUTHORIZED, "본인 게시물을 신고할 수 없습니다.");
 
     @Getter
     private HttpStatus httpStatus;

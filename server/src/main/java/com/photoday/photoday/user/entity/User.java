@@ -72,7 +72,7 @@ public class User {
     @Default
     private List<Report> reports = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Default
     private List<Like> likes = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
 

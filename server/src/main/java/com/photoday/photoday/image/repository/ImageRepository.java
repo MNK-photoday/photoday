@@ -20,5 +20,8 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Query(value = "SELECT i FROM Image i WHERE i.imageId IN(SELECT b.image.imageId FROM Bookmark b WHERE b.user.userId =:userId)")
     Page<Image> findAllBookmarkImages(Pageable pageable, Long userId);
 
+    @Query(value = "SELECT i FROM Image i WHERE i.user.userId = :userId")
+    Page<Image> findAllUserImages(Pageable pageable, Long userId);
+
     boolean existsByImageHashValue(String imageHashValue);
 }

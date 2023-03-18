@@ -7,6 +7,7 @@ import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
+import com.photoday.photoday.image.repository.LikeRepository;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +47,7 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final TagMapper tagMapper;
     private final AuthUserService authUserService;
+    private final LikeRepository likeRepository;
 
     public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
         if (!List.of("image/jpeg", "image/pjpeg", "image/tiff" ,"image/png", "image/bmp", "image/x-windows-bmp")
@@ -97,12 +100,9 @@ public class ImageService {
         image.getImageTagList().clear();
 
         //새로운 태그들을 tag -> imageTag로 변환해서 저장.
-        List<ImageTag> imageTagList = tagListToImageTagList(tagList, image);
+        tagListToImageTagList(tagList, image);
 
-        image.getImageTagList().addAll(imageTagList);
-
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
     }
 
     private List<ImageTag> tagListToImageTagList(List<Tag> tagList, Image image) {
@@ -145,14 +145,14 @@ public class ImageService {
 
         if (bookmark.isPresent()) {
             image.getBookmarkList().remove(bookmark.get());
-        } else { //TODO 레포지토리 파서 쿼리로 ...
+
+        } else {
             Bookmark newBookmark = new Bookmark();
             newBookmark.setUser(user);
             newBookmark.setImage(image);
         }
 
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
     }
 
     public MultiResponseDto getBookmarkImages(Pageable pageable) {
@@ -161,8 +161,8 @@ public class ImageService {
 
         Page<Image> page = imageRepository.findAllBookmarkImages(pageRequest, userId);
         List<Image> imageList = page.getContent();
-        List<ImageDto.BookmarkAndSearchResponse> responses
-                = imageList.stream().map(imageMapper::imageToBookmarkAndSearchResponse).collect(Collectors.toList());
+        List<ImageDto.PageResponse> responses
+                = imageList.stream().map(imageMapper::imageToPageResponse).collect(Collectors.toList());
 
         return new MultiResponseDto(responses, page);
     }
@@ -170,10 +170,14 @@ public class ImageService {
     public ImageDto.Response createReport(long imageId) {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
         Long userId = authUserService.getLoginUserId();
+
+        if(image.getUser().getUserId()==userId) throw new CustomException(ExceptionCode.CANNOT_REPORT_MYSELF); // 본인 신고 불가
+
         User user = userService.findVerifiedUser(userId);
         userService.checkUserReportCount(userId);
         //사용자가 이미 신고했으면 예외 터뜨리기.
-        Optional<Report> optionalReport = image.getReportList().stream().filter(r -> r.getUser().getUserId() == userId).findFirst();
+        Optional<Report> optionalReport = image.getReportList().stream()
+                .filter(r -> r.getUser().getUserId() == userId).findFirst();
 
         if (optionalReport.isPresent()) {
             throw new CustomException(ALREADY_REPORTED);
@@ -196,8 +200,7 @@ public class ImageService {
             }
         }
 
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
     }
 
     public ImageDto.Response updateLike(long imageId) {
@@ -205,21 +208,31 @@ public class ImageService {
         Long userId = authUserService.getLoginUserId(); //TODO 리팩토링 필요
         User user = userService.findVerifiedUser(userId);
 
-        //TODO 포스트맨에서는 1,1,0 으로 됨(등록,버그,취소). //TODO 레포지토리 파서 쿼리로 ...
         Optional<Like> like = image.getLikeList().stream()
                 .filter(l -> l.getUser().getUserId() == userId)
                 .findFirst();
 
         if (like.isPresent()) {
             image.getLikeList().remove(like.get());
+            likeRepository.deleteAllByIdInBatch(Collections.singleton(like.get().getLikeId()));
         } else {
             Like newLike = new Like();
             newLike.setUser(user);
             newLike.setImage(image);
         }
 
-        Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(image);
+    }
+
+    public MultiResponseDto getUserImages(long userId, Pageable pageable) {
+        Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
+
+        Page<Image> page = imageRepository.findAllUserImages(pageRequest, userId);
+        List<Image> imageList = page.getContent();
+        List<ImageDto.PageResponse> responses
+                = imageList.stream().map(imageMapper::imageToPageResponse).collect(Collectors.toList());
+
+        return new MultiResponseDto(responses, page);
     }
 
     public Image findVerifiedImage(long imageId) {

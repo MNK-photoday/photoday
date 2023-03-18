@@ -27,10 +27,12 @@ public class UserDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Update {
-        @Pattern(regexp = "^.{1,200}$", message = "자기소래란은 1자 이상 200자 이하여야 합니다.")
+        @Pattern(regexp = "^.{1,200}$", message = "자기소개란은 1자 이상 200자 이하여야 합니다.")
         private String description;
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Getter
     public static class UpdateUserPassword {
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$", message = "비밀번호는 영문과 특수문자, 숫자를 포함하여 8자 이상이고 20자 이하여야 합니다.")

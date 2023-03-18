@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.io.IOException;
 import java.net.URI;
 
 @RestController
@@ -35,13 +34,13 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestPart(required = false) @Valid UserDto.Update userUpdateDto, //TODO requestPart valid 적용되는지 확인
-                                        @RequestPart(value = "file", required = false) MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> updateUser(@RequestPart(required = false) @Valid UserDto.Update userUpdateDto,
+                                        @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
         UserDto.Response response = userService.updateUser(userUpdateDto, multipartFile);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PostMapping("/password")
+    @PostMapping("/update/password")
     public ResponseEntity<?> updateUserPassword(@RequestBody @Valid UserDto.UpdateUserPassword updateUserPasswordDto) {
         UserDto.Response response = userService.updateUserPassword(updateUserPasswordDto);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
