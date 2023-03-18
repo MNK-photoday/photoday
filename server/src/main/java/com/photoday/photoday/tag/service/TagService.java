@@ -33,8 +33,8 @@ public class TagService {
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         Page<Image> page = imageRepository.findAllByTag(tags.getTags(), pageRequest);
-        List<ImageDto.BookmarkAndSearchResponse> responses = page.stream()
-                .map(imageMapper::imageToBookmarkAndSearchResponse).collect(Collectors.toList());
+        List<ImageDto.PageResponse> responses = page.stream()
+                .map(imageMapper::imageToPageResponse).collect(Collectors.toList());
 
         return new MultiResponseDto(responses, page);
     }

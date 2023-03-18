@@ -39,10 +39,10 @@ public class ImageDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
-    public static class BookmarkAndSearchResponse {
+    public static class PageResponse {
         private Long imageId;
         private String imageUrl;
         private boolean like;
-        private int viewCount;
+        private boolean bookmark;
     }
 }

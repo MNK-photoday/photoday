@@ -18,12 +18,12 @@ public class ImageMapper {
     private final UserMapper userMapper;
     private final AuthUserService authUserService;
 
-    public ImageDto.BookmarkAndSearchResponse imageToBookmarkAndSearchResponse(Image image){ //TODO imageListToImageResponseList 로 메서드 이름 변경?
-        return ImageDto.BookmarkAndSearchResponse.builder()
+    public ImageDto.PageResponse imageToPageResponse(Image image){
+        return ImageDto.PageResponse.builder()
                 .imageId(image.getImageId())
                 .imageUrl(image.getImageUrl())
                 .like(hasLiked(image))
-                .viewCount(image.getViewCount())
+                .bookmark(hasBookmarked(image))
                 .build();
     }
 
