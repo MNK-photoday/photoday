@@ -143,8 +143,8 @@ public class RestDocsSnippets {
     }
 
     public static FollowDto.ResponseFollowUsers getFollowDtoResponseFollowUsers() {
-        FollowDto.ResponseFollowUserData followingUserData = new FollowDto.ResponseFollowUserData(3L, "흰둥이");
-        FollowDto.ResponseFollowUserData followerUserData = new FollowDto.ResponseFollowUserData(2L, "신형만");
+        FollowDto.ResponseFollowingUserData followingUserData = new FollowDto.ResponseFollowingUserData(3L, "흰둥이", "http://흰둥이이미지.jpg");
+        FollowDto.ResponseFollowerUserData followerUserData = new FollowDto.ResponseFollowerUserData(2L, "신형만", "http://신형만이미지.jpg", false);
         return new FollowDto.ResponseFollowUsers(List.of(followingUserData), List.of(followerUserData), 1, 1);
     }
 
@@ -216,9 +216,12 @@ public class RestDocsSnippets {
                 fieldWithPath("data.userFollowing").type(JsonFieldType.ARRAY).description("현재 유저가 팔로우 하는 유저 목록"),
                 fieldWithPath("data.userFollowing[].userId").type(JsonFieldType.NUMBER).description("현재 유저가 팔로우 하는 유저의 식별자"),
                 fieldWithPath("data.userFollowing[].name").type(JsonFieldType.STRING).description("현재 유저가 팔로우 하는 유저의 닉네임"),
+                fieldWithPath("data.userFollowing[].userProfileImage").type(JsonFieldType.STRING).description("현재 유저가 팔로우 하는 유저의 프로필 이미지"),
                 fieldWithPath("data.userFollower").type(JsonFieldType.ARRAY).description("현재 유저를 팔로우 하는 유저 목록"),
                 fieldWithPath("data.userFollower[].userId").type(JsonFieldType.NUMBER).description("현재 유저를 팔로우 하는 유저의 식별자"),
                 fieldWithPath("data.userFollower[].name").type(JsonFieldType.STRING).description("현재 유저를 팔로우 하는 유저의 이름"),
+                fieldWithPath("data.userFollower[].userProfileImage").type(JsonFieldType.STRING).description("현재 유저를 팔로우 하는 유저의 프로필 이미지"),
+                fieldWithPath("data.userFollower[].checkFollow").type(JsonFieldType.BOOLEAN).description("현재 유저의 팔로워를 팔로우 하는지 여부"),
                 fieldWithPath("data.userFollowingCount").type(JsonFieldType.NUMBER).description("현재 유저가 팔로우 하는 유저의 수"),
                 fieldWithPath("data.userFollowerCount").type(JsonFieldType.NUMBER).description("현재 유저를 팔로우 하는 유저의 수 ")
         );
