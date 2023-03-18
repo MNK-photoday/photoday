@@ -89,7 +89,7 @@ export const S_DeleteAccountText = styled.p`
   color: var(--color-primary-black);
 `;
 
-export const S_InputWrap = styled.div`
+export const S_InputWrap = styled.form`
   display: flex;
   flex-direction: column;
   margin-bottom: 0;

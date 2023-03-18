@@ -38,12 +38,13 @@ export function PasswordInput({
 }: PasswordProps) {
   return (
     <>
-      <S_InputLabel htmlFor="password">{labelValue}</S_InputLabel>
+      <S_InputLabel htmlFor={labelValue}>{labelValue}</S_InputLabel>
       <S_Input
-        id="password"
+        id={labelValue}
         type="password"
         value={passwordValue}
         onChange={changeEventHandler}
+        autoComplete="off"
       />
     </>
   );
