@@ -44,7 +44,7 @@ export const S_TextButtonWrap = styled.div`
   flex-direction: column;
 `;
 
-type TextButtonType = 'edit' | 'changePassword' | 'deleteAccount' | 'Cancel';
+type TextButtonType = 'edit' | 'changePassword' | 'deleteAccount' | 'cancel';
 
 const TextButtonCss = {
   edit: css`
@@ -64,7 +64,7 @@ const TextButtonCss = {
     color: var(--color-primary-red);
   `,
 
-  Cancel: css`
+  cancel: css`
     color: var(--color-primary-black);
     position: relative;
     top: 17.5px;
@@ -89,7 +89,7 @@ export const S_DeleteAccountText = styled.p`
   color: var(--color-primary-black);
 `;
 
-export const S_InputWrap = styled.div`
+export const S_InputWrap = styled.form`
   display: flex;
   flex-direction: column;
   margin-bottom: 0;

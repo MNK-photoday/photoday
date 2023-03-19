@@ -21,23 +21,23 @@ import { S_TermsGuideModal, S_Ul, S_Li } from './Signup.styles';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
-import { LoginFormType, ValidationsType } from '../Login/Login';
-import { validationLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import { LoginValue, ValidityResults } from '../Login/Login';
+import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 
 function Signup() {
   const [isCheckedTerms, setIsCheckedTerms] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
-  const [loginForm, setLoginForm] = useState<LoginFormType>({
+  const [loginForm, setLoginForm] = useState<LoginValue>({
     email: '',
     password: '',
   });
-  const [validations, setValidations] = useState<ValidationsType>({
+  const [validations, setValidations] = useState<ValidityResults>({
     isValidEmail: true,
     isValidPassword: true,
   });
 
   useEffect(() => {
-    validationLogin({ loginForm, setValidations });
+    validateLogin({ loginForm, setValidations });
   }, [loginForm]);
 
   const changeEmailAndPasswordValueHandler = (

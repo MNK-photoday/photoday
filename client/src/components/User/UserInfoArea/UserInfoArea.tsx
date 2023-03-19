@@ -14,25 +14,29 @@ import UserInfoTextarea from './UserInfoTextarea/UserInfoTextarea';
 import { FaHeart } from 'react-icons/fa';
 import { TbPhotoCancel } from 'react-icons/tb';
 import { MdHideImage } from 'react-icons/md';
+import { RiAlarmWarningLine } from 'react-icons/ri';
+import { IoWarningOutline } from 'react-icons/io5';
 import { DataType } from '../../../pages/User/User';
-import { validationValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
+import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
 import { PasswordInput } from '../../Login/Input/Input';
 import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
 
-interface IProps {
+interface User {
   userData: DataType;
 }
 
-function UserInfoArea({ userData }: IProps) {
+function UserInfoArea({ userData }: User) {
   const [inputValue, setInputValue] = useState('');
   const [confirminputValue, setconfirmInputValue] = useState('');
   const [validValue, setValidValue] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [isChangePassWord, setIsChangePassWord] = useState(false);
-  const valueType = 'password';
+  const VALUE_TYPE = 'password';
+  const user = userData.data[0];
+  const confirmValue = inputValue !== confirminputValue;
 
   useEffect(() => {
-    validationValue({ inputValue, setValidValue, valueType });
+    validateValue({ inputValue, setValidValue, VALUE_TYPE });
   }, [inputValue]);
 
   const clickEditHandler = () => {
@@ -60,17 +64,17 @@ function UserInfoArea({ userData }: IProps) {
   return (
     <S_UserInfoArea>
       <S_UserNameContainer>
-        <S_UserName>{userData.data[0].name}</S_UserName>
+        <S_UserName>{user.name}</S_UserName>
         <FaHeart size={18} className="likeicon" />
-        <S_UserLikeAndReport>{userData.data[0].likeCount}</S_UserLikeAndReport>
-        {/* 아이콘 고민 중 <TbPhotoCancel size={25} className="reporticon" /> */}
-        <MdHideImage size={20} className="reporticon" />
-        <S_UserLikeAndReport>
-          {userData.data[0].reportCount}
-        </S_UserLikeAndReport>
+        <S_UserLikeAndReport>{user.likeCount}</S_UserLikeAndReport>
+        {/* <TbPhotoCancel size={25} className="reporticon" /> */}
+        {/* <RiAlarmWarningLine size={25} className="reporticon" /> */}
+        <IoWarningOutline size={25} className="reporticon" />
+        {/* <MdHideImage size={20} className="reporticon" /> */}
+        <S_UserLikeAndReport>{user.reportCount}</S_UserLikeAndReport>
       </S_UserNameContainer>
       <S_UserDescription isEdit={isEdit}>
-        {isEdit ? <UserInfoTextarea /> : userData.data[0].description}
+        {isEdit ? <UserInfoTextarea /> : user.description}
       </S_UserDescription>
       <S_TextButtonWrap>
         <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
@@ -94,13 +98,13 @@ function UserInfoArea({ userData }: IProps) {
               passwordValue={confirminputValue}
               changeEventHandler={changeConfirmPasswordHandler}
             />
-            {!(inputValue === confirminputValue) && (
-              <S_InvalidMessage isShowMessage={!validValue ? 'show' : 'hide'}>
+            {confirmValue && (
+              <S_InvalidMessage isShowMessage={confirmValue ? 'show' : 'hide'}>
                 Passwords do not match.
               </S_InvalidMessage>
             )}
             <S_TextButton
-              isTextButtonType="Cancel"
+              isTextButtonType="cancel"
               onClick={clickChangePassWordHandler}
             >
               Cancel

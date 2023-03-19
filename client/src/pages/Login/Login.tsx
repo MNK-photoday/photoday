@@ -19,31 +19,31 @@ import Button from '../../components/common/Button/Button';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
-import { validationLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 
-export interface LoginFormType {
+export interface LoginValue {
   email: string;
   password: string;
 }
 
-export interface ValidationsType {
+export interface ValidityResults {
   isValidEmail: boolean;
   isValidPassword: boolean;
 }
 
 function Login() {
   const [isSigned, setIsSigned] = useState(false);
-  const [loginForm, setLoginForm] = useState<LoginFormType>({
+  const [loginForm, setLoginForm] = useState<LoginValue>({
     email: '',
     password: '',
   });
-  const [validations, setValidations] = useState<ValidationsType>({
+  const [validations, setValidations] = useState<ValidityResults>({
     isValidEmail: true,
     isValidPassword: true,
   });
 
   useEffect(() => {
-    validationLogin({ loginForm, setValidations });
+    validateLogin({ loginForm, setValidations });
   }, [loginForm]);
 
   const changeEmailAndPasswordValueHandler = (
