@@ -6,6 +6,7 @@ import { Tags } from '../../../pages/Upload/Upload';
 const TagItemWrap = styled.button`
   ${Flex}
   margin-right: 5px;
+  margin-bottom: 5px;
   padding: 9px 7px 7px;
   background-color: #67cd92;
   border: 1px solid #67cd92;
