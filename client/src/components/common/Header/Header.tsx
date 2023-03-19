@@ -3,6 +3,7 @@ import { BiImageAdd } from 'react-icons/bi';
 import { FaUserCircle } from 'react-icons/fa';
 import { RxTriangleDown } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
+import SearchBar from '../SearchBar/SearchBar';
 import {
   S_NavLink,
   S_NavBox,
@@ -16,11 +17,16 @@ import {
 } from './Header.styles';
 import HeaderModal from './HeaderModal';
 
-function Header() {
+type HeaderProps = {
+  activeSearchBar: boolean;
+};
+
+function Header({ activeSearchBar }: HeaderProps) {
   /*로그인 여부에 따라 상태 변경 (임시)*/
   const [isLogin, setIsLogin] = useState(true);
-  /*유저아이콘 클릭 여부에 따라 상태 변경*/
+  /*유저아이콘 클릭 여부에 따라 모달 상태 변경*/
   const [isActiveMenu, setIsActiveMenu] = useState(false);
+
   return (
     <S_HeaderWrap>
       <S_HeaderContainer>
@@ -31,14 +37,17 @@ function Header() {
             </Link>
           </S_LogoH1>
         </S_LogoBox>
-        {/* 메인화면 제외 모든 페이지에 출력 (임시로 주석 처리) <SearchBar /> */}
+        {activeSearchBar && <SearchBar activeSearchBar={activeSearchBar} />}
         {isLogin ? (
           <S_NavBox>
             <S_NavLink to="/upload">
               <BiImageAdd className="addImage-icon" />
             </S_NavLink>
             <S_NavSpan>
-              <S_NavLinkIconBox onClick={() => setIsActiveMenu(!isActiveMenu)}>
+              <S_NavLinkIconBox
+                active={isActiveMenu}
+                onClick={() => setIsActiveMenu(!isActiveMenu)}
+              >
                 <FaUserCircle className="user-icon" />
                 <RxTriangleDown className="triangleDown-icon" />
                 {isActiveMenu && <HeaderModal />}
