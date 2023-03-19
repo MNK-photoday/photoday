@@ -1,27 +1,77 @@
-import { Container, ContainerWrap, Content } from '../../styles/Layout';
-import * as style from './Detail.styles';
-import img from '../../assets/imgs/image1.jpg';
+import { Container, ContainerWrap } from '../../styles/Layout';
+import Button from '../../components/common/Button/Button';
+import { FaHeart, FaBookmark } from 'react-icons/fa';
+import { RiAlarmWarningFill } from 'react-icons/ri';
+import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
+import { GrView } from 'react-icons/gr';
+import {
+  S_DetailBox,
+  S_PicBox,
+  S_ContentsTop,
+  S_Contents,
+  S_ContentsBottom,
+  S_SeachList,
+  S_UserBox,
+  S_IconBox,
+  S_CountBox,
+} from './Detail.styles';
+import TEST_IMAGE from '../../assets/imgs/image1.jpg';
+import TEST_USER from '../../assets/imgs/userDefaultProfile.png';
+import TagList from '../../components/Upload/Tag/TagList';
+import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
 function Detail() {
+  const TEST_USERNAME = 'JangEunsu';
+  const TEST_VIEW = '123,201,012';
+  const TEST_LIKE = '33,221,031';
+  const TEST_TAGS = [
+    { id: 1, name: '석양' },
+    { id: 2, name: '풍경' },
+  ];
   return (
     <ContainerWrap>
       <Container>
-        <style.DetailBox>
-          <style.PicBox>
-            <style.ContentsTop>
-              <div>유저영역</div>
-              <div>아이콘영역</div>
-            </style.ContentsTop>
-            <style.Contents>
-              <img src={img} alt="테스트이미지" />
-            </style.Contents>
-            <style.ContentsBottom>
-              <div>조회수,좋아요수 영역</div>
-              <div>다운로드영역</div>
-            </style.ContentsBottom>
-          </style.PicBox>
-          <style.TagBox>태그영역</style.TagBox>
-          <style.SeachList>관련사진영역</style.SeachList>
-        </style.DetailBox>
+        <S_DetailBox>
+          <S_PicBox>
+            <S_ContentsTop>
+              <S_UserBox>
+                <div className="user-profile">
+                  <img src={TEST_USER} alt="user_profile_image" />
+                </div>
+                <div className="user-name">{TEST_USERNAME}</div>
+                <div className="user-follow">
+                  <FiUserPlus size={20} />
+                </div>
+              </S_UserBox>
+              <S_IconBox>
+                <FaHeart size={20} className="like-icon" />
+                <FaBookmark size={18} className="bookmark-icon" />
+                <RiAlarmWarningFill size={22} className="report-icon" />
+              </S_IconBox>
+            </S_ContentsTop>
+            <S_Contents>
+              <img src={TEST_IMAGE} alt="테스트이미지" />
+            </S_Contents>
+            <S_ContentsBottom>
+              <S_CountBox>
+                <div>
+                  <GrView size={20} className="view-icon" />
+                  {TEST_VIEW}
+                </div>
+                <div>
+                  <FaHeart size={18} className="like-icon" />
+                  {TEST_LIKE}
+                </div>
+              </S_CountBox>
+              <Button variant={'point'} shape={'round'} size={'medium'}>
+                Upload file
+              </Button>
+            </S_ContentsBottom>
+          </S_PicBox>
+          <TagList tags={TEST_TAGS} />
+          <S_SeachList>
+            <ImageCardList />
+          </S_SeachList>
+        </S_DetailBox>
       </Container>
     </ContainerWrap>
   );
