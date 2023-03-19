@@ -1,9 +1,13 @@
-// import GlobalStyle from './Styles/GlobalStyles';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Root, LoginRoot } from './routes/Route';
 import Main from './pages/Main/Main';
-import MyPage from './pages/MyPage/MyPage';
+import User from './pages/User/User';
 import Login from './pages/Login/Login';
+import Signup from './pages/Signup/Signup';
+import AccountRecovery from './pages/AccountRecovery/AccountRecovery';
+import Upload from './pages/Upload/Upload';
+import TagSearch from './pages/Search/Search';
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 function App() {
   const router = createBrowserRouter([
@@ -13,15 +17,30 @@ function App() {
       children: [
         { path: '/', element: <Main /> },
         {
-          path: '/mypage',
-          element: <MyPage />,
+          path: '/users',
+          element: <User />,
+        },
+        {
+          path: '/upload',
+          element: <Upload />,
+        },
+        {
+          path: '/tags',
+          element: <TagSearch />,
+        },
+        {
+          path: '/*',
+          element: <ErrorPage />,
         },
       ],
     },
     {
-      path: '/login',
       element: <LoginRoot />,
-      children: [{ path: '/login', element: <Login /> }],
+      children: [
+        { path: '/login', element: <Login /> },
+        { path: '/signup', element: <Signup /> },
+        { path: '/account-recovery', element: <AccountRecovery /> },
+      ],
     },
   ]);
 

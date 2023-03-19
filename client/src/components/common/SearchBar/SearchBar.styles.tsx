@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const SearchBarWrap = styled.div`
+export const S_SearchBarWrap = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
@@ -9,16 +9,18 @@ export const SearchBarWrap = styled.div`
   .search-icon {
     font-size: 15px;
     position: absolute;
-    left: 10px;
+    left: 15px;
   }
 `;
 
-export const SearchBarInput = styled.input`
-  border-radius: 15px;
+export const S_SearchBarInput = styled.input`
+  border-radius: 25px;
   background-color: var(--color-primary-gray10);
-  height: 33px;
+  height: 35px;
   width: 100%;
-  padding: 0 35px;
+  padding: 3px 40px;
   border: none;
   outline: none;
+  font-size: var(--font-size-m);
+  color: var(--color-primary-black);
 `;

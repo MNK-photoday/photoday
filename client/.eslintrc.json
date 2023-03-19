@@ -5,6 +5,7 @@
     "amd": true, // require 해결
     "node": true // module 해결
   },
+  "plugins": ["react", "jsx-a11y", "prettier"],
   "extends": [
     "prettier",
     "eslint:recommended",
