@@ -2,10 +2,12 @@ package com.photoday.photoday.image.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.image.dto.ImageDto;
+import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,18 @@ class ImageServiceTest {
     ImageService imageService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ImageRepository imageRepository;
     @MockBean
     AuthUserService authUserService;
     @MockBean
     S3Service s3Service;
+
+    @BeforeEach
+    void dropRepository() {
+        userRepository.deleteAll();
+        imageRepository.deleteAll();
+    }
 
     @Test
     @WithMockUser(username = "default@mail.com")
