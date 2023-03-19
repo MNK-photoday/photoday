@@ -1,13 +1,16 @@
 import styled from 'styled-components';
+import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_SelectBoxWrap = styled.button`
-  padding: 7px 10px;
+  padding: 7px 15px;
   border-radius: 20px;
   border: var(--color-tag-line);
   background-color: var(--white);
   position: relative;
   cursor: pointer;
   transition: 0.5s;
+  ${RowFlex}
+  align-items: center;
 
   &:hover {
     border: 1px solid var(--color-primary-black);
