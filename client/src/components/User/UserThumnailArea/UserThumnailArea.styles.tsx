@@ -24,6 +24,10 @@ export const S_UserFollowContainer = styled.div`
   margin-bottom: 15px;
 `;
 
+export const S_UserFollowWrap = styled.div`
+  cursor: pointer;
+`;
+
 export const S_UserFollowCount = styled.span`
   ${Flex}
   font-size: var(--font-size-m);

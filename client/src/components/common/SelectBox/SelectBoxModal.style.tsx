@@ -22,6 +22,7 @@ export const S_SelectModalContainer = styled.div`
 export const S_SelectModalSpan = styled.span<{ active: boolean }>`
   padding: 7px 5px;
   font-size: var(--color-primary-black);
+  font-size: var(--font-size-sm);
   border-radius: 5px;
   color: ${({ active }) =>
     active ? 'var(--color-primary-green)' : 'var(--color-primary-black)'};

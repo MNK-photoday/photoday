@@ -29,7 +29,7 @@ export interface UserData {
 }
 
 // 임시 데이터, 나중에 삭제
-const data: DataType = {
+export const data: DataType = {
   data: [
     {
       userId: 1,
