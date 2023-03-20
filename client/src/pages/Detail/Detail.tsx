@@ -62,7 +62,7 @@ function Detail() {
                   {TEST_LIKE}
                 </div>
               </S_CountBox>
-              <Button variant={'point'} shape={'round'} size={'medium'}>
+              <Button variant="point" shape="round" size="medium">
                 Upload file
               </Button>
             </S_ContentsBottom>

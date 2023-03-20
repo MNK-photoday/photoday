@@ -8,8 +8,6 @@ export const S_DetailBox = styled.div`
 
   padding-top: 40px;
 
-  /* background-color: skyblue; */
-
   height: auto;
 `;
 
