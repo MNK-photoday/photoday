@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -19,7 +16,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class TagController {
     private final TagService tagService;
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<?> searchByTags(@RequestBody @Valid TagDto tags, Pageable pageable) {
         MultiResponseDto<?> responseDto = tagService.searchByTags(tags, pageable);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
