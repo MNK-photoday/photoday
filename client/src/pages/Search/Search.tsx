@@ -1,25 +1,29 @@
-import { Container, ContainerWrap } from '../../styles/Layout';
+import { ContainerWrap } from '../../styles/Layout';
 import SelectBox from '../../components/common/SelectBox/SelectBox';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
+import TagList from '../../components/Upload/Tag/TagList';
 import {
   S_ImageCardBox,
   S_SearchBox,
+  S_SearchContainer,
   S_SearchMenuBox,
   S_SelectContentBox,
-  S_Tag,
   S_TagContentBox,
-} from './Search.styled';
+} from './Search.styles';
 function Search() {
+  /*임시 태그*/
+  const TEST_TAGS = [
+    { id: 1, name: '석양' },
+    { id: 2, name: '풍경' },
+    { id: 3, name: '나무' },
+  ];
   return (
     <ContainerWrap>
-      <Container>
+      <S_SearchContainer>
         <S_SearchBox>
           <S_SearchMenuBox>
             <S_TagContentBox>
-              {/*임시 태그*/}
-              <S_Tag>나무</S_Tag>
-              <S_Tag>나무 무늬</S_Tag>
-              <S_Tag>나무 색</S_Tag>
+              <TagList tags={TEST_TAGS} />
             </S_TagContentBox>
             <S_SelectContentBox>
               <SelectBox />
@@ -29,7 +33,7 @@ function Search() {
             <ImageCardList />
           </S_ImageCardBox>
         </S_SearchBox>
-      </Container>
+      </S_SearchContainer>
     </ContainerWrap>
   );
 }
