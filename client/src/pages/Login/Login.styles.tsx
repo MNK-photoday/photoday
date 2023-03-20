@@ -58,7 +58,7 @@ export const S_LinkToTextContainer = styled.div`
 `;
 
 type LinkProps = {
-  isAccount: string;
+  isaccount: string;
 };
 
 export const S_LinkTo = styled(Link)<LinkProps>`
@@ -66,8 +66,8 @@ export const S_LinkTo = styled(Link)<LinkProps>`
   margin-left: 10px;
   font-weight: bold;
 
-  ${({ isAccount }) =>
-    isAccount === 'true' &&
+  ${({ isaccount }) =>
+    isaccount === 'true' &&
     `
     font-size: var(--font-size-sm);
     font-weight: normal;
