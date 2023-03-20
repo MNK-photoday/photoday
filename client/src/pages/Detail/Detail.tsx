@@ -71,7 +71,7 @@ function Detail() {
               </Button>
             </S_ContentsBottom>
           </S_PicBox>
-          <TagList tags={TEST_TAGS} />
+          <TagList tags={TEST_TAGS} isModificationMode={false} />
           <S_SeachList>
             <ImageCardList />
           </S_SeachList>
