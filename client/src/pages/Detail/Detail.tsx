@@ -4,6 +4,7 @@ import { FaHeart, FaBookmark } from 'react-icons/fa';
 import { RiAlarmWarningFill } from 'react-icons/ri';
 import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
 import { GrView } from 'react-icons/gr';
+import { BiDotsVerticalRounded } from 'react-icons/bi';
 import {
   S_DetailBox,
   S_PicBox,
@@ -14,6 +15,7 @@ import {
   S_UserBox,
   S_IconBox,
   S_CountBox,
+  S_UploadDateBox,
 } from './Detail.styles';
 import TEST_IMAGE from '../../assets/imgs/image1.jpg';
 import TEST_USER from '../../assets/imgs/userDefaultProfile.png';
@@ -27,6 +29,7 @@ function Detail() {
     { id: 1, name: '석양' },
     { id: 2, name: '풍경' },
   ];
+  const TEST_UPLOAD_DATE = '2020-01-01';
   return (
     <ContainerWrap>
       <Container>
@@ -43,9 +46,9 @@ function Detail() {
                 </div>
               </S_UserBox>
               <S_IconBox>
-                <FaHeart size={20} className="like-icon" />
                 <FaBookmark size={18} className="bookmark-icon" />
-                <RiAlarmWarningFill size={22} className="report-icon" />
+                <FaHeart size={20} className="like-icon" />
+                <BiDotsVerticalRounded size={20} className="dots-icon" />
               </S_IconBox>
             </S_ContentsTop>
             <S_Contents>
@@ -62,6 +65,7 @@ function Detail() {
                   {TEST_LIKE}
                 </div>
               </S_CountBox>
+              <S_UploadDateBox>{TEST_UPLOAD_DATE}</S_UploadDateBox>
               <Button variant="point" shape="round" size="medium">
                 Upload file
               </Button>

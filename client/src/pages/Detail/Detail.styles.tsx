@@ -18,13 +18,22 @@ export const S_PicBox = styled.div`
 
   width: 100%;
   height: auto;
+  margin-bottom: 20px;
 
   padding: 20px 40px;
   border-radius: 10px;
 
+  z-index: 1;
+
   &:hover {
-    background-color: #ccc;
-    opacity: 0.5;
+    > :first-child {
+      transition: all 0.3s ease-in-out;
+      opacity: 1;
+    }
+    > :last-child {
+      transition: all 0.3s ease-in-out;
+      opacity: 1;
+    }
   }
 `;
 
@@ -32,6 +41,9 @@ export const S_ContentsTop = styled.div`
   ${RowFlex}
   width: 100%;
   justify-content: space-between;
+  opacity: 0;
+  z-index: 3;
+  transition: all 0.3s ease-in-out;
 `;
 
 export const S_UserBox = styled.div`
@@ -75,24 +87,23 @@ export const S_IconBox = styled.div`
   align-items: center;
 
   .like-icon {
-    color: #fff;
+    color: var(--color-primary-gray30);
     &:hover {
       cursor: pointer;
       color: var(--color-primary-red);
     }
   }
   .bookmark-icon {
-    color: #fff;
+    color: var(--color-primary-gray30);
     &:hover {
       cursor: pointer;
       color: var(--color-primary-green);
     }
   }
-  .report-icon {
-    color: #fff;
+  .dots-icon {
+    color: var(--color-primary-gray30);
     &:hover {
       cursor: pointer;
-      color: var(--color-primary-red);
     }
   }
 `;
@@ -113,6 +124,8 @@ export const S_ContentsBottom = styled.div`
   ${RowFlex}
   width: 100%;
   justify-content: space-between;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
   > Button {
     height: 30px;
     margin-top: 10px;
@@ -137,6 +150,13 @@ export const S_CountBox = styled.div`
       color: var(--color-primary-red);
     }
   }
+`;
+
+export const S_UploadDateBox = styled.div`
+  margin-top: 10px;
+  font-size: var(--font-size-sm);
+  font-weight: 100;
+  color: var(--color-primary-gray20);
 `;
 
 export const S_SeachList = styled.div`
