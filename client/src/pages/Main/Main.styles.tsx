@@ -6,27 +6,41 @@ export const S_MainContentBox = styled.div`
   height: 100%;
   padding: 40px 0;
   box-sizing: border-box;
-  flex-wrap: wrap;
   align-items: center;
   width: 100%;
   justify-content: space-around;
+  @media screen and (max-width: 1024px) {
+    flex-wrap: wrap;
+    width: 100%;
+  }
 `;
 
 export const S_MainImageContentBox = styled.section`
   width: 700px;
+  @media screen and (max-width: 1500px) {
+    padding-left: 30px;
+  }
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    padding-left: 0px;
+  }
 `;
 
 export const S_MainImgBox = styled.article`
   width: 100%;
-  height: 390px;
   &:first-child {
     margin-bottom: 10px;
+
+    @media screen and (max-width: 1024px) {
+      margin-bottom: 30px;
+    }
   }
 `;
 
 export const S_MainImg = styled.img`
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
   object-fit: cover;
 `;
 
@@ -35,6 +49,10 @@ export const S_SearchContentBox = styled.section`
   height: 450px;
   position: relative;
   margin: 31px 0;
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+  }
 `;
 
 export const S_SearchImgBox = styled.div`
@@ -65,6 +83,10 @@ export const S_MainTitle = styled.h1`
   color: var(--color-primary-black);
   font-weight: 500;
   line-height: 1.2;
+
+  @media screen and (max-width: 1450px) {
+    font-size: 47px;
+  }
 `;
 
 export const S_MainTextBox = styled.div`
