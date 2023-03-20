@@ -8,6 +8,7 @@ import AccountRecovery from './pages/AccountRecovery/AccountRecovery';
 import Upload from './pages/Upload/Upload';
 import TagSearch from './pages/Search/Search';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
+import Detail from './pages/Detail/Detail';
 
 function App() {
   const router = createBrowserRouter([
@@ -23,6 +24,10 @@ function App() {
         {
           path: '/upload',
           element: <Upload />,
+        },
+        {
+          path: '/detail',
+          element: <Detail />,
         },
         {
           path: '/tags',
