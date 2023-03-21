@@ -10,13 +10,17 @@ import {
   S_ButtonContainer,
   S_UploadBox,
   S_UploadTitle,
+  S_PreviewInfo,
+  S_PreviewWrapper,
 } from './Upload.styles';
 import TagList from '../../components/Upload/Tag/TagList';
+import axios from 'axios';
 
 type UploadImage = {
   file: File;
   thumbnail: string;
   type: string;
+  name: string;
 };
 
 export type Tags = {
@@ -44,6 +48,7 @@ function Upload() {
         file: fileList[0],
         thumbnail: URL.createObjectURL(fileList[0]),
         type: fileList[0].type,
+        name: fileList[0].name,
       });
     }
   };
@@ -55,11 +60,47 @@ function Upload() {
       file: fileList[0],
       thumbnail: URL.createObjectURL(fileList[0]),
       type: fileList[0].type,
+      name: fileList[0].name,
     });
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLInputElement>) => {
     event.preventDefault();
+  };
+
+  const fileUploadHandler = () => {
+    if (imagefile !== null && tags.length > 0) {
+      const tagsArray: string[] = tags.map((tag) => {
+        return tag.name;
+      });
+      const postTags = {
+        tags: tagsArray,
+      };
+      const jsonTags = JSON.stringify(postTags);
+      const tagsBlob = new Blob([jsonTags], { type: 'application/json' });
+      const formData = new FormData();
+      formData.append('file', imagefile.file);
+      formData.append('post', tagsBlob);
+
+      axios
+        .post('http://3.39.238.242:8080/api/images', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization:
+              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoidGVzdEB0ZXN0LmNvbSIsInN1YiI6InRlc3RAdGVzdC5jb20iLCJpYXQiOjE2NzkzNzkxMTgsImV4cCI6MTY3OTQxNTExOH0.bAe_PlJzsha5Jnpg-0G3NQ5Eh6xfcMVcY6gTPp_yhxE',
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (imagefile === null) {
+      alert('Please choose an image');
+    } else if (tags.length === 0) {
+      alert('Please add at least one tag');
+    }
   };
 
   const inputTagHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,9 +135,10 @@ function Upload() {
           </S_FileBox>
           {/* 아래는 미리보기 기능을 위한 임시 코드입니다. */}
           {imagefile && (
-            <div>
+            <S_PreviewWrapper>
               <img src={imagefile.thumbnail} alt="thumbnail" />
-            </div>
+              <S_PreviewInfo>{imagefile.name}</S_PreviewInfo>
+            </S_PreviewWrapper>
           )}
           <S_UploadBottom>
             <S_TagContainer>
@@ -111,14 +153,19 @@ function Upload() {
             </S_TagContainer>
             <S_ButtonContainer>
               <Button
-                variant={'primary'}
-                shape={'round'}
-                size={'medium'}
+                variant="primary"
+                shape="round"
+                size="medium"
                 clickEventHandler={fileInputClickHandler}
               >
                 Choose file
               </Button>
-              <Button variant={'point'} shape={'round'} size={'medium'}>
+              <Button
+                variant="point"
+                shape="round"
+                size="medium"
+                clickEventHandler={fileUploadHandler}
+              >
                 Upload file
               </Button>
             </S_ButtonContainer>

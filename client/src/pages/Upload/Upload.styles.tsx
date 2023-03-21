@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { RowFlex, ColFlex } from '../../styles/GlobalStyles';
+import { RowFlex, ColFlex, Flex } from '../../styles/GlobalStyles';
 
 export const S_UploadBox = styled.div`
   ${ColFlex}
@@ -76,4 +76,27 @@ export const S_ButtonContainer = styled.div`
     margin-bottom: 10px;
     font-size: 1rem;
   }
+`;
+
+export const S_PreviewWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+  margin-top: 20px;
+  > img {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    max-width: 100%;
+    height: 180px;
+
+    margin-left: 10px;
+  }
+`;
+export const S_PreviewInfo = styled.div`
+  ${Flex}
+  width: 100%;
+  height: 200px;
+  background-color: var(--color-primary-gray10);
+  border-radius: 10px;
+  margin-left: 10px;
 `;
