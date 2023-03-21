@@ -16,7 +16,7 @@ import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionControllerAdvice {
+public class ExceptionControllerAdvice { //TODO 로그 정리
     @ExceptionHandler
     public ResponseEntity handleCustomException(CustomException e) {
         log.error("CustomException : {}", e.getMessage());
@@ -77,7 +77,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleException(Exception e) {
+    public ErrorResponse handleException(Exception e) { //TODO 개발자에게 이메일 보내는 로직 추가
         log.error("Exception : {}", e.getMessage());
         final ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
         return errorResponse;
