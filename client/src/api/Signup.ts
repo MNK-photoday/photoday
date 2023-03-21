@@ -1,18 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { LoginValue } from '../pages/Login/Login';
-
-type FieldError = {
-  field: string;
-  rejectedValue: string;
-  message: string;
-};
-
-type ErrorResponse = {
-  fieldErrors: FieldError[] | null;
-  violationErrors: any[] | null;
-  httpStatus: number | null;
-  message: string | null;
-};
+import { ErrorResponse } from './Login';
 
 const postSignup = async (loginForm: LoginValue) => {
   try {
