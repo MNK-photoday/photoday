@@ -20,6 +20,7 @@ import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import postLogin from '../../api/Login';
 
 export interface LoginValue {
   email: string;
@@ -45,6 +46,11 @@ function Login() {
   useEffect(() => {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await postLogin(loginForm);
+  };
 
   const changeEmailAndPasswordValueHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -77,7 +83,7 @@ function Login() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer>
+        <S_LoginContainer onSubmit={handleSubmit}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
