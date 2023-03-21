@@ -23,8 +23,6 @@ export const S_PicBox = styled.div`
   padding: 20px 40px;
   border-radius: 10px;
 
-  z-index: 1;
-
   &:hover {
     > :first-child {
       transition: all 0.3s ease-in-out;
@@ -79,7 +77,7 @@ export const S_UserBox = styled.div`
   }
 `;
 
-export const S_IconBox = styled.div`
+export const S_IconBox = styled.div<{ isModal: boolean }>`
   width: 80px;
 
   display: flex;
@@ -101,7 +99,8 @@ export const S_IconBox = styled.div`
     }
   }
   .dots-icon {
-    color: var(--color-primary-gray30);
+    color: ${({ isModal }) =>
+      isModal ? 'var(--color-primary-black)' : 'var(--color-primary-gray30)'};
     &:hover {
       cursor: pointer;
     }

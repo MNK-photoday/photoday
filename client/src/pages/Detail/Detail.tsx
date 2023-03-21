@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import Button from '../../components/common/Button/Button';
 import { FaHeart, FaBookmark } from 'react-icons/fa';
@@ -21,6 +22,7 @@ import TEST_IMAGE from '../../assets/imgs/image1.jpg';
 import TEST_USER from '../../assets/imgs/userDefaultProfile.png';
 import TagList from '../../components/Upload/Tag/TagList';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
+import DetailModal from './DetailModal';
 function Detail() {
   const TEST_USERNAME = 'JangEunsu';
   const TEST_VIEW = '123,201,012';
@@ -30,11 +32,18 @@ function Detail() {
     { id: 2, name: '풍경' },
   ];
   const TEST_UPLOAD_DATE = '2020-01-01';
+
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const handleOpenModal = (e: React.MouseEvent<HTMLOrSVGElement>) => {
+    e.preventDefault();
+    setIsOpenModal(!isOpenModal);
+  };
+  const handleCloseModal = () => setIsOpenModal(false);
   return (
     <ContainerWrap>
       <Container>
         <S_DetailBox>
-          <S_PicBox>
+          <S_PicBox onMouseLeave={handleCloseModal}>
             <S_ContentsTop>
               <S_UserBox>
                 <div className="user-profile">
@@ -45,10 +54,15 @@ function Detail() {
                   <FiUserPlus size={20} />
                 </div>
               </S_UserBox>
-              <S_IconBox>
+              <S_IconBox isModal={isOpenModal}>
                 <FaBookmark size={18} className="bookmark-icon" />
                 <FaHeart size={20} className="like-icon" />
-                <BiDotsVerticalRounded size={20} className="dots-icon" />
+                <BiDotsVerticalRounded
+                  size={20}
+                  className="dots-icon"
+                  onClick={handleOpenModal}
+                />
+                {isOpenModal && <DetailModal />}
               </S_IconBox>
             </S_ContentsTop>
             <S_Contents>
@@ -67,13 +81,13 @@ function Detail() {
               </S_CountBox>
               <S_UploadDateBox>{TEST_UPLOAD_DATE}</S_UploadDateBox>
               <Button variant="point" shape="round" size="medium">
-                Upload file
+                Download
               </Button>
             </S_ContentsBottom>
           </S_PicBox>
           <TagList tags={TEST_TAGS} isModificationMode={false} />
           <S_SeachList>
-            <ImageCardList />
+            <ImageCardList width="400" />
           </S_SeachList>
         </S_DetailBox>
       </Container>
