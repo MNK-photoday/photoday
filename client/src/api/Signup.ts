@@ -23,7 +23,7 @@ const postSignup = async (loginForm: LoginValue) => {
         password: loginForm.password,
       },
     );
-    alert('가입을 환영합니다!');
+    alert('potoday 회원가입이 성공적으로 완료되었습니다.');
     window.history.back();
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
