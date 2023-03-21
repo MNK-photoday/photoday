@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_CardImagePicture = styled.div`
-  margin: 10px;
+  margin: 5px;
   position: relative;
 `;
 
