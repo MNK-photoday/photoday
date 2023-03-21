@@ -15,7 +15,10 @@ export type ErrorResponse = {
   authorization?: string;
 };
 
-const postLogin = async (loginForm: LoginValue, keepLoggedIn: boolean) => {
+export const postLogin = async (
+  loginForm: LoginValue,
+  keepLoggedIn: boolean,
+) => {
   try {
     const response = await axios.post<undefined, AxiosResponse<ErrorResponse>>(
       `${import.meta.env.VITE_APP_API_URL}/api/auth/login`,
@@ -49,5 +52,3 @@ const postLogin = async (loginForm: LoginValue, keepLoggedIn: boolean) => {
     }
   }
 };
-
-export default postLogin;
