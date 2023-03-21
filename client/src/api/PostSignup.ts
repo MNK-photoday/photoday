@@ -23,6 +23,8 @@ const postSignup = async (loginForm: LoginValue) => {
         password: loginForm.password,
       },
     );
+    alert('가입을 환영합니다!');
+    window.history.back();
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       if (error.response) {
