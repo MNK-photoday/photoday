@@ -73,11 +73,7 @@ export const S_SearchImgBox = styled.div`
     background: var(--color-primary-gray20);
   }
 `;
-export const S_ContentImgBox = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 5px;
-`;
+
 export const S_MainTitle = styled.h1`
   font-size: var(--font-size-xxxl);
   color: var(--color-primary-black);
