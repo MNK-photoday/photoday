@@ -105,7 +105,7 @@ function Login() {
               </S_InvalidMessage>
             )}
           </S_InputContainerWrap>
-          <S_LinkTo to="/account-recovery" isAccount>
+          <S_LinkTo to="/account-recovery" isaccount="true">
             Forgot password?
           </S_LinkTo>
           <S_CheckBoxContainer>
@@ -129,7 +129,7 @@ function Login() {
           </S_ButtounContainer>
           <S_LinkToTextContainer>
             Don’t have an account?
-            <S_LinkTo to="/signup" isAccount={false}>
+            <S_LinkTo to="/signup" isaccount="false">
               Sign Up
             </S_LinkTo>
           </S_LinkToTextContainer>
