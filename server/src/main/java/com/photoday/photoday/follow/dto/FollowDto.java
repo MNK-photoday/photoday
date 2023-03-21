@@ -1,6 +1,5 @@
 package com.photoday.photoday.follow.dto;
 
-import com.photoday.photoday.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +11,8 @@ public class FollowDto {
     @Getter
     @Setter
     public static class ResponseFollowUsers {
-        private List<ResponseFollowUserData> userFollowing;
-        private List<ResponseFollowUserData> userFollower;
+        private List<ResponseFollowingUserData> userFollowing;
+        private List<ResponseFollowerUserData> userFollower;
         private int userFollowingCount;
         private int userFollowerCount;
     }
@@ -21,8 +20,19 @@ public class FollowDto {
     @AllArgsConstructor
     @Getter
     @Setter
-    public static class ResponseFollowUserData {
+    public static class ResponseFollowingUserData {
         private Long userId;
         private String name;
+        private String userProfileImage;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    public static class ResponseFollowerUserData {
+        private Long userId;
+        private String name;
+        private String userProfileImage;
+        private boolean checkFollow;
     }
 }

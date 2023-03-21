@@ -37,7 +37,7 @@ public class AuthUserService {
         return authentication.getName();
     }
 
-    public void getNewPassword(String email){
+    public void setNewPassword(String email){
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         publisher.publishEvent(new UserApplicationEvent(this, user));
     }

@@ -24,7 +24,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByEmail(username);
-        User findUser = optionalUser.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+        User findUser = optionalUser.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND)); //TODO 필터 아직 안 빠져 나간 거 아님? 커스텀 익셉션 먹음?
 
         return new PrincipalDetails(findUser);
     }

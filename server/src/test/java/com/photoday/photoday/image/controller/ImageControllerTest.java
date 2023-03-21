@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.photoday.photoday.snippets.RestDocsSnippets.*;
+import static com.photoday.photoday.helper.snippets.RestDocsSnippets.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -177,7 +177,7 @@ class ImageControllerTest {
     void getBookmarkImages() throws Exception {
         // given
         MultiValueMap<String, String> params = getParams("createAt,desc");
-        MultiResponseDto<?> response = getMultiResponseDtoBookMarkAndSearchResponse();
+        MultiResponseDto response = getMultiResponseDtoPageResponse();
 
         given(imageService.getBookmarkImages(any(Pageable.class))).willReturn(response);
 

@@ -13,7 +13,7 @@ import java.util.List;
 public class ImageDto {
     @Getter
     public static class Patch {
-        @Size(min =1, max = 5)
+        @Size(min = 1, max = 20)
         List<String> tags;
     }
 
@@ -39,10 +39,10 @@ public class ImageDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
-    public static class BookmarkAndSearchResponse {
+    public static class PageResponse {
         private Long imageId;
         private String imageUrl;
         private boolean like;
-        private int viewCount;
+        private boolean bookmark;
     }
 }

@@ -2,7 +2,6 @@ package com.photoday.photoday.security.utils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class CookieUtil {
     static public Cookie createCookie(String cookieName, String value) {

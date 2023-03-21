@@ -5,9 +5,8 @@ import com.photoday.photoday.image.entity.Bookmark;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.image.entity.Like;
 import com.photoday.photoday.image.entity.Report;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.Builder.Default;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,12 +18,14 @@ import java.util.List;
 @Setter
 @Table(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -34,39 +35,50 @@ public class User {
     private String name;
 
     @Column(nullable = false)
-    private String profileImageUrl = "https://cdn.discordapp.com/attachments/1082610363712950272/1082610364371435540/userImage.png";
+    @Default
+    private String profileImageUrl = "https://ifh.cc/g/zPrPfv.png";
 
     @Column
+    @Default
     private String description = "안녕하세요!";
 
     @Column(nullable = false)
+    @Default
+    @Enumerated(EnumType.STRING)
     private UserStatus status = UserStatus.USER_ACTIVE; // 보류 -> 백업데이터 고려, DB 2개
 
-    private LocalDateTime banTime; // 로직 고려
+    private LocalDateTime banTime;
 
     private int reportedCount;
 
-    private int todayReportCount; // 보류 -> 로직 고려
+    private int todayReportCount;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Default
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Default
     private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
+    @Default
     private List<Follow> following = new ArrayList<>();
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+    @Default
     private List<Follow> follower = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Report> reports = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @Default
+    private List<Report> reports = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Like> likes = new ArrayList<>();
+    @Default
+    private List<Like> likes = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Default
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     public User(Long userId, String name) {

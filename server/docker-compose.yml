@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  cache:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ~/Desktop/redis/data/:/data
+  application:
+    container_name: board
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      DB_ENDPOINT: ${DB_ENDPOINT}
+      DB_NAME: ${DB_NAME}
+      DB_ID: ${DB_ID}
+      DB_PSW: ${DB_PSW}
+      G_CLIENT_ID: ${G_CLIENT_ID}
+      G_CLIENT_SECRET: ${G_CLIENT_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      ACCESS_TOKEN_EXP: ${ACCESS_TOKEN_EXP}
+      REFRESH_TOKEN_EXP: ${REFRESH_TOKEN_EXP}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+      MAIL_ADMIN: ${MAIL_ADMIN}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+    depends_on:
+      - cache

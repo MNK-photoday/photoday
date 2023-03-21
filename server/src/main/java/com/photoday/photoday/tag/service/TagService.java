@@ -14,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,15 +29,14 @@ public class TagService {
     private final TagRepository tagRepository;
     private final ImageMapper imageMapper;
 
-    public MultiResponseDto searchByTags(TagDto tags, Pageable pageable){ //TODO 다중 검색으로 구현하기
-        Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
+    public MultiResponseDto searchByTags(@RequestBody @Valid TagDto tags, Pageable pageable) {
+        Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
-        Page<Image> imagePage = imageRepository.findAllByTag(tags.getTags(), pageRequest);
-        List<Image> imageList = imagePage.getContent();
-        List<ImageDto.BookmarkAndSearchResponse> responses
-                = imageList.stream().distinct().map(i -> imageMapper.imageToBookmarkAndSearchResponse(i)).collect(Collectors.toList());
+        Page<Image> page = imageRepository.findAllByTag(tags.getTags(), pageRequest);
+        List<ImageDto.PageResponse> responses = page.stream()
+                .map(imageMapper::imageToPageResponse).collect(Collectors.toList());
 
-        return new MultiResponseDto(responses, imagePage);
+        return new MultiResponseDto(responses, page);
     }
 
     public Tag verifyTag(Tag tag) {

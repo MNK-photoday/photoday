@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/api/images")
@@ -24,51 +26,57 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    public ResponseEntity createImage(@RequestPart TagDto post,
-                                      @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> createImage(@RequestPart @Valid TagDto post,
+                                      @RequestPart(value = "file") MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
         ImageDto.Response response = imageService.createImage(post, multipartFile);
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{imageId}")
-    public ResponseEntity updateImageTags(@PathVariable Long imageId, @RequestBody @Valid TagDto patch) {
+    public ResponseEntity<?> updateImageTags(@PathVariable @Positive Long imageId, @RequestBody @Valid TagDto patch) {
         ImageDto.Response response = imageService.updateImageTags(imageId, patch);
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{imageId}")
-    public ResponseEntity getImage(@PathVariable Long imageId) {
+    public ResponseEntity<?> getImage(@PathVariable @Positive Long imageId) {
         ImageDto.Response response = imageService.getImage(imageId);
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @DeleteMapping("/{imageId}")
-    public ResponseEntity deleteImage(@PathVariable Long imageId) {
+    public ResponseEntity<?> deleteImage(@PathVariable @Positive Long imageId) {
         imageService.deleteImage(imageId);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{imageId}/bookmarks")
-    public ResponseEntity updateBookmark(@PathVariable Long imageId) {
+    public ResponseEntity<?> updateBookmark(@PathVariable @Positive Long imageId) {
         ImageDto.Response response = imageService.updateBookmark(imageId);
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/bookmarks")
-    public ResponseEntity getBookmarkImages(Pageable pageable) {
-        MultiResponseDto bookmarkImages = imageService.getBookmarkImages(pageable);
+    public ResponseEntity<?> getBookmarkImages(Pageable pageable) {
+        MultiResponseDto<?> bookmarkImages = imageService.getBookmarkImages(pageable);
         return new ResponseEntity<>(bookmarkImages, HttpStatus.OK);
     }
 
     @PostMapping("/{imageId}/reports")
-    public ResponseEntity createReport(@PathVariable Long imageId) {
+    public ResponseEntity<?> createReport(@PathVariable @Positive Long imageId) {
         ImageDto.Response response = imageService.createReport(imageId);
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{imageId}/likes")
-    public ResponseEntity updateLike(@PathVariable Long imageId) {
+    public ResponseEntity<?> updateLike(@PathVariable @Positive Long imageId) {
         ImageDto.Response response = imageService.updateLike(imageId);
-        return new ResponseEntity(new SingleResponseDto(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserImages(@PathVariable @Positive Long userId, Pageable pageable) {
+        MultiResponseDto userImages = imageService.getUserImages(userId, pageable);
+        return new ResponseEntity<>(userImages, HttpStatus.OK);
     }
 }

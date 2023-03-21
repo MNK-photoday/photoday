@@ -27,14 +27,14 @@ public class Like {
 
     public void setImage(Image image) {
         this.image = image;
-        if(!image.getLikeList().contains(this)){
+        if (!image.getLikeList().contains(this)) {
             image.getLikeList().add(this);
         }
     }
 
     public void setUser(User user) {
         this.user = user;
-        if(!user.getLikes().contains(this)){
+        if (!user.getLikes().contains(this)) {
             user.getLikes().add(this);
         }
     }

@@ -1,9 +1,15 @@
 package com.photoday.photoday.security.handler;
 
+import com.google.gson.Gson;
+import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.excpetion.ErrorResponse;
 import com.photoday.photoday.security.utils.ErrorResponder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +22,19 @@ import java.io.IOException;
 public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+
         Exception exception = (Exception) request.getAttribute("exception");
-        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);
+        if(exception instanceof CustomException) {
+            Gson gson = new Gson();
+            ErrorResponse errorResponse;
+            errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+        } else {
+            ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);
+        }
 
         logExceptionMessage(authException, exception);
     }

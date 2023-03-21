@@ -1,14 +1,16 @@
 package com.photoday.photoday.security.configuration;
 
+import com.photoday.photoday.mail.UserEventListener;
 import com.photoday.photoday.security.filter.JwtAuthenticationFilter;
 import com.photoday.photoday.security.filter.JwtVerificationFilter;
 import com.photoday.photoday.security.handler.*;
 import com.photoday.photoday.security.jwt.JwtProvider;
-import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.principaldetails.PrincipalDetailsService;
+import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.security.utils.UserDataResponder;
 import com.photoday.photoday.user.service.UserService;
+import com.photoday.photoday.util.TempPassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,7 @@ public class SecurityConfiguration {
     private final UserDataResponder userDataResponder;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final TempPassword tempPassword;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,11 +60,12 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.GET, "/*/users/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/*/users/**").hasRole("USER") //TODO 미완성? 회원정보 수정, 로그아웃, 회원삭제, 팔로우정보,팔로우, 비밀번호 변경, 이미지 등록, 이미지 태그 수정,이미지 삭제, 북마크, 북마크 이미지 조회, 사진 신고, 좋아요 - 회원 권한 필요.
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder)));
+                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder, tempPassword))
+                        .failureHandler(new OAuth2FailureHandler()));
 
         return http.build();
     }
@@ -73,7 +77,7 @@ public class SecurityConfiguration {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("*");
-        configuration.validateAllowCredentials();
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -82,7 +86,7 @@ public class SecurityConfiguration {
 
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
         @Override
-        public void configure(HttpSecurity builder) throws Exception {
+        public void configure(HttpSecurity builder) {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, userService ,jwtProvider, redisService, userDataResponder);

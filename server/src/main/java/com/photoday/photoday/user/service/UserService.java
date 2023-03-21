@@ -16,10 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -52,10 +54,8 @@ public class UserService {
 
         String name = getNameFromUser(user);
         user.setName(name);
-        user.setBanTime(LocalDateTime.now());
-        user.setStatus(User.UserStatus.USER_BANED);
         User createdUser = userRepository.save(user);
-        return userMapper.userToUserResponse(createdUser);
+        return userMapper.userToUserResponse(createdUser, null);
     }
 
     public User registerUserOAuth2(User user) {
@@ -67,24 +67,20 @@ public class UserService {
         user.setRoles(roles);
         user.setName(getNameFromUser(user));
 
-        User savedUser = userRepository.save(user);
-
-        return savedUser;
+        return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
     public UserDto.Response getUser(long userId) {
         Long loginUserId = authUserService.getLoginUserId();
-        findVerifiedUser(loginUserId);
         User targetUser = findVerifiedUser(userId);
-
-        return userMapper.userToUserResponse(targetUser);
+        return userMapper.userToUserResponse(targetUser, loginUserId);
     }
 
-    public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) throws IOException {
-        User user = userMapper.userPatchToUser(userUpdateDto);
-        User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
-        user.setUserId(authUserService.getLoginUserId());
+    public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) {
+        User user = userMapper.userUpdateToUser(userUpdateDto);
+        Long loginUserId = authUserService.getLoginUserId();
+        User verifiedUser = findVerifiedUser(loginUserId);
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
@@ -92,19 +88,21 @@ public class UserService {
                 url = s3Service.saveImage(multipartFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
             }
             verifiedUser.setProfileImageUrl(url);
         });
-        Optional.ofNullable(user.getDescription()).ifPresent(description -> verifiedUser.setDescription(description));
-
-        return userMapper.userToUserResponse(verifiedUser);
+        Optional.ofNullable(user.getDescription()).ifPresent(verifiedUser::setDescription);
+        return userMapper.userToUserResponse(verifiedUser, loginUserId);
     }
 
     public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
         if(updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
-            User verifiedUser = findVerifiedUser(authUserService.getLoginUserId());
-            verifiedUser.setPassword(updateUserPasswordDto.getPassword());
-            return userMapper.userToUserResponse(verifiedUser);
+            Long loginUserId = authUserService.getLoginUserId();
+            User verifiedUser = findVerifiedUser(loginUserId);
+            verifiedUser.setPassword(passwordEncoder.encode(updateUserPasswordDto.getPassword()));
+            return userMapper.userToUserResponse(verifiedUser, loginUserId);
         } else {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
@@ -117,8 +115,7 @@ public class UserService {
 
     public User findVerifiedUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        User verifiedUser = user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
-        return verifiedUser;
+        return user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
     }
 
     public void checkUserReportCount(Long userId) {
@@ -138,12 +135,11 @@ public class UserService {
     }
 
     public void checkBanTime(User user) {
-        if(LocalDateTime.now().isAfter(user.getBanTime())) {
+        if(user.getBanTime() != null && LocalDateTime.now().isAfter(user.getBanTime())) {
             user.setBanTime(null);
             user.setStatus(User.UserStatus.USER_ACTIVE);
-
+            userRepository.save(user);
         }
-        userRepository.save(user);
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
@@ -161,8 +157,7 @@ public class UserService {
     }
 
     private String getNameFromUser(User user) {
-        String name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
-        return name;
+        return user.getEmail().substring(0, user.getEmail().indexOf("@"));
     }
 
 }

@@ -25,7 +25,7 @@ public class AuthController {
     private final AuthUserService authUserService;
 
     @GetMapping("/reissue")
-    public ResponseEntity reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtProvider.getRefreshTokenFromRequest(request);
 
         String redisRefreshToken = redisService.getValues(jwtProvider.getSubject(refreshToken));
@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtProvider.getRefreshTokenFromRequest(request);
         redisService.deleteValues(jwtProvider.getSubject(refreshToken));
         Cookie cookie = new Cookie("Refresh", null);
@@ -49,9 +49,9 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/newpassword")
-    public ResponseEntity getNewPassword(String email){
-        authUserService.getNewPassword(email);
+    @PostMapping("/password")
+    public ResponseEntity<?> setNewPassword(String email){
+        authUserService.setNewPassword(email);
         return ResponseEntity.ok().build();
     }
 }

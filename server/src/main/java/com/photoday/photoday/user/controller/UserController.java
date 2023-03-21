@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
+import javax.validation.constraints.Positive;
 import java.net.URI;
 
 @RestController
@@ -28,20 +28,20 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUser(@PathVariable long userId) {
+    public ResponseEntity<?> getUser(@PathVariable @Positive long userId) {
         UserDto.Response response = userService.getUser(userId);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestPart(required = false) UserDto.Update userUpdateDto,
-                                        @RequestPart(value = "file", required = false) MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> updateUser(@RequestPart(required = false) @Valid UserDto.Update userUpdateDto,
+                                        @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
         UserDto.Response response = userService.updateUser(userUpdateDto, multipartFile);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PostMapping("/update/password")
-    public ResponseEntity<?> updateUserPassword(@RequestBody UserDto.UpdateUserPassword updateUserPasswordDto) {
+    public ResponseEntity<?> updateUserPassword(@RequestBody @Valid UserDto.UpdateUserPassword updateUserPasswordDto) {
         UserDto.Response response = userService.updateUserPassword(updateUserPasswordDto);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }

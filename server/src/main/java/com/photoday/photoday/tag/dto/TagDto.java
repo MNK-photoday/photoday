@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TagDto {
-    @Size(min = 1)
+    @Size(min = 1, max = 20)
     private List<String> tags;
 }

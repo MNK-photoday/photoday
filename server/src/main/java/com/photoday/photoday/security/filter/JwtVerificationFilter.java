@@ -8,10 +8,8 @@ import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,9 +48,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                     Map<String, Object> claims = verifyJws(request);
                     String username = (String) claims.get("username");
                     User user = userService.findUserByEmail(username);
-                    if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
-                        throw new CustomException(ExceptionCode.ACCOUNT_SUSPENDED);
-                    }
+
+                    checkUserStatus(user);
+
                     setAuthenticationToContext(claims);
                 }
             }
@@ -95,5 +93,11 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private void checkUserStatus(User user) {
+        if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
+            throw new CustomException(ExceptionCode.ACCOUNT_SUSPENDED); //TODO exception 종류 변경 ~
+        }
     }
 }

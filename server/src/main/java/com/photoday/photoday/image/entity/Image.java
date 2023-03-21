@@ -1,9 +1,8 @@
 package com.photoday.photoday.image.entity;
 
 import com.photoday.photoday.user.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.Builder.Default;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,8 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
-public class Image { // 메타데이터 필드 추가
+@AllArgsConstructor
+@Builder
+@EntityListeners(AuditingEntityListener.class) //TODO setter, construct 접근제어자 고려 후 수정
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long imageId;
@@ -31,20 +32,27 @@ public class Image { // 메타데이터 필드 추가
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private String imageHashValue;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<ImageTag> imageTagList = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<Like> likeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Default
     private List<Report> reportList = new ArrayList<>();
 
     public void setUser(User user) {

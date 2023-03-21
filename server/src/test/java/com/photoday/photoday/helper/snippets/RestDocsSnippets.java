@@ -1,4 +1,4 @@
-package com.photoday.photoday.snippets;
+package com.photoday.photoday.helper.snippets;
 
 import com.google.gson.Gson;
 import com.photoday.photoday.dto.MultiResponseDto;
@@ -31,14 +31,12 @@ import java.util.List;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 
 public class RestDocsSnippets {
 
-    static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     public static OperationRequestPreprocessor getRequestPreprocessor() {
         return preprocessRequest(prettyPrint());
@@ -53,8 +51,8 @@ public class RestDocsSnippets {
         return gson.toJson(post);
     }
 
-    public static String getUpdateUserJsonBody(String password, String description) {
-        UserDto.Update patch = new UserDto.Update(password, description);
+    public static String getUpdateUserJsonBody(String description) {
+        UserDto.Update patch = new UserDto.Update(description);
         return gson.toJson(patch);
     }
 
@@ -145,15 +143,15 @@ public class RestDocsSnippets {
     }
 
     public static FollowDto.ResponseFollowUsers getFollowDtoResponseFollowUsers() {
-        FollowDto.ResponseFollowUserData followingUserData = new FollowDto.ResponseFollowUserData(3L, "흰둥이");
-        FollowDto.ResponseFollowUserData followerUserData = new FollowDto.ResponseFollowUserData(2L, "신형만");
+        FollowDto.ResponseFollowingUserData followingUserData = new FollowDto.ResponseFollowingUserData(3L, "흰둥이", "http://흰둥이이미지.jpg");
+        FollowDto.ResponseFollowerUserData followerUserData = new FollowDto.ResponseFollowerUserData(2L, "신형만", "http://신형만이미지.jpg", false);
         return new FollowDto.ResponseFollowUsers(List.of(followingUserData), List.of(followerUserData), 1, 1);
     }
 
-    public static MultiResponseDto<?> getMultiResponseDtoBookMarkAndSearchResponse() {
-        ImageDto.BookmarkAndSearchResponse responseDto = new ImageDto.BookmarkAndSearchResponse(1L, "http://image.jpg", false, 0);
-        Page<ImageDto.BookmarkAndSearchResponse> page = new PageImpl<>(List.of(responseDto), PageRequest.of(0, 12), 1324);
-        List<ImageDto.BookmarkAndSearchResponse> content = page.getContent();
+    public static MultiResponseDto getMultiResponseDtoPageResponse() {
+        ImageDto.PageResponse responseDto = new ImageDto.PageResponse(1L, "http://image.jpg", false, false);
+        Page<ImageDto.PageResponse> page = new PageImpl<>(List.of(responseDto), PageRequest.of(0, 12), 1324);
+        List<ImageDto.PageResponse> content = page.getContent();
         return new MultiResponseDto<>(content, page);
     }
 
@@ -218,9 +216,12 @@ public class RestDocsSnippets {
                 fieldWithPath("data.userFollowing").type(JsonFieldType.ARRAY).description("현재 유저가 팔로우 하는 유저 목록"),
                 fieldWithPath("data.userFollowing[].userId").type(JsonFieldType.NUMBER).description("현재 유저가 팔로우 하는 유저의 식별자"),
                 fieldWithPath("data.userFollowing[].name").type(JsonFieldType.STRING).description("현재 유저가 팔로우 하는 유저의 닉네임"),
+                fieldWithPath("data.userFollowing[].userProfileImage").type(JsonFieldType.STRING).description("현재 유저가 팔로우 하는 유저의 프로필 이미지"),
                 fieldWithPath("data.userFollower").type(JsonFieldType.ARRAY).description("현재 유저를 팔로우 하는 유저 목록"),
                 fieldWithPath("data.userFollower[].userId").type(JsonFieldType.NUMBER).description("현재 유저를 팔로우 하는 유저의 식별자"),
                 fieldWithPath("data.userFollower[].name").type(JsonFieldType.STRING).description("현재 유저를 팔로우 하는 유저의 이름"),
+                fieldWithPath("data.userFollower[].userProfileImage").type(JsonFieldType.STRING).description("현재 유저를 팔로우 하는 유저의 프로필 이미지"),
+                fieldWithPath("data.userFollower[].checkFollow").type(JsonFieldType.BOOLEAN).description("현재 유저의 팔로워를 팔로우 하는지 여부"),
                 fieldWithPath("data.userFollowingCount").type(JsonFieldType.NUMBER).description("현재 유저가 팔로우 하는 유저의 수"),
                 fieldWithPath("data.userFollowerCount").type(JsonFieldType.NUMBER).description("현재 유저를 팔로우 하는 유저의 수 ")
         );
@@ -232,7 +233,7 @@ public class RestDocsSnippets {
                 fieldWithPath("data[].imageId").type(JsonFieldType.NUMBER).description("이미지 식별자"),
                 fieldWithPath("data[].imageUrl").type(JsonFieldType.STRING).description("이미지 URL"),
                 fieldWithPath("data[].like").type(JsonFieldType.BOOLEAN).description("현재 유저의 이미지 좋아요 여부"),
-                fieldWithPath("data[].viewCount").type(JsonFieldType.NUMBER).description("이미지 조회수"),
+                fieldWithPath("data[].bookmark").type(JsonFieldType.BOOLEAN).description("현재 유저의 이미지 북마크 여부"),
                 fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이징 데이터"),
                 fieldWithPath("pageInfo.pageNumber").type(JsonFieldType.NUMBER).description("페이지 번호"),
                 fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 별 이미지 수"),
