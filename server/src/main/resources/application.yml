@@ -6,8 +6,8 @@ spring:
     password: ${DB_PSW}
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: create
+#    show-sql: true
     properties:
       hibernate:
         highlight_sql: true
