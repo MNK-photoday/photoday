@@ -4,7 +4,7 @@ import com.photoday.photoday.helper.security.SecurityTestHelper;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.mapper.UserMapper;
-import com.photoday.photoday.user.service.UserService;
+import com.photoday.photoday.user.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ class UserControllerTest {
     @Autowired
     private SecurityTestHelper helper;
     @MockBean
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
     @MockBean
     private UserMapper userMapper;
 
@@ -53,7 +53,7 @@ class UserControllerTest {
         UserDto.Response response = getUserDtoResponse();
 
         given(userMapper.userPostToUser(any(UserDto.Post.class))).willReturn(new User());
-        given(userService.createUser(any(UserDto.Post.class))).willReturn(response);
+        given(userServiceImpl.createUser(any(UserDto.Post.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -135,7 +135,7 @@ class UserControllerTest {
         MockMultipartFile content = getMockMultipartFile("userUpdateDto", userUpdateDto);
         UserDto.Response response = getUserDtoResponse();
 
-        given(userService.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
+        given(userServiceImpl.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -166,7 +166,7 @@ class UserControllerTest {
         MockMultipartFile content = getMockMultipartFile("userUpdateDto", userPatchDto);
         UserDto.Response response = getUserDtoResponse();
 
-        given(userService.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
+        given(userServiceImpl.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -188,7 +188,7 @@ class UserControllerTest {
         // given
         UserDto.Response response = getUserDtoResponse();
 
-        given(userService.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
+        given(userServiceImpl.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -211,7 +211,7 @@ class UserControllerTest {
         UserDto.Response response = getUserDtoResponse();
         String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
-        given(userService.getUser(anyLong())).willReturn(response);
+        given(userServiceImpl.getUser(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -234,7 +234,7 @@ class UserControllerTest {
     @DisplayName("deleteUser: 정상 입력")
     void deleteUser() throws Exception {
         // given
-        doNothing().when(userService).deleteUser();
+        doNothing().when(userServiceImpl).deleteUser();
 
         // when
         ResultActions actions = mvc.perform(

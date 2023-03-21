@@ -3,7 +3,7 @@ package com.photoday.photoday.image.controller;
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.mapper.ImageMapper;
-import com.photoday.photoday.image.service.ImageService;
+import com.photoday.photoday.image.service.ImageServiceImpl;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.mapper.TagMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +40,7 @@ class ImageControllerTest {
     @Autowired
     private MockMvc mvc;
     @MockBean
-    ImageService imageService;
+    ImageServiceImpl imageServiceImpl;
     @MockBean
     ImageMapper imageMapper;
     @MockBean
@@ -54,7 +54,7 @@ class ImageControllerTest {
         ImageDto.Response response = getImageDtoResponse();
         MockMultipartFile content = getMockMultipartFile("post", post);
 
-        given(imageService.createImage(any(TagDto.class), any(MultipartFile.class))).willReturn(response);
+        given(imageServiceImpl.createImage(any(TagDto.class), any(MultipartFile.class))).willReturn(response);
 
         // when
         ResultActions actions =
@@ -83,7 +83,7 @@ class ImageControllerTest {
         String content = getTagDto();
         ImageDto.Response response = getImageDtoResponse();
 
-        given(imageService.updateImageTags(anyLong(), any(TagDto.class))).willReturn(response);
+        given(imageServiceImpl.updateImageTags(anyLong(), any(TagDto.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -110,7 +110,7 @@ class ImageControllerTest {
         long imageId = 1L;
         ImageDto.Response response = getImageDtoResponse();
 
-        given(imageService.getImage(anyLong())).willReturn(response);
+        given(imageServiceImpl.getImage(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -133,7 +133,7 @@ class ImageControllerTest {
     void deleteImage() throws Exception {
         // given
         long imageId = 1L;
-        doNothing().when(imageService).deleteImage(anyLong());
+        doNothing().when(imageServiceImpl).deleteImage(anyLong());
 
         // when
         ResultActions actions = mvc.perform(
@@ -154,7 +154,7 @@ class ImageControllerTest {
         long imageId = 1L;
         ImageDto.Response response = getImageDtoResponse();
 
-        given(imageService.updateBookmark(anyLong())).willReturn(response);
+        given(imageServiceImpl.updateBookmark(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -179,7 +179,7 @@ class ImageControllerTest {
         MultiValueMap<String, String> params = getParams("createAt,desc");
         MultiResponseDto response = getMultiResponseDtoPageResponse();
 
-        given(imageService.getBookmarkImages(any(Pageable.class))).willReturn(response);
+        given(imageServiceImpl.getBookmarkImages(any(Pageable.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -204,7 +204,7 @@ class ImageControllerTest {
         long imageId = 1L;
         ImageDto.Response response = getImageDtoResponse();
 
-        given(imageService.createReport(anyLong())).willReturn(response);
+        given(imageServiceImpl.createReport(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -228,7 +228,7 @@ class ImageControllerTest {
         long imageId = 1L;
         ImageDto.Response response = getImageDtoResponse();
 
-        given(imageService.updateLike(anyLong())).willReturn(response);
+        given(imageServiceImpl.updateLike(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(

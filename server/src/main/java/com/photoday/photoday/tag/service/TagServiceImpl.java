@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TagService {
+public class TagServiceImpl {
     private final ImageRepository imageRepository;
     private final TagRepository tagRepository;
     private final ImageMapper imageMapper;

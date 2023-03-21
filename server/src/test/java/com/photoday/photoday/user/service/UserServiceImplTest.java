@@ -1,8 +1,8 @@
 package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.image.service.S3Service;
-import com.photoday.photoday.security.service.AuthUserService;
+import com.photoday.photoday.image.service.S3ServiceImpl;
+import com.photoday.photoday.security.service.AuthUserServiceImpl;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
@@ -25,16 +25,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
-class UserServiceTest {
+class UserServiceImplTest {
 
     @Autowired
-    UserService userService;
+    UserServiceImpl userServiceImpl;
     @Autowired
     UserRepository userRepository;
     @MockBean
-    AuthUserService authUserService;
+    AuthUserServiceImpl authUserServiceImpl;
     @MockBean
-    S3Service s3Service;
+    S3ServiceImpl s3ServiceImpl;
 
     @BeforeEach
     void dropRepository() {
@@ -47,10 +47,10 @@ class UserServiceTest {
         // given
         UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
         String defaultProfileImageUrl = "https://ifh.cc/g/zPrPfv.png";
-        given(authUserService.checkLogin()).willReturn(null);
+        given(authUserServiceImpl.checkLogin()).willReturn(null);
 
         // when
-        UserDto.Response userDtoResponse = userService.createUser(post);
+        UserDto.Response userDtoResponse = userServiceImpl.createUser(post);
 
         //then
         assertNotNull(userDtoResponse.getUserId());
@@ -69,10 +69,10 @@ class UserServiceTest {
     void createUserExistedEmail() {
         // given
         UserDto.Post post = new UserDto.Post("default@email.com", "123456a!");
-        userService.createUser(post);
+        userServiceImpl.createUser(post);
 
         // when
-        CustomException exception = assertThrows(CustomException.class, () -> userService.createUser(post));
+        CustomException exception = assertThrows(CustomException.class, () -> userServiceImpl.createUser(post));
         assertEquals(exception.getExceptionCode().getHttpStatus(), HttpStatus.CONFLICT);
         assertEquals(exception.getExceptionCode().getMessage(), "이미 존재하는 이메일입니다.");
     }
@@ -86,7 +86,7 @@ class UserServiceTest {
         user.setPassword("@265sx*vS^&ax&#DE#");
 
         // when
-        User resultUser = userService.registerUserOAuth2(user);
+        User resultUser = userServiceImpl.registerUserOAuth2(user);
 
         // then
         assertNotNull(resultUser.getUserId());
@@ -99,9 +99,9 @@ class UserServiceTest {
         User user = new User();
         user.setEmail("oauth@email.com");
         user.setPassword("@265sx*vS^&ax&#DE#");
-        User registeredUser = userService.registerUserOAuth2(user);
+        User registeredUser = userServiceImpl.registerUserOAuth2(user);
         // when
-        User loginUser = userService.registerUserOAuth2(user);
+        User loginUser = userServiceImpl.registerUserOAuth2(user);
 
         // then
         assertEquals(registeredUser.getUserId(), loginUser.getUserId());
@@ -119,11 +119,11 @@ class UserServiceTest {
         User loginUser = userRepository.save(user);
 
         UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
-        UserDto.Response ExpectedResponse = userService.createUser(post);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        UserDto.Response ExpectedResponse = userServiceImpl.createUser(post);
+        given(authUserServiceImpl.getLoginUserId()).willReturn(loginUser.getUserId());
 
         // when
-        UserDto.Response actualResponse = userService.getUser(ExpectedResponse.getUserId());
+        UserDto.Response actualResponse = userServiceImpl.getUser(ExpectedResponse.getUserId());
 
         // then
         assertEquals(ExpectedResponse.getUserId(), actualResponse.getUserId());
@@ -147,14 +147,14 @@ class UserServiceTest {
                 .password("123456a!")
                 .build();
         User loginUser = userRepository.save(user);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserServiceImpl.getLoginUserId()).willReturn(loginUser.getUserId());
 
         UserDto.Update userUpdateDto = new UserDto.Update("edited!");
         MultipartFile multipartFile = getMockMultipartFile("multipartFile", "multipartFile");
-        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://changedProfileImageUrl.jpg");
+        given(s3ServiceImpl.saveImage(any(MultipartFile.class))).willReturn("http://changedProfileImageUrl.jpg");
 
         // when
-        UserDto.Response response = userService.updateUser(userUpdateDto, multipartFile);
+        UserDto.Response response = userServiceImpl.updateUser(userUpdateDto, multipartFile);
 
         // then
         assertEquals("edited!", response.getDescription());
@@ -171,12 +171,12 @@ class UserServiceTest {
                 .password("123456a!")
                 .build();
         User loginUser = userRepository.save(user);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserServiceImpl.getLoginUserId()).willReturn(loginUser.getUserId());
 
         UserDto.Update userUpdateDto = new UserDto.Update("edited!");
 
         // when
-        UserDto.Response response = userService.updateUser(userUpdateDto, null);
+        UserDto.Response response = userServiceImpl.updateUser(userUpdateDto, null);
 
         // then
         assertEquals("edited!", response.getDescription());
@@ -212,7 +212,7 @@ class UserServiceTest {
         UserDto.UpdateUserPassword userDto = new UserDto.UpdateUserPassword("123456a@", "123456a#");
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> userService.updateUserPassword(userDto));
+        CustomException exception = assertThrows(CustomException.class, () -> userServiceImpl.updateUserPassword(userDto));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
         assertEquals("비밀번호가 일치하지 않습니다.", exception.getExceptionCode().getMessage());
     }
@@ -229,7 +229,7 @@ class UserServiceTest {
         User registeredUser = userRepository.save(user);
 
         // when
-        User verifiedUser = userService.findVerifiedUser(registeredUser.getUserId());
+        User verifiedUser = userServiceImpl.findVerifiedUser(registeredUser.getUserId());
 
         // then
         assertEquals(registeredUser.getUserId(), verifiedUser.getUserId());
@@ -241,7 +241,7 @@ class UserServiceTest {
         // given
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> userService.findVerifiedUser(1L));
+        CustomException exception = assertThrows(CustomException.class, () -> userServiceImpl.findVerifiedUser(1L));
         assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
         assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
     }
@@ -258,7 +258,7 @@ class UserServiceTest {
         User registeredUser = userRepository.save(user);
 
         // when
-        User responseUser = userService.findUserByEmail(registeredUser.getEmail());
+        User responseUser = userServiceImpl.findUserByEmail(registeredUser.getEmail());
 
         // then
         assertEquals(registeredUser.getUserId(), responseUser.getUserId());
@@ -270,7 +270,7 @@ class UserServiceTest {
         // given
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> userService.findUserByEmail("notRegistered@email.com"));
+        CustomException exception = assertThrows(CustomException.class, () -> userServiceImpl.findUserByEmail("notRegistered@email.com"));
         assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
         assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
     }
@@ -288,7 +288,7 @@ class UserServiceTest {
         User bannedUser = userRepository.save(user);
 
         // when
-        userService.checkBanTime(bannedUser);
+        userServiceImpl.checkBanTime(bannedUser);
 
         // then
         assertNotNull(bannedUser.getBanTime());
@@ -307,7 +307,7 @@ class UserServiceTest {
         User bannedUser = userRepository.save(user);
 
         // when
-        userService.checkBanTime(bannedUser);
+        userServiceImpl.checkBanTime(bannedUser);
 
         // then
         assertNull(bannedUser.getBanTime());

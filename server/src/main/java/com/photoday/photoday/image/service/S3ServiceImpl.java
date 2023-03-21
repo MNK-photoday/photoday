@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class S3Service {
+public class S3ServiceImpl {
     private final AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String s3Bucket;

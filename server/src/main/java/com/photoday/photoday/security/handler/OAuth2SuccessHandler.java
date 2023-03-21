@@ -1,11 +1,10 @@
 package com.photoday.photoday.security.handler;
 
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.mail.UserEventListener;
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.utils.CookieUtil;
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.service.UserService;
+import com.photoday.photoday.user.service.UserServiceImpl;
 import com.photoday.photoday.util.TempPassword;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,7 @@ import java.net.URI;
 @Slf4j
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtProvider jwtProvider;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final PasswordEncoder passwordEncoder;
     private final TempPassword tempPassword;
 
@@ -49,7 +48,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(tempPassword.getTempPassword()));
-        return userService.registerUserOAuth2(user);
+        return userServiceImpl.registerUserOAuth2(user);
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, User user)
@@ -82,7 +81,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private void checkUserStatus(User user) {
         try {
-            userService.checkBanTime(user);
+            userServiceImpl.checkBanTime(user);
             if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
                 throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
             }

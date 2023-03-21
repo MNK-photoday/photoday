@@ -8,13 +8,13 @@ import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.image.repository.LikeRepository;
-import com.photoday.photoday.security.service.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserServiceImpl;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.mapper.TagMapper;
-import com.photoday.photoday.tag.service.TagService;
+import com.photoday.photoday.tag.service.TagServiceImpl;
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.service.UserService;
+import com.photoday.photoday.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,14 +39,14 @@ import static com.photoday.photoday.excpetion.ExceptionCode.IMAGE_NOT_FOUND;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class ImageService {
+public class ImageServiceImpl {
     private final ImageRepository imageRepository;
-    private final TagService tagService;
-    private final S3Service s3Service;
-    private final UserService userService;
+    private final TagServiceImpl tagServiceImpl;
+    private final S3ServiceImpl s3ServiceImpl;
+    private final UserServiceImpl userServiceImpl;
     private final ImageMapper imageMapper;
     private final TagMapper tagMapper;
-    private final AuthUserService authUserService;
+    private final AuthUserServiceImpl authUserServiceImpl;
     private final LikeRepository likeRepository;
 
     public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
@@ -55,17 +55,17 @@ public class ImageService {
             throw new CustomException(ExceptionCode.IMAGE_FILE_ONLY);
         }
 
-        String imageHashValue = s3Service.getMd5Hash(multipartFile);
+        String imageHashValue = s3ServiceImpl.getMd5Hash(multipartFile);
         if(imageRepository.existsByImageHashValue(imageHashValue)) {
             throw new CustomException(ExceptionCode.DUPLICATE_IMAGE);
         }
 
         List<Tag> tagList = tagMapper.dtoToTag(post);
 
-        Long userId = authUserService.getLoginUserId();
+        Long userId = authUserServiceImpl.getLoginUserId();
 
         // S3에 이미지 저장하고 url을 받는다.
-        String imageUrl = s3Service.saveImage(multipartFile);
+        String imageUrl = s3ServiceImpl.saveImage(multipartFile);
 
         // Image 객체를 생성하는 중 >> mapper에서 만들어 오지 않았기 때문에
         Image image = makeImage(imageUrl, userId);
@@ -80,7 +80,7 @@ public class ImageService {
     }
 
     private Image makeImage(String imageUrl, Long userId) {
-        User user = userService.findVerifiedUser(userId);
+        User user = userServiceImpl.findVerifiedUser(userId);
 
         Image image = new Image();
         image.setImageUrl(imageUrl);
@@ -94,7 +94,7 @@ public class ImageService {
 
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
 
-        Long userId = authUserService.getLoginUserId();
+        Long userId = authUserServiceImpl.getLoginUserId();
         if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
 
         image.getImageTagList().clear();
@@ -107,7 +107,7 @@ public class ImageService {
 
     private List<ImageTag> tagListToImageTagList(List<Tag> tagList, Image image) {
         return tagList.stream()
-                .map(tagService::verifyTag)
+                .map(tagServiceImpl::verifyTag)
                 .map(this::tagToImageTag)
                 .peek(tag -> tag.setImage(image))
                 .collect(Collectors.toList());
@@ -128,15 +128,15 @@ public class ImageService {
 
     public void deleteImage(long imageId) {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
-        Long userId = authUserService.getLoginUserId();
+        Long userId = authUserServiceImpl.getLoginUserId();
         if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
         imageRepository.deleteById(imageId);
     }
 
     public ImageDto.Response updateBookmark(long imageId) {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
-        Long userId = authUserService.getLoginUserId();
-        User user = userService.findVerifiedUser(userId);
+        Long userId = authUserServiceImpl.getLoginUserId();
+        User user = userServiceImpl.findVerifiedUser(userId);
 
         // 북마크 했으면, 리스트에서 제거 , 안 했으면 리스트에 추가
         Optional<Bookmark> bookmark = image.getBookmarkList().stream()
@@ -156,7 +156,7 @@ public class ImageService {
     }
 
     public MultiResponseDto getBookmarkImages(Pageable pageable) {
-        Long userId = authUserService.getLoginUserId();
+        Long userId = authUserServiceImpl.getLoginUserId();
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize(), pageable.getSort());
 
         Page<Image> page = imageRepository.findAllBookmarkImages(pageRequest, userId);
@@ -169,12 +169,12 @@ public class ImageService {
 
     public ImageDto.Response createReport(long imageId) {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
-        Long userId = authUserService.getLoginUserId();
+        Long userId = authUserServiceImpl.getLoginUserId();
 
         if(image.getUser().getUserId()==userId) throw new CustomException(ExceptionCode.CANNOT_REPORT_MYSELF); // 본인 신고 불가
 
-        User user = userService.findVerifiedUser(userId);
-        userService.checkUserReportCount(userId);
+        User user = userServiceImpl.findVerifiedUser(userId);
+        userServiceImpl.checkUserReportCount(userId);
         //사용자가 이미 신고했으면 예외 터뜨리기.
         Optional<Report> optionalReport = image.getReportList().stream()
                 .filter(r -> r.getUser().getUserId() == userId).findFirst();
@@ -205,8 +205,8 @@ public class ImageService {
 
     public ImageDto.Response updateLike(long imageId) {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
-        Long userId = authUserService.getLoginUserId(); //TODO 리팩토링 필요
-        User user = userService.findVerifiedUser(userId);
+        Long userId = authUserServiceImpl.getLoginUserId(); //TODO 리팩토링 필요
+        User user = userServiceImpl.findVerifiedUser(userId);
 
         Optional<Like> like = image.getLikeList().stream()
                 .filter(l -> l.getUser().getUserId() == userId)
