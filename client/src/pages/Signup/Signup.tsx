@@ -23,6 +23,7 @@ import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { LoginValue, ValidityResults } from '../Login/Login';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import postSignup from '../../api/PostSignup';
 
 function Signup() {
   const [isCheckedTerms, setIsCheckedTerms] = useState(false);
@@ -39,6 +40,16 @@ function Signup() {
   useEffect(() => {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (isCheckedTerms) {
+      await postSignup(loginForm);
+    } else {
+      alert('약관을 확인해 주세요.');
+    }
+  };
 
   const changeEmailAndPasswordValueHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -73,7 +84,7 @@ function Signup() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer>
+        <S_LoginContainer onSubmit={handleSubmit}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
@@ -163,7 +174,7 @@ function Signup() {
           </S_ButtounContainer>
           <S_LinkToTextContainer>
             Already have an account?
-            <S_LinkTo to="/login" isAccount={false}>
+            <S_LinkTo to="/login" isaccount="false">
               Log in
             </S_LinkTo>
           </S_LinkToTextContainer>
