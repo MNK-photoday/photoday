@@ -33,7 +33,7 @@ export interface ValidityResults {
 }
 
 function Login() {
-  const [isSigned, setIsSigned] = useState(false);
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState<LoginValue>({
     email: '',
     password: '',
@@ -49,7 +49,7 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await postLogin(loginForm);
+    await postLogin(loginForm, keepLoggedIn);
   };
 
   const changeEmailAndPasswordValueHandler = (
@@ -69,7 +69,7 @@ function Login() {
   };
 
   const clickSignedHandler = () => {
-    setIsSigned(!isSigned);
+    setKeepLoggedIn(!keepLoggedIn);
   };
 
   /* 
@@ -115,7 +115,10 @@ function Login() {
             Forgot password?
           </S_LinkTo>
           <S_CheckBoxContainer>
-            <CheckBox isChecked={isSigned} onClickEvent={clickSignedHandler}>
+            <CheckBox
+              isChecked={keepLoggedIn}
+              onClickEvent={clickSignedHandler}
+            >
               Stay signed in
             </CheckBox>
           </S_CheckBoxContainer>
