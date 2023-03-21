@@ -29,9 +29,7 @@ function Search() {
               <SelectBox />
             </S_SelectContentBox>
           </S_SearchMenuBox>
-          <S_ImageCardBox>
-            <ImageCardList />
-          </S_ImageCardBox>
+          <ImageCardList width={'400'} />
         </S_SearchBox>
       </S_SearchContainer>
     </ContainerWrap>
