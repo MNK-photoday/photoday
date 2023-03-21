@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import MainImage from '../../assets/imgs/image1.jpg';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
-import ImageCard from '../../components/common/ImageCard/ImageCard';
 import {
-  S_ContentImgBox,
   S_MainContentBox,
   S_MainImg,
   S_MainImgBox,
@@ -14,8 +12,8 @@ import {
   S_MainTitle,
   S_MainImageContentBox,
 } from './Main.styles';
-import Skeleton from '../../components/common/Skeleton/Skeleton';
 import MainSkeleton from '../../components/common/Skeleton/MainSkeleton';
+import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
 
 function Main() {
   const [activeTextBox, setActiveTextBox] = useState(true);
@@ -33,15 +31,7 @@ function Main() {
           <S_SearchContentBox>
             <SearchBar setActiveTextBox={setActiveTextBox} />
             <S_SearchImgBox textBoxActive={activeTextBox}>
-              <S_ContentImgBox>
-                <ImageCard />
-                <ImageCard />
-                <ImageCard />
-                <ImageCard />
-                <ImageCard />
-                <ImageCard />
-                <ImageCard />
-              </S_ContentImgBox>
+              <ImageCardList width={'240'} />
             </S_SearchImgBox>
             <S_MainTextBox textBoxActive={activeTextBox}>
               <S_MainTitle>

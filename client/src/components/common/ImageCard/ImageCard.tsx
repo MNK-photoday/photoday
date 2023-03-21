@@ -7,7 +7,7 @@ import {
   S_IconBox,
   S_OverlayControls,
   S_OverlayControlsBox,
-} from './ImageCard.style';
+} from './ImageCard.styles';
 function ImageCard() {
   return (
     <S_CardImagePicture>

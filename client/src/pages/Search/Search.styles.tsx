@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 
 import { ColFlex, RowFlex } from '../../styles/GlobalStyles';
+import { Container } from '../../styles/Layout';
+export const S_SearchContainer = styled(Container)`
+  padding: 0px 220px;
+`;
 
 export const S_SearchBox = styled.section`
   ${ColFlex}
   align-items: center;
-  padding: 40px 200px;
+  padding: 40px 0px;
   width: 100%;
   margin: 0 auto;
 `;
