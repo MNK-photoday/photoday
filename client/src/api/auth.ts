@@ -1,4 +1,4 @@
-export const checkAuth = async () => {
+function checkAuth() {
   const tokenString = localStorage.getItem('accessToken');
   if (!tokenString) {
     return false;
@@ -26,4 +26,6 @@ export const checkAuth = async () => {
   } else {
     return true;
   }
-};
+}
+
+export default checkAuth;

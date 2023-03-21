@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import checkAuth from '../api/Auth';
 
 type AuthState = {
   isLoggedIn: boolean;
 };
 
 const initialState: AuthState = {
-  isLoggedIn: false,
+  isLoggedIn: checkAuth(),
 };
 
 const authSlice = createSlice({
