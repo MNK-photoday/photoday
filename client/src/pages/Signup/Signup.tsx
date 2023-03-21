@@ -23,7 +23,7 @@ import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { LoginValue, ValidityResults } from '../Login/Login';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
-import postSignup from '../../api/PostSignup';
+import postSignup from '../../api/Signup';
 
 function Signup() {
   const [isCheckedTerms, setIsCheckedTerms] = useState(false);
