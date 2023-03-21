@@ -5,11 +5,11 @@ import {
 } from './UserPageSubTitle.styles';
 import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
 
-interface IProps {
+interface User {
   userName: string;
 }
 
-function UserPageSubTitle({ userName }: IProps) {
+function UserPageSubTitle({ userName }: User) {
   return (
     <S_UserPageSubTitleWrap>
       <h2>

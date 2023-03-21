@@ -60,7 +60,7 @@ export const S_NavSpan = styled.div`
   margin-left: 30px;
   cursor: pointer;
 `;
-export const S_NavLinkIconBox = styled.div`
+export const S_NavLinkIconBox = styled.div<{ active: boolean }>`
   ${RowFlex}
   align-items: center;
   position: relative;
@@ -78,5 +78,18 @@ export const S_NavLinkIconBox = styled.div`
     font-size: 20px;
     color: #868383;
     transition: all 0.125s ease-in 0s;
+  }
+
+  &::before {
+    content: ' ';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    display: ${({ active }) => (active ? 'block' : 'none')};
+    cursor: default;
+    background: transparent;
   }
 `;

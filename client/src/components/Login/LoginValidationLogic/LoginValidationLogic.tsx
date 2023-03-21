@@ -1,4 +1,4 @@
-import { LoginFormType, ValidationsType } from '../../../pages/Login/Login';
+import { LoginValue, ValidityResults } from '../../../pages/Login/Login';
 
 // 이메일 정규 표현식 => 일치 시 true 반환
 export const validateEmail = (email: string) => {
@@ -17,15 +17,15 @@ export const validatePassword = (password: string) => {
   return regExp.test(password);
 };
 
-interface ValidationLoginIProps {
-  loginForm: LoginFormType;
-  setValidations: React.Dispatch<React.SetStateAction<ValidationsType>>;
+interface ValidateLoginType {
+  loginForm: LoginValue;
+  setValidations: React.Dispatch<React.SetStateAction<ValidityResults>>;
 }
 
-export function validationLogin({
+export function validateLogin({
   loginForm,
   setValidations,
-}: ValidationLoginIProps) {
+}: ValidateLoginType) {
   const emailIdentifier = setTimeout(() => {
     if (loginForm.email) {
       setValidations((state) => {
@@ -73,20 +73,20 @@ export function validationLogin({
   };
 }
 
-interface ValidationIProps {
+interface ValidateType {
   inputValue: string;
   setValidValue: React.Dispatch<React.SetStateAction<boolean>>;
-  valueType: string;
+  VALUE_TYPE: string;
 }
 
-export function validationValue({
+export function validateValue({
   inputValue,
   setValidValue,
-  valueType,
-}: ValidationIProps) {
+  VALUE_TYPE,
+}: ValidateType) {
   const valueIdentifier = setTimeout(() => {
     if (inputValue) {
-      switch (valueType) {
+      switch (VALUE_TYPE) {
         case 'email':
           setValidValue((state) => {
             return (state = validateEmail(inputValue));

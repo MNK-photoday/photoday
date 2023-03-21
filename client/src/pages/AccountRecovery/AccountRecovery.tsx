@@ -12,15 +12,15 @@ import Button from '../../components/common/Button/Button';
 import { EmailInput } from '../../components/Login/Input/Input';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
-import { validationValue } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import { validateValue } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 
 function AccountRecovery() {
   const [inputValue, setInputValue] = useState('');
   const [validValue, setValidValue] = useState(true);
-  const valueType = 'email';
+  const VALUE_TYPE = 'email';
 
   useEffect(() => {
-    validationValue({ inputValue, setValidValue, valueType });
+    validateValue({ inputValue, setValidValue, VALUE_TYPE });
   }, [inputValue]);
 
   const changeEmailValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
