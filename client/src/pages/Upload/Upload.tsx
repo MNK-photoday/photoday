@@ -70,24 +70,23 @@ function Upload() {
 
   const fileUploadHandler = () => {
     if (imagefile !== null && tags.length > 0) {
-      const tagsArray: string[] = tags.map((tag) => {
-        return tag.name;
-      });
-      const postTags = {
-        tags: tagsArray,
-      };
-      const jsonTags = JSON.stringify(postTags);
-      const tagsBlob = new Blob([jsonTags], { type: 'application/json' });
+      const tagsBlob = new Blob(
+        [JSON.stringify({ tags: tags.map((tag) => tag.name) })],
+        { type: 'application/json' },
+      );
+
       const formData = new FormData();
       formData.append('file', imagefile.file);
       formData.append('post', tagsBlob);
 
+      const tokenString: any = localStorage.getItem('accessToken');
+      const { token, expiresAt } = JSON.parse(tokenString);
+
       axios
-        .post('http://3.39.238.242:8080/api/images', formData, {
+        .post(`${import.meta.env.VITE_APP_API_URL}/api/images`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization:
-              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInVzZXJuYW1lIjoidGVzdEB0ZXN0LmNvbSIsInN1YiI6InRlc3RAdGVzdC5jb20iLCJpYXQiOjE2NzkzNzkxMTgsImV4cCI6MTY3OTQxNTExOH0.bAe_PlJzsha5Jnpg-0G3NQ5Eh6xfcMVcY6gTPp_yhxE',
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
