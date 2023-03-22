@@ -43,7 +43,7 @@ function Signup() {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const signupHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isCheckedTerms) {
       try {
@@ -84,15 +84,15 @@ function Signup() {
     }
   };
 
-  const handleonChecked = () => {
+  const onCheckedHandler = () => {
     setIsCheckedTerms(!isCheckedTerms);
   };
 
-  const handleonDoubleChecked = () => {
+  const onDoubleCheckedHandler = () => {
     setIsCheckedTerms(true);
   };
 
-  const handleonIsShowModal = () => {
+  const onIsShowModalHandler = () => {
     setIsShowModal(!isShowModal);
     setIsCheckedTerms(false);
   };
@@ -101,7 +101,7 @@ function Signup() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer onSubmit={handleSignup}>
+        <S_LoginContainer onSubmit={signupHandler}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
@@ -134,8 +134,11 @@ function Signup() {
             <br /> including at least 1 letter and 1 number.
           </S_PasswordGuide>
           <S_CheckBoxContainer>
-            <CheckBox isChecked={isCheckedTerms} onClickEvent={handleonChecked}>
-              <p onClick={handleonIsShowModal}>Check Terms and Conditions</p>
+            <CheckBox
+              isChecked={isCheckedTerms}
+              onClickEvent={onCheckedHandler}
+            >
+              <p onClick={onIsShowModalHandler}>Check Terms and Conditions</p>
             </CheckBox>
           </S_CheckBoxContainer>
           {isShowModal && (
@@ -167,8 +170,8 @@ function Signup() {
               <CheckBox
                 isChecked={isCheckedTerms}
                 onClickEvent={() => {
-                  handleonIsShowModal();
-                  handleonDoubleChecked();
+                  onIsShowModalHandler();
+                  onDoubleCheckedHandler();
                 }}
               >
                 위와 같은 이용약관에 동의하십니까?

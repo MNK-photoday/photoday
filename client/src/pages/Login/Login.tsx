@@ -46,7 +46,7 @@ function Login() {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -86,7 +86,7 @@ function Login() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer onSubmit={handleLogin}>
+        <S_LoginContainer onSubmit={loginHandler}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput

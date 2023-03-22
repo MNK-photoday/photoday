@@ -24,7 +24,7 @@ function AccountRecovery() {
     validateValue({ inputValue, setValidValue, VALUE_TYPE });
   }, [inputValue]);
 
-  const handleSendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+  const sendEmailHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -51,7 +51,7 @@ function AccountRecovery() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer onSubmit={handleSendEmail}>
+        <S_LoginContainer onSubmit={sendEmailHandler}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
