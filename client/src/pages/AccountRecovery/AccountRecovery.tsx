@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import {
   S_LoginContainerWrap,
   S_ImgContainer,
@@ -13,6 +13,7 @@ import { EmailInput } from '../../components/Login/Input/Input';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateValue } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import postPassword from '../../api/AccountRecovery';
 
 function AccountRecovery() {
   const [inputValue, setInputValue] = useState('');
@@ -23,6 +24,24 @@ function AccountRecovery() {
     validateValue({ inputValue, setValidValue, VALUE_TYPE });
   }, [inputValue]);
 
+  const handleSendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await postPassword(inputValue);
+      alert(
+        '입력하신 email로 임시 비밀번호을 성공적으로 발송하였습니다. 메일을 확인해 주세요.',
+      );
+      window.location.href = '/login';
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          alert(error.response.data.message);
+        }
+      }
+    }
+  };
+
   const changeEmailValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
@@ -32,7 +51,7 @@ function AccountRecovery() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer>
+        <S_LoginContainer onSubmit={handleSendEmail}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
@@ -49,17 +68,15 @@ function AccountRecovery() {
             Forgot your account’s password? <br />
             Enter your email address and we’ll send you a recovery link.
           </S_PasswordGuide>
-          <Link to="/login">
-            <Button
-              variant="point"
-              shape="default"
-              size="XXLarge"
-              fullWidth
-              disabled={!validValue}
-            >
-              Send recovery email
-            </Button>
-          </Link>
+          <Button
+            variant="point"
+            shape="default"
+            size="XXLarge"
+            fullWidth
+            disabled={!validValue}
+          >
+            Send recovery email
+          </Button>
         </S_LoginContainer>
       </S_ContentSection>
     </S_LoginContainerWrap>
