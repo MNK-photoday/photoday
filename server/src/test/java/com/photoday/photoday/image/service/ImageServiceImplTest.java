@@ -248,12 +248,38 @@ class ImageServiceImplTest {
     }
 
     @Test
-    void getBookmarkImagesTest() {
-
-    }
-
-    @Test
+    @WithMockUser("loginUser@mail.com")
+    @DisplayName("createReport: 한 번 눌렀을 때 신고 성공")
     void createReportTest() {
+        // given
+        User user = User.builder()
+                .email("loginUser@mail.com")
+                .name("loginUser")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        User creator = User.builder()
+                .email("owner@email.com")
+                .name("owner")
+                .password("123456a!")
+                .build();
+        User owner = userRepository.save(creator);
+
+        Image image = Image.builder()
+                .imageUrl("http://imageUrl.jpg")
+                .createdAt(LocalDateTime.now())
+                .user(owner)
+                .imageHashValue("imageHashValue")
+                .build();
+        Image savedImage = imageRepository.save(image);
+
+        // when
+        ImageDto.Response response = imageService.createReport(savedImage.getImageId());
+
+        // then
+        assertTrue(response.isReport());
     }
 
     @Test
