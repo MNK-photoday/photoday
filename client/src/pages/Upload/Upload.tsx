@@ -71,9 +71,12 @@ function Upload() {
   };
 
   const fileUploadHandler = () => {
+    const FILE_SIZE_LIMIT = 1024 * 1024 * 10;
     if (imagefile !== null && tags.length > 0) {
       if (tags.length > 20) {
-        alert('Only 20 tags can be created');
+        return alert('Only 20 tags can be created');
+      } else if (imagefile.file.size > FILE_SIZE_LIMIT) {
+        return alert('File size should not exceed 10MB');
       }
 
       const tagsBlob = new Blob(
