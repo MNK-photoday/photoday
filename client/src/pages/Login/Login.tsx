@@ -50,8 +50,8 @@ function Login() {
     e.preventDefault();
 
     try {
-      await postLogin(loginForm, keepLoggedIn);
-      await dispatch(login());
+      const response = await postLogin(loginForm, keepLoggedIn);
+      await dispatch(login(response));
       window.location.href = '/';
     } catch (error) {
       if (error instanceof AxiosError) {
