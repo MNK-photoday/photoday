@@ -189,7 +189,67 @@ class ImageServiceImplTest {
     }
 
     @Test
+    @WithMockUser("owner@mail.com")
+    @DisplayName("updateBookmark: 한 번 눌렀을 때 북마크 추가")
+    void updateBookmarkTest() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = User.builder()
+                .email("owner@mail.com")
+                .name("owner")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        TagDto postTagDto = new TagDto(List.of("background", "blue"));
+        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+
+        String createdImageUrl = "http://createdImageUrl.jpg";
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+
+        ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
+
+        // when
+        ImageDto.Response response = imageService.updateBookmark(image.getImageId());
+
+        // then
+        assertTrue(response.isBookmark());
+    }
+
+    @Test
+    @WithMockUser("owner@mail.com")
+    @DisplayName("updateBookmark: 두 번 눌렀을 때 북마크 취소")
+    void updateBookmarkCancelTest() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = User.builder()
+                .email("owner@mail.com")
+                .name("owner")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        TagDto postTagDto = new TagDto(List.of("background", "blue"));
+        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+
+        String createdImageUrl = "http://createdImageUrl.jpg";
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+
+        ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
+
+        // when
+        imageService.updateBookmark(image.getImageId());
+        ImageDto.Response response = imageService.updateBookmark(image.getImageId());
+
+        // then
+        assertFalse(response.isBookmark());
+    }
+
+    @Test
     void getBookmarkImagesTest() {
+
     }
 
     @Test
@@ -198,10 +258,6 @@ class ImageServiceImplTest {
 
     @Test
     void updateLikeTest() {
-    }
-
-    @Test
-    void updateBookmarkTest() {
     }
 
     @Test
