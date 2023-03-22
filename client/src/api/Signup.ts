@@ -16,13 +16,13 @@ const postSignup = async (loginForm: LoginValue) => {
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       if (error.response) {
-        const errordata = error.response.data;
-        const errorResponse: ErrorResponse = errordata.message;
+        const errorData = error.response.data;
+        const errorResponse: ErrorResponse = errorData.message;
         if (errorResponse) {
           alert(errorResponse);
         } else {
           const newErrorResponse: ErrorResponse =
-            errordata.fieldErrors[0].message;
+            errorData.fieldErrors[0].message;
           alert(newErrorResponse);
         }
       }
