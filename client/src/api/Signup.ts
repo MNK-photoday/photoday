@@ -1,18 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { LoginValue } from '../pages/Login/Login';
-
-type FieldError = {
-  field: string;
-  rejectedValue: string;
-  message: string;
-};
-
-type ErrorResponse = {
-  fieldErrors: FieldError[] | null;
-  violationErrors: any[] | null;
-  httpStatus: number | null;
-  message: string | null;
-};
+import { ErrorResponse } from './Login';
 
 const postSignup = async (loginForm: LoginValue) => {
   try {
@@ -28,9 +16,14 @@ const postSignup = async (loginForm: LoginValue) => {
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       if (error.response) {
-        console.log(error.response);
-        const errorResponse: ErrorResponse = error.response.data;
-        alert(errorResponse.message);
+        const errorResponse: ErrorResponse = error.response.data.message;
+        if (errorResponse) {
+          alert(errorResponse);
+        } else {
+          const newErrorResponse: ErrorResponse =
+            error.response.data.fieldErrors[0].message;
+          alert(newErrorResponse);
+        }
       }
     }
   }
