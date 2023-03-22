@@ -2,6 +2,7 @@ package com.photoday.photoday.image.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.image.dto.ImageDto;
+import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -154,7 +156,36 @@ class ImageServiceImplTest {
     }
 
     @Test
+    @DisplayName("deleteImage: 잘못된 유저")
     void deleteImageTest() {
+        // given
+        User user = User.builder()
+                .email("loginUser@mail.com")
+                .name("loginUser")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        User creator = User.builder()
+                .email("owner@email.com")
+                .name("owner")
+                .password("123456a!")
+                .build();
+        User owner = userRepository.save(creator);
+
+        Image image = Image.builder()
+                .imageUrl("http://imageUrl.jpg")
+                .createdAt(LocalDateTime.now())
+                .user(owner)
+                .imageHashValue("imageHashValue")
+                .build();
+        Image save = imageRepository.save(image);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.deleteImage(save.getImageId()));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
+        assertEquals("게시물 작성자가 아닙니다.", exception.getExceptionCode().getMessage());
     }
 
     @Test
