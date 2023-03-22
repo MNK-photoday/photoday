@@ -25,6 +25,7 @@ public class S3ServiceImpl implements S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String s3Bucket;
 
+    @Override
     public String saveImage(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
         String originalFilename = multipartFile.getOriginalFilename();
         long size = multipartFile.getSize();
@@ -40,6 +41,7 @@ public class S3ServiceImpl implements S3Service {
         return amazonS3Client.getUrl(s3Bucket, originalFilename).toString();
     }
 
+    @Override
     public String getMd5Hash(MultipartFile file) throws IOException, NoSuchAlgorithmException {
         InputStream is = file.getInputStream();
         MessageDigest md = MessageDigest.getInstance("MD5");
