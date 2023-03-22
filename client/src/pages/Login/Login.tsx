@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   S_LinkTo,
   S_ImgContainer,
@@ -20,6 +21,8 @@ import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import { postLogin } from '../../api/Login';
+import { loginSuccess } from '../../store/authSlice';
 
 export interface LoginValue {
   email: string;
@@ -32,7 +35,8 @@ export interface ValidityResults {
 }
 
 function Login() {
-  const [isSigned, setIsSigned] = useState(false);
+  const dispatch = useDispatch();
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState<LoginValue>({
     email: '',
     password: '',
@@ -45,6 +49,12 @@ function Login() {
   useEffect(() => {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await postLogin(loginForm, keepLoggedIn);
+    await dispatch(loginSuccess());
+  };
 
   const changeEmailAndPasswordValueHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -62,22 +72,15 @@ function Login() {
     }
   };
 
-  const clickSignedHandler = () => {
-    setIsSigned(!isSigned);
+  const clickkeepLoggedInHandler = () => {
+    setKeepLoggedIn(!keepLoggedIn);
   };
-
-  /* 
-  ! 기능 구현할 때 참고할 주석입니다.
-  ? Login 버튼 눌렀을 때
-    1. email value가 ''이 아니고, password value가 ''이 아닐 것
-    2. isAllValid.email과 isAllValid.password가 true일 것
-  */
 
   return (
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer>
+        <S_LoginContainer onSubmit={handleLogin}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
@@ -109,7 +112,10 @@ function Login() {
             Forgot password?
           </S_LinkTo>
           <S_CheckBoxContainer>
-            <CheckBox isChecked={isSigned} onClickEvent={clickSignedHandler}>
+            <CheckBox
+              isChecked={keepLoggedIn}
+              onClickEvent={clickkeepLoggedInHandler}
+            >
               Stay signed in
             </CheckBox>
           </S_CheckBoxContainer>

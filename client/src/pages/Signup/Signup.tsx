@@ -41,7 +41,7 @@ function Signup() {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isCheckedTerms) {
@@ -84,7 +84,7 @@ function Signup() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer onSubmit={handleSubmit}>
+        <S_LoginContainer onSubmit={handleSignup}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
