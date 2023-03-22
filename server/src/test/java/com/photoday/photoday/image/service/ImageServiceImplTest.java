@@ -89,7 +89,39 @@ class ImageServiceImplTest {
     }
 
     @Test
-    void updateImageTagsTest() {
+    @WithMockUser(username = "default@mail.com")
+    @DisplayName("updateImageTags: 정상 입력")
+    void updateImageTagsTest() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = User.builder()
+                .email("default@mail.com")
+                .name("default")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        TagDto postTagDto = new TagDto(List.of("background", "blue"));
+        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+
+        String createdImageUrl = "http://createdImageUrl.jpg";
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+
+        ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
+
+        TagDto patchTagDto = new TagDto(List.of("tag", "will", "be", "change!"));
+
+        // when
+        ImageDto.Response response = imageService.updateImageTags(image.getImageId(), patchTagDto);
+
+        // then
+        assertTrue(response.getTags().contains("tag"));
+        assertTrue(response.getTags().contains("will"));
+        assertTrue(response.getTags().contains("be"));
+        assertTrue(response.getTags().contains("change!"));
+        assertFalse(response.getTags().contains("background"));
+        assertFalse(response.getTags().contains("blue"));
     }
 
     @Test
