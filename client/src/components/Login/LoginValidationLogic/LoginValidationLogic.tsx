@@ -1,4 +1,5 @@
-import { LoginValue, ValidityResults } from '../../../pages/Login/Login';
+import { ValidityResults } from '../../../pages/Login/Login';
+import { LoginValue } from '../../../api/Login';
 
 // 이메일 정규 표현식 => 일치 시 true 반환
 export const validateEmail = (email: string) => {
@@ -9,10 +10,10 @@ export const validateEmail = (email: string) => {
 };
 
 // 비밀번호 정규 표현식 => 일치 시 true 반환
-//? 8 ~ 16자 영문, 숫자, 특수문자 최소 한가지씩 조합
+//? 8 ~ 20자 영문, 숫자, 특수문자 최소 한가지씩 조합
 export const validatePassword = (password: string) => {
   const regExp =
-    /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+    /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
 
   return regExp.test(password);
 };

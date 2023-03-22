@@ -32,7 +32,7 @@ export const S_ContentSection = styled.section`
   background: var(--white);
 `;
 
-export const S_LoginContainer = styled.div`
+export const S_LoginContainer = styled.form`
   padding: 0 50px;
   height: 100vh;
 `;
@@ -57,15 +57,26 @@ export const S_LinkToTextContainer = styled.div`
   font-size: var(--font-size-sm);
 `;
 
-export const S_LinkTo = styled(Link)<{ isAccount: boolean }>`
+type LinkProps = {
+  isaccount: string;
+};
+
+export const S_LinkTo = styled(Link)<LinkProps>`
   color: var(--color-primary-green);
   margin-left: 10px;
-  font-size: ${({ isAccount }) => isAccount && 'var(--font-size-sm)'};
-  display: ${({ isAccount }) => isAccount && 'flex'};
-  justify-content: ${({ isAccount }) => isAccount && 'end'};
-  font-weight: ${({ isAccount }) => !isAccount && 'bold'};
-  position: ${({ isAccount }) => isAccount && 'relative'};
-  bottom: ${({ isAccount }) => isAccount && '10'}px;
+  font-weight: bold;
+
+  ${({ isaccount }) =>
+    isaccount === 'true' &&
+    `
+    font-size: var(--font-size-sm);
+    font-weight: normal;
+    display: flex;
+    justify-content: end;
+    position: relative;
+    bottom: 10px;
+  `};
+
   &:hover {
     color: hsl(140, 40%, 44%);
   }

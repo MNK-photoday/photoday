@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AxiosError } from 'axios';
 import {
   S_LinkTo,
   S_ImgContainer,
@@ -20,19 +22,17 @@ import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
+import { postLogin, LoginValue } from '../../api/Login';
+import { login } from '../../store/authSlice';
 
-export interface LoginValue {
-  email: string;
-  password: string;
-}
-
-export interface ValidityResults {
+export type ValidityResults = {
   isValidEmail: boolean;
   isValidPassword: boolean;
-}
+};
 
 function Login() {
-  const [isSigned, setIsSigned] = useState(false);
+  const dispatch = useDispatch();
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState<LoginValue>({
     email: '',
     password: '',
@@ -45,6 +45,22 @@ function Login() {
   useEffect(() => {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
+
+  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await postLogin(loginForm, keepLoggedIn);
+      await dispatch(login());
+      window.location.href = '/';
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          alert(error.response.data.message);
+        }
+      }
+    }
+  };
 
   const changeEmailAndPasswordValueHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -62,22 +78,15 @@ function Login() {
     }
   };
 
-  const clickSignedHandler = () => {
-    setIsSigned(!isSigned);
+  const clickkeepLoggedInHandler = () => {
+    setKeepLoggedIn(!keepLoggedIn);
   };
-
-  /* 
-  ! 기능 구현할 때 참고할 주석입니다.
-  ? Login 버튼 눌렀을 때
-    1. email value가 ''이 아니고, password value가 ''이 아닐 것
-    2. isAllValid.email과 isAllValid.password가 true일 것
-  */
 
   return (
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer>
+        <S_LoginContainer onSubmit={loginHandler}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
@@ -100,16 +109,19 @@ function Login() {
               <S_InvalidMessage
                 isShowMessage={!validations.isValidPassword ? 'show' : 'hide'}
               >
-                Passwords must contain 8 to 16 characters in English, numbers,
+                Passwords must contain 8 to 20 characters in English, numbers,
                 and special characters.
               </S_InvalidMessage>
             )}
           </S_InputContainerWrap>
-          <S_LinkTo to="/account-recovery" isAccount>
+          <S_LinkTo to="/account-recovery" isaccount="true">
             Forgot password?
           </S_LinkTo>
           <S_CheckBoxContainer>
-            <CheckBox isChecked={isSigned} onClickEvent={clickSignedHandler}>
+            <CheckBox
+              isChecked={keepLoggedIn}
+              onClickEvent={clickkeepLoggedInHandler}
+            >
               Stay signed in
             </CheckBox>
           </S_CheckBoxContainer>
@@ -129,7 +141,7 @@ function Login() {
           </S_ButtounContainer>
           <S_LinkToTextContainer>
             Don’t have an account?
-            <S_LinkTo to="/signup" isAccount={false}>
+            <S_LinkTo to="/signup" isaccount="false">
               Sign Up
             </S_LinkTo>
           </S_LinkToTextContainer>
