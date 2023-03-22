@@ -2,7 +2,7 @@ package com.photoday.photoday.image.mapper;
 
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
-import com.photoday.photoday.security.service.AuthUserServiceImpl;
+import com.photoday.photoday.security.service.impl.AuthUserServiceImpl;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.mapper.UserMapper;

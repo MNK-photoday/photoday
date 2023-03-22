@@ -6,7 +6,7 @@ import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.principaldetails.PrincipalDetailsService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.service.UserServiceImpl;
+import com.photoday.photoday.user.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final PrincipalDetailsService principalDetailsService;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -47,7 +47,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                 } else {
                     Map<String, Object> claims = verifyJws(request);
                     String username = (String) claims.get("username");
-                    User user = userServiceImpl.findUserByEmail(username);
+                    User user = userService.findUserByEmail(username);
 
                     checkUserStatus(user);
 
