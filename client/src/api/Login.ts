@@ -31,21 +31,13 @@ export const postLogin = async (
         password: loginForm.password,
       },
     );
-    const accessToken: string | undefined =
-      response.headers.authorization.replace(/^Bearer /, '');
 
-    if (keepLoggedIn) {
-      if (accessToken) {
-        const expirationTime = new Date().getTime() + 5 * 60 * 60 * 1000;
-        localStorage.setItem(
-          'accessToken',
-          JSON.stringify({
-            token: accessToken,
-            expiresAt: expirationTime,
-          }),
-        );
-      }
+    const accessToken: string | undefined = response.headers.authorization;
+
+    if (keepLoggedIn && accessToken) {
+      localStorage.setItem('accessToken', accessToken);
     }
+
     window.history.back();
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
