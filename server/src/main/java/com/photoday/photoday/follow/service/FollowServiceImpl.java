@@ -28,6 +28,7 @@ public class FollowServiceImpl implements FollowService {
     private final FollowMapper followMapper;
     private final AuthUserService authUserService;
 
+    @Override
     public FollowDto.ResponseFollowUsers findFollowUser() {
         Long loginUserId = authUserService.getLoginUserId();
 
@@ -46,6 +47,7 @@ public class FollowServiceImpl implements FollowService {
         return followMapper.followUserListToResponseFollowUsers(follow, loginUserId);
     }
 
+    @Override
     public FollowDto.ResponseFollowUsers registerFollowUser(Long followingId) {
         Long loginUserId = authUserService.getLoginUserId();
         if (followingId.equals(loginUserId)) {
