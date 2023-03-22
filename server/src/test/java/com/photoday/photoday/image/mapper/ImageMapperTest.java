@@ -2,7 +2,7 @@ package com.photoday.photoday.image.mapper;
 
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
-import com.photoday.photoday.security.service.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserServiceImpl;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.mapper.UserMapper;
@@ -32,7 +32,7 @@ class ImageMapperTest {
     @MockBean
     UserMapper userMapper;
     @MockBean
-    AuthUserService authUserService;
+    AuthUserServiceImpl authUserServiceImpl;
 
     @Test
     @WithMockUser // default value로 username = “user”, password = “password”, role = “USER”
@@ -51,7 +51,7 @@ class ImageMapperTest {
 //        method.setAccessible(true);
 //        assertThrows(NullPointerException.class, ()->method.invoke(imageMapper, image));
 
-        given(authUserService.checkLogin()).willReturn(null);
+        given(authUserServiceImpl.checkLogin()).willReturn(null);
         given(userMapper.userToUserResponse(Mockito.any(User.class), Mockito.anyLong())).willReturn(new UserDto.Response());
 
         // when
@@ -83,7 +83,7 @@ class ImageMapperTest {
         UserDto.Response responseUser = new UserDto.Response(1L, "홍길동",
                 "profileImageUrl", "hi", 1, 1, 1, 1, false);
 
-        given(authUserService.checkLogin()).willReturn(1L);
+        given(authUserServiceImpl.checkLogin()).willReturn(1L);
         given(userMapper.userToUserResponse(Mockito.any(User.class), anyLong())).willReturn(responseUser);
 
         //when

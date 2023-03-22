@@ -2,7 +2,7 @@ package com.photoday.photoday.security.controller;
 
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.redis.service.RedisService;
-import com.photoday.photoday.security.service.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserServiceImpl;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class AuthController {
     private final JwtProvider jwtProvider;
     private final RedisService redisService;
-    private final AuthUserService authUserService;
+    private final AuthUserServiceImpl authUserServiceImpl;
 
     @GetMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
@@ -51,7 +51,7 @@ public class AuthController {
 
     @PostMapping("/password")
     public ResponseEntity<?> setNewPassword(String email){
-        authUserService.setNewPassword(email);
+        authUserServiceImpl.setNewPassword(email);
         return ResponseEntity.ok().build();
     }
 }

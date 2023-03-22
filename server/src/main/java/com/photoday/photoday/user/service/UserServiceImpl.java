@@ -4,8 +4,8 @@ import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.repository.ReportRepository;
-import com.photoday.photoday.image.service.S3Service;
-import com.photoday.photoday.security.service.AuthUserService;
+import com.photoday.photoday.image.service.S3ServiceImpl;
+import com.photoday.photoday.security.service.AuthUserServiceImpl;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,14 +32,14 @@ import static com.photoday.photoday.excpetion.ExceptionCode.REPORT_COUNT_EXCEEDS
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserService {
+public class UserServiceImpl {
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
-    private final S3Service s3Service;
+    private final S3ServiceImpl s3ServiceImpl;
     private final UserMapper userMapper;
-    private final AuthUserService authUserService;
+    private final AuthUserServiceImpl authUserServiceImpl;
 
     public UserDto.Response createUser(UserDto.Post userPostDto) {
         User user = userMapper.userPostToUser(userPostDto);
@@ -72,20 +71,20 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDto.Response getUser(long userId) {
-        Long loginUserId = authUserService.getLoginUserId();
+        Long loginUserId = authUserServiceImpl.getLoginUserId();
         User targetUser = findVerifiedUser(userId);
         return userMapper.userToUserResponse(targetUser, loginUserId);
     }
 
     public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) {
         User user = userMapper.userUpdateToUser(userUpdateDto);
-        Long loginUserId = authUserService.getLoginUserId();
+        Long loginUserId = authUserServiceImpl.getLoginUserId();
         User verifiedUser = findVerifiedUser(loginUserId);
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
             try {
-                url = s3Service.saveImage(multipartFile);
+                url = s3ServiceImpl.saveImage(multipartFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (NoSuchAlgorithmException e) {
@@ -99,7 +98,7 @@ public class UserService {
 
     public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
         if(updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
-            Long loginUserId = authUserService.getLoginUserId();
+            Long loginUserId = authUserServiceImpl.getLoginUserId();
             User verifiedUser = findVerifiedUser(loginUserId);
             verifiedUser.setPassword(passwordEncoder.encode(updateUserPasswordDto.getPassword()));
             return userMapper.userToUserResponse(verifiedUser, loginUserId);
@@ -109,7 +108,7 @@ public class UserService {
     }
 
     public void deleteUser() {
-        Long loginUserId = authUserService.getLoginUserId();
+        Long loginUserId = authUserServiceImpl.getLoginUserId();
         userRepository.deleteById(loginUserId);
     }
 

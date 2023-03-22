@@ -2,7 +2,7 @@ package com.photoday.photoday.tag.controller;
 
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.tag.dto.TagDto;
-import com.photoday.photoday.tag.service.TagService;
+import com.photoday.photoday.tag.service.TagServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ class TagControllerTest {
     @Autowired
     private MockMvc mvc;
     @MockBean
-    private TagService tagService;
+    private TagServiceImpl tagServiceImpl;
 
     @Test
     @DisplayName("searchByTags: 정상 입력")
@@ -44,7 +44,7 @@ class TagControllerTest {
         MultiValueMap<String, String> params = getParams("createdAt,desc");
         MultiResponseDto<?> response = getMultiResponseDtoPageResponse();
 
-        given(tagService.searchByTags(any(TagDto.class), any(Pageable.class))).willReturn(response);
+        given(tagServiceImpl.searchByTags(any(TagDto.class), any(Pageable.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(

@@ -1,6 +1,5 @@
 package com.photoday.photoday.security.configuration;
 
-import com.photoday.photoday.mail.UserEventListener;
 import com.photoday.photoday.security.filter.JwtAuthenticationFilter;
 import com.photoday.photoday.security.filter.JwtVerificationFilter;
 import com.photoday.photoday.security.handler.*;
@@ -9,7 +8,7 @@ import com.photoday.photoday.security.principaldetails.PrincipalDetailsService;
 import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.security.utils.UserDataResponder;
-import com.photoday.photoday.user.service.UserService;
+import com.photoday.photoday.user.service.UserServiceImpl;
 import com.photoday.photoday.util.TempPassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +37,7 @@ public class SecurityConfiguration {
     private final RedisService redisService;
     private final PrincipalDetailsService principalDetailsService;
     private final UserDataResponder userDataResponder;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final PasswordEncoder passwordEncoder;
     private final TempPassword tempPassword;
 
@@ -64,7 +63,7 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userService, passwordEncoder, tempPassword))
+                        .successHandler(new OAuth2SuccessHandler(jwtProvider, userServiceImpl, passwordEncoder, tempPassword))
                         .failureHandler(new OAuth2FailureHandler()));
 
         return http.build();
@@ -89,12 +88,12 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, userService ,jwtProvider, redisService, userDataResponder);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, userServiceImpl,jwtProvider, redisService, userDataResponder);
             jwtAuthenticationFilter.setFilterProcessesUrl("/api/auth/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new UserAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new UserAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtProvider, customAuthorityUtils, principalDetailsService, userService);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtProvider, customAuthorityUtils, principalDetailsService, userServiceImpl);
 
             builder
                     .addFilter(jwtAuthenticationFilter)

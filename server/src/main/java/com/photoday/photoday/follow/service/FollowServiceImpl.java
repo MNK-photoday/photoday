@@ -6,9 +6,9 @@ import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.follow.mapper.FollowMapper;
 import com.photoday.photoday.follow.repository.FollowRepository;
-import com.photoday.photoday.security.service.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserServiceImpl;
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.service.UserService;
+import com.photoday.photoday.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class FollowService {
-    private final UserService userService;
+public class FollowServiceImpl {
+    private final UserServiceImpl userServiceImpl;
     private final FollowRepository followRepository;
     private final FollowMapper followMapper;
-    private final AuthUserService authUserService;
+    private final AuthUserServiceImpl authUserServiceImpl;
 
     public FollowDto.ResponseFollowUsers findFollowUser() {
-        Long loginUserId = authUserService.getLoginUserId();
+        Long loginUserId = authUserServiceImpl.getLoginUserId();
 
         List<Follow> follower = followRepository.findFollowByFollower_UserId(loginUserId);
         List<Follow> following = followRepository.findFollowByFollowing_UserId(loginUserId);
@@ -47,12 +47,12 @@ public class FollowService {
     }
 
     public FollowDto.ResponseFollowUsers registerFollowUser(Long followingId) {
-        Long loginUserId = authUserService.getLoginUserId();
+        Long loginUserId = authUserServiceImpl.getLoginUserId();
         if(followingId.equals(loginUserId)) {
             throw new CustomException(ExceptionCode.CANNOT_FOLLOW_MYSELF);
         }
-        User user = userService.findVerifiedUser(loginUserId);
-        User targetUser = userService.findVerifiedUser(followingId);
+        User user = userServiceImpl.findVerifiedUser(loginUserId);
+        User targetUser = userServiceImpl.findVerifiedUser(followingId);
 
         Optional<Follow> check = followRepository.findByFollowerAndFollowing(targetUser, user);
 

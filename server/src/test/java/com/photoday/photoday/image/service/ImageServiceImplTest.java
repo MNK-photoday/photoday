@@ -3,7 +3,7 @@ package com.photoday.photoday.image.service;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.repository.ImageRepository;
-import com.photoday.photoday.security.service.AuthUserService;
+import com.photoday.photoday.security.service.AuthUserServiceImpl;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
@@ -27,17 +27,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
-class ImageServiceTest {
+class ImageServiceImplTest {
     @Autowired
-    ImageService imageService;
+    ImageServiceImpl imageServiceImpl;
     @Autowired
     UserRepository userRepository;
     @Autowired
     ImageRepository imageRepository;
     @MockBean
-    AuthUserService authUserService;
+    AuthUserServiceImpl authUserServiceImpl;
     @MockBean
-    S3Service s3Service;
+    S3ServiceImpl s3ServiceImpl;
 
     @BeforeEach
     void dropRepository() {
@@ -56,17 +56,17 @@ class ImageServiceTest {
                 .password("123456a!")
                 .build();
         User loginUser = userRepository.save(user);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserServiceImpl.getLoginUserId()).willReturn(loginUser.getUserId());
 
         TagDto tagDto = new TagDto(List.of("background", "blue"));
         MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
-        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        given(s3ServiceImpl.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
 
         String createdImageUrl = "http://createdImageUrl.jpg";
-        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+        given(s3ServiceImpl.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
 
         // when
-        ImageDto.Response image = imageService.createImage(tagDto, multipartFile);
+        ImageDto.Response image = imageServiceImpl.createImage(tagDto, multipartFile);
 
         // then
         assertNotNull(image.getImageId());
@@ -80,7 +80,7 @@ class ImageServiceTest {
         MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "application/pdf", "multipartFile".getBytes());
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> imageService.createImage(tagDto, multipartFile));
+        CustomException exception = assertThrows(CustomException.class, () -> imageServiceImpl.createImage(tagDto, multipartFile));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getExceptionCode().getHttpStatus());
         assertEquals("이미지 타입의 파일이 아닙니다.", exception.getExceptionCode().getMessage());
     }
