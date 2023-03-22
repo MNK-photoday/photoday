@@ -85,19 +85,17 @@ function Upload() {
       formData.append('file', imagefile.file);
       formData.append('post', tagsBlob);
 
-      const tokenString: any = localStorage.getItem('accessToken');
-      const { token, expiresAt } = JSON.parse(tokenString);
+      const token = localStorage.getItem('accessToken');
 
       axios
-        .post(`${import.meta.env.VITE_APP_API_URL}/api/images`, formData, {
+        .post(`${import.meta.env.VITE_APP_API}/images`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         })
         .then((response) => {
-          console.log(response.data);
-          navigate(`/images/${response.data.imageId}`);
+          navigate(`/images/${response.data.data.imageId}`);
         })
         .catch((error) => {
           console.log(error);
