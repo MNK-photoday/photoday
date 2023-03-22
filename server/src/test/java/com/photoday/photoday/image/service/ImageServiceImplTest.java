@@ -318,6 +318,34 @@ class ImageServiceImplTest {
     }
 
     @Test
+    @WithMockUser("loginUser@mail.com")
+    @DisplayName("createReport: 게시글 작성자가 신고 불가")
+    void createReportCannotReportMyselfTest() {
+        // given
+
+        User creator = User.builder()
+                .email("owner@email.com")
+                .name("owner")
+                .password("123456a!")
+                .build();
+        User owner = userRepository.save(creator);
+        given(authUserService.getLoginUserId()).willReturn(owner.getUserId());
+
+        Image image = Image.builder()
+                .imageUrl("http://imageUrl.jpg")
+                .createdAt(LocalDateTime.now())
+                .user(owner)
+                .imageHashValue("imageHashValue")
+                .build();
+        Image savedImage = imageRepository.save(image);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.createReport(savedImage.getImageId()));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
+        assertEquals("본인 게시물을 신고할 수 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
     void updateLikeTest() {
     }
 
