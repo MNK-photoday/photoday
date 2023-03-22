@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '../../components/common/Button/Button';
 import { Container, ContainerWrap } from '../../styles/Layout';
@@ -29,6 +30,7 @@ export type Tags = {
 };
 
 function Upload() {
+  const navigate = useNavigate();
   const chooseFileRef = useRef<HTMLInputElement>(null);
 
   const [imagefile, setImagefile] = useState<UploadImage | null>(null);
@@ -95,6 +97,7 @@ function Upload() {
         })
         .then((response) => {
           console.log(response.data);
+          navigate(`/images/${response.data.imageId}`);
         })
         .catch((error) => {
           console.log(error);
