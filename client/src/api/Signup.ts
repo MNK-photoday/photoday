@@ -1,33 +1,11 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { LoginValue } from './Login';
-import { ErrorResponse } from './Login';
 
 const postSignup = async (loginForm: LoginValue) => {
-  try {
-    await axios.post<undefined, AxiosResponse<ErrorResponse>>(
-      `${import.meta.env.VITE_APP_API}/api/users`,
-      {
-        email: loginForm.email,
-        password: loginForm.password,
-      },
-    );
-    alert('potoday 회원가입이 성공적으로 완료되었습니다.');
-    window.history.back();
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      if (error.response) {
-        const errorData = error.response.data;
-        const errorResponse: ErrorResponse = errorData.message;
-        if (errorResponse) {
-          alert(errorResponse);
-        } else {
-          const newErrorResponse: ErrorResponse =
-            errorData.fieldErrors[0].message;
-          alert(newErrorResponse);
-        }
-      }
-    }
-  }
+  await axios.post<AxiosResponse>(`${import.meta.env.VITE_APP_API}/api/users`, {
+    email: loginForm.email,
+    password: loginForm.password,
+  });
 };
 
 export default postSignup;

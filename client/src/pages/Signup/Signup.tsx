@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AxiosError } from 'axios';
 import {
   S_LoginContainerWrap,
   S_ImgContainer,
@@ -24,7 +25,7 @@ import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles'
 import { ValidityResults } from '../Login/Login';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 import postSignup from '../../api/Signup';
-import { LoginValue } from '../../api/Login';
+import { LoginValue, ErrorResponse } from '../../api/Login';
 
 function Signup() {
   const [isCheckedTerms, setIsCheckedTerms] = useState(false);
@@ -44,9 +45,24 @@ function Signup() {
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (isCheckedTerms) {
-      await postSignup(loginForm);
+      try {
+        await postSignup(loginForm);
+        alert('potoday 회원가입이 성공적으로 완료되었습니다.');
+        window.history.back();
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.response) {
+            const errorData = error.response.data;
+            const errorResponse: ErrorResponse = errorData.message;
+            if (errorResponse) {
+              alert(errorResponse);
+            } else {
+              alert(errorData.fieldErrors[0].message);
+            }
+          }
+        }
+      }
     } else {
       alert('약관을 확인해 주세요.');
     }
@@ -108,7 +124,7 @@ function Signup() {
               <S_InvalidMessage
                 isShowMessage={!validations.isValidPassword ? 'show' : 'hide'}
               >
-                Passwords must contain 8 to 16 characters in English, numbers,
+                Passwords must contain 8 to 20 characters in English, numbers,
                 and special characters.
               </S_InvalidMessage>
             )}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { AxiosError } from 'axios';
 import {
   S_LinkTo,
   S_ImgContainer,
@@ -22,7 +23,7 @@ import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 import { postLogin, LoginValue } from '../../api/Login';
-import { loginSuccess } from '../../store/authSlice';
+import { login } from '../../store/authSlice';
 
 export type ValidityResults = {
   isValidEmail: boolean;
@@ -47,8 +48,18 @@ function Login() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await postLogin(loginForm, keepLoggedIn);
-    await dispatch(loginSuccess());
+
+    try {
+      await postLogin(loginForm, keepLoggedIn);
+      await dispatch(login());
+      window.location.href = '/';
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          alert(error.response.data.message);
+        }
+      }
+    }
   };
 
   const changeEmailAndPasswordValueHandler = (
@@ -98,7 +109,7 @@ function Login() {
               <S_InvalidMessage
                 isShowMessage={!validations.isValidPassword ? 'show' : 'hide'}
               >
-                Passwords must contain 8 to 16 characters in English, numbers,
+                Passwords must contain 8 to 20 characters in English, numbers,
                 and special characters.
               </S_InvalidMessage>
             )}
