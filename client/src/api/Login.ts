@@ -25,7 +25,7 @@ export const postLogin = async (
 ) => {
   try {
     const response = await axios.post<undefined, AxiosResponse<ErrorResponse>>(
-      `${import.meta.env.VITE_APP_API_URL}/api/auth/login`,
+      `${import.meta.env.VITE_APP_API}/api/auth/login`,
       {
         email: loginForm.email,
         password: loginForm.password,

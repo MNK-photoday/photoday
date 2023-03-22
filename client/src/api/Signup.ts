@@ -1,11 +1,11 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import { LoginValue } from '../pages/Login/Login';
+import { LoginValue } from './Login';
 import { ErrorResponse } from './Login';
 
 const postSignup = async (loginForm: LoginValue) => {
   try {
     await axios.post<undefined, AxiosResponse<ErrorResponse>>(
-      `${import.meta.env.VITE_APP_API_URL}/api/users`,
+      `${import.meta.env.VITE_APP_API}/api/users`,
       {
         email: loginForm.email,
         password: loginForm.password,
