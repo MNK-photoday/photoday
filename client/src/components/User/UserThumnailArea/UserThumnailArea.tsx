@@ -9,31 +9,29 @@ import {
 } from './UserThumnailArea.styles';
 import Button from '../../common/Button/Button';
 import UserFollwModal from '../UserFollwModal/UserFollwModal';
+import { UserData } from '../../../store/userSlice';
 
-import { DataType } from '../../../pages/User/User';
-
-interface User {
-  userData: DataType;
-}
+export type User = {
+  userData: UserData;
+};
 
 function UserThumnailArea({ userData }: User) {
   const [followModal, setFollowModal] = useState(false);
-  const user = userData.data[0];
-
+  console.log(userData);
   const clickFollowModalHandler = () => {
     setFollowModal(!followModal);
   };
 
   return (
     <S_UserThumnailArea>
-      <S_UserProfileIamge alt="user profile" src={user.profileImageUrl} />
+      <S_UserProfileIamge alt="user profile" src={userData.profileImageUrl} />
       <S_UserFollowContainer>
         <S_UserFollowWrap onClick={clickFollowModalHandler}>
-          <S_UserFollowCount>{user.followerCount}</S_UserFollowCount>
+          <S_UserFollowCount>{userData.followerCount}</S_UserFollowCount>
           <S_UserFollow>Follower</S_UserFollow>
         </S_UserFollowWrap>
         <S_UserFollowWrap onClick={clickFollowModalHandler}>
-          <S_UserFollowCount>{user.followingCount}</S_UserFollowCount>
+          <S_UserFollowCount>{userData.followingCount}</S_UserFollowCount>
           <S_UserFollow>Following</S_UserFollow>
         </S_UserFollowWrap>
       </S_UserFollowContainer>

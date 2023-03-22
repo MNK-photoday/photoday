@@ -12,18 +12,11 @@ import {
 } from './UserInfoArea.styles';
 import UserInfoTextarea from './UserInfoTextarea/UserInfoTextarea';
 import { FaHeart } from 'react-icons/fa';
-import { TbPhotoCancel } from 'react-icons/tb';
-import { MdHideImage } from 'react-icons/md';
-import { RiAlarmWarningLine } from 'react-icons/ri';
 import { IoWarningOutline } from 'react-icons/io5';
-import { DataType } from '../../../pages/User/User';
 import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
 import { PasswordInput } from '../../Login/Input/Input';
 import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
-
-interface User {
-  userData: DataType;
-}
+import { User } from '../UserThumnailArea/UserThumnailArea';
 
 function UserInfoArea({ userData }: User) {
   const [inputValue, setInputValue] = useState('');
@@ -32,7 +25,6 @@ function UserInfoArea({ userData }: User) {
   const [isEdit, setIsEdit] = useState(false);
   const [isChangePassWord, setIsChangePassWord] = useState(false);
   const VALUE_TYPE = 'password';
-  const user = userData.data[0];
   const confirmValue = inputValue !== confirminputValue;
 
   useEffect(() => {
@@ -64,17 +56,16 @@ function UserInfoArea({ userData }: User) {
   return (
     <S_UserInfoArea>
       <S_UserNameContainer>
-        <S_UserName>{user.name}</S_UserName>
-        <FaHeart size={18} className="likeicon" />
-        <S_UserLikeAndReport>{user.likeCount}</S_UserLikeAndReport>
+        <S_UserName>{userData.name}</S_UserName>
+        <FaHeart size={20} className="likeicon" />
+        <S_UserLikeAndReport>{userData.likeCount}</S_UserLikeAndReport>
         {/* <TbPhotoCancel size={25} className="reporticon" /> */}
         {/* <RiAlarmWarningLine size={25} className="reporticon" /> */}
         <IoWarningOutline size={25} className="reporticon" />
-        {/* <MdHideImage size={20} className="reporticon" /> */}
-        <S_UserLikeAndReport>{user.reportCount}</S_UserLikeAndReport>
+        <S_UserLikeAndReport>{userData.reportCount}</S_UserLikeAndReport>
       </S_UserNameContainer>
       <S_UserDescription isEdit={isEdit}>
-        {isEdit ? <UserInfoTextarea /> : user.description}
+        {isEdit ? <UserInfoTextarea /> : userData.description}
       </S_UserDescription>
       <S_TextButtonWrap>
         <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
