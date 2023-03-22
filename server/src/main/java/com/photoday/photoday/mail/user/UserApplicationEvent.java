@@ -1,4 +1,4 @@
-package com.photoday.photoday.mail;
+package com.photoday.photoday.mail.user;
 
 
 import com.photoday.photoday.user.entity.User;

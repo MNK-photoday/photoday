@@ -1,7 +1,10 @@
 package com.photoday.photoday.excpetion;
 
+import com.photoday.photoday.mail.developer.DeveloperApplicationEvent;
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -16,7 +19,10 @@ import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ExceptionControllerAdvice { //TODO 로그 정리
+    private final ApplicationEventPublisher publisher;
+
     @ExceptionHandler
     public ResponseEntity handleCustomException(CustomException e) {
         log.error("CustomException : {}", e.getMessage());
@@ -77,7 +83,8 @@ public class ExceptionControllerAdvice { //TODO 로그 정리
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleException(Exception e) { //TODO 개발자에게 이메일 보내는 로직 추가
+    public ErrorResponse handleException(Exception e) {
+        publisher.publishEvent(new DeveloperApplicationEvent(this, e.getClass().toString()));
         log.error("Exception : {}", e.getMessage());
         final ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
         return errorResponse;

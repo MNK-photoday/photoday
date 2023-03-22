@@ -1,4 +1,4 @@
-package com.photoday.photoday.mail;
+package com.photoday.photoday.mail.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailSendException;

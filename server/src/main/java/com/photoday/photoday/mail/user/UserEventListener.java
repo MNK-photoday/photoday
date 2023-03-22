@@ -1,5 +1,6 @@
-package com.photoday.photoday.mail;
+package com.photoday.photoday.mail.user;
 
+import com.photoday.photoday.mail.config.EmailSender;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
 import com.photoday.photoday.util.TempPassword;

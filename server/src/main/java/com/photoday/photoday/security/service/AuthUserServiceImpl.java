@@ -2,7 +2,7 @@ package com.photoday.photoday.security.service;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
-import com.photoday.photoday.mail.UserApplicationEvent;
+import com.photoday.photoday.mail.user.UserApplicationEvent;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
