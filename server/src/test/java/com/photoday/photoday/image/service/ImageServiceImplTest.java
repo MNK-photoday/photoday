@@ -283,6 +283,41 @@ class ImageServiceImplTest {
     }
 
     @Test
+    @WithMockUser("loginUser@mail.com")
+    @DisplayName("createReport: 두 번 눌렀을 때 신고 불가")
+    void createReportFailTest() {
+        // given
+        User user = User.builder()
+                .email("loginUser@mail.com")
+                .name("loginUser")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        User creator = User.builder()
+                .email("owner@email.com")
+                .name("owner")
+                .password("123456a!")
+                .build();
+        User owner = userRepository.save(creator);
+
+        Image image = Image.builder()
+                .imageUrl("http://imageUrl.jpg")
+                .createdAt(LocalDateTime.now())
+                .user(owner)
+                .imageHashValue("imageHashValue")
+                .build();
+        Image savedImage = imageRepository.save(image);
+        imageService.createReport(savedImage.getImageId());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.createReport(savedImage.getImageId()));
+        assertEquals(HttpStatus.CONFLICT, exception.getExceptionCode().getHttpStatus());
+        assertEquals("이미 신고한 게시물입니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
     void updateLikeTest() {
     }
 
