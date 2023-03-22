@@ -115,7 +115,7 @@ function Upload() {
           },
         })
         .then((response) => {
-          navigate(`/images/${response.data.data.imageId}`);
+          navigate(`/detail/${response.data.data.imageId}`);
         })
         .catch((error) => {
           console.log(error);
