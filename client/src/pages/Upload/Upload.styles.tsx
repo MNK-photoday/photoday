@@ -93,10 +93,20 @@ export const S_PreviewWrapper = styled.div`
   }
 `;
 export const S_PreviewInfo = styled.div`
-  ${Flex}
+  ${ColFlex}
+  align-items: center;
   width: 100%;
   height: 200px;
   background-color: var(--color-primary-gray10);
   border-radius: 10px;
   margin-left: 10px;
+`;
+
+export const S_FileSizePreview = styled.p`
+  font-size: var(--font-size-sm);
+`;
+
+export const S_FileSizeWarning = styled.p`
+  font-size: var(--font-size-sm);
+  color: var(--color-primary-red);
 `;

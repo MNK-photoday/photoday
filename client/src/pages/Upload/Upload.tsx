@@ -13,6 +13,8 @@ import {
   S_UploadTitle,
   S_PreviewInfo,
   S_PreviewWrapper,
+  S_FileSizeWarning,
+  S_FileSizePreview,
 } from './Upload.styles';
 import TagList from '../../components/Upload/Tag/TagList';
 import axios from 'axios';
@@ -22,6 +24,7 @@ type UploadImage = {
   thumbnail: string;
   type: string;
   name: string;
+  size: string;
 };
 
 export type Tags = {
@@ -39,6 +42,18 @@ function Upload() {
   const [tagCount, setTagCount] = useState<number>(0);
   const [inputValue, setInputValue] = useState('');
 
+  const fileSizeCalculator = (dataSize: number, unit: string) => {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const index = units.indexOf(unit.toUpperCase());
+    let size = dataSize;
+
+    for (let i = 0; i < index; i++) {
+      size /= 1024;
+    }
+
+    return size.toFixed(2) + ' ' + units[index];
+  };
+
   const fileInputClickHandler = () => {
     chooseFileRef.current?.click();
   };
@@ -51,6 +66,7 @@ function Upload() {
         thumbnail: URL.createObjectURL(fileList[0]),
         type: fileList[0].type,
         name: fileList[0].name,
+        size: fileSizeCalculator(fileList[0].size, 'MB'),
       });
     }
   };
@@ -63,6 +79,7 @@ function Upload() {
       thumbnail: URL.createObjectURL(fileList[0]),
       type: fileList[0].type,
       name: fileList[0].name,
+      size: fileSizeCalculator(fileList[0].size, 'MB'),
     });
   };
 
@@ -140,11 +157,19 @@ function Upload() {
               onChange={uploadImageHandler}
             />
           </S_FileBox>
-          {/* 아래는 미리보기 기능을 위한 임시 코드입니다. */}
           {imagefile && (
             <S_PreviewWrapper>
               <img src={imagefile.thumbnail} alt="thumbnail" />
-              <S_PreviewInfo>{imagefile.name}</S_PreviewInfo>
+              <S_PreviewInfo>
+                <p>{imagefile.name}</p>
+                {imagefile.file.size > 1024 * 1024 * 10 ? (
+                  <S_FileSizeWarning>
+                    File size should not exceed 10MB
+                  </S_FileSizeWarning>
+                ) : (
+                  <S_FileSizePreview>{imagefile.size}</S_FileSizePreview>
+                )}
+              </S_PreviewInfo>
             </S_PreviewWrapper>
           )}
           <S_UploadBottom>
