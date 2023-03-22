@@ -1,14 +1,14 @@
 version: "3.7"
 services:
-  cache:
+  redis:
     container_name: redis
     image: redis:alpine
     ports:
       - 6379:6379
     volumes:
       - ~/Desktop/redis/data/:/data
-  application:
-    container_name: board
+  spring:
+    container_name: spring
     build:
       context: .
       dockerfile: Dockerfile
@@ -32,5 +32,9 @@ services:
       MAIL_ADMIN: ${MAIL_ADMIN}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
+      TEST_DB_ENDPOINT: ${TEST_DB_ENDPOINT}
+      TEST_DB_NAME: ${TEST_DB_NAME}
+      TEST_DB_ID: ${TEST_DB_ID}
+      TEST_DB_PSW: ${TEST_DB_PSW}
     depends_on:
-      - cache
+      - redis
