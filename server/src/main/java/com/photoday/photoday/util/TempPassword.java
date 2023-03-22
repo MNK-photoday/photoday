@@ -22,9 +22,9 @@ public class TempPassword {
         }
 
         //유효성 검사에 충족하기 위한 로직 추가
-        sb.append(str.charAt((int) (Math.random() * 10)));
-        sb.append(str.charAt((int) (Math.random() * (str.indexOf("z") - str.indexOf("A"))) + str.indexOf("A")));
-        sb.append(str.charAt((int) (Math.random() * (str.indexOf("&") - str.indexOf("!"))) + str.indexOf("!")));
+        sb.insert(sr.nextInt(size), str.charAt((int) (Math.random() * 10)));
+        sb.insert(sr.nextInt(size), str.charAt((int) (Math.random() * 50) + 11));
+        sb.insert(sr.nextInt(size), str.charAt((int) (Math.random() * 6) + 62));
 
         return sb.toString();
     }
