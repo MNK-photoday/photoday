@@ -70,6 +70,10 @@ function Upload() {
 
   const fileUploadHandler = () => {
     if (imagefile !== null && tags.length > 0) {
+      if (tags.length > 20) {
+        alert('Only 20 tags can be created');
+      }
+
       const tagsBlob = new Blob(
         [JSON.stringify({ tags: tags.map((tag) => tag.name) })],
         { type: 'application/json' },
