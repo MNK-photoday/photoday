@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AxiosError } from 'axios';
 import {
   S_UserInfoArea,
   S_UserNameContainer,
@@ -17,6 +18,7 @@ import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationL
 import { PasswordInput } from '../../Login/Input/Input';
 import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
 import { User } from '../UserThumnailArea/UserThumnailArea';
+import { updatePasswordUser } from '../../../api/User';
 
 function UserInfoArea({ userData }: User) {
   const [inputValue, setInputValue] = useState('');
@@ -53,6 +55,23 @@ function UserInfoArea({ userData }: User) {
     setIsChangePassWord(!isChangePassWord);
   };
 
+  const updatePassWordHandler = async () => {
+    setIsChangePassWord(!isChangePassWord);
+    try {
+      await updatePasswordUser({
+        inputValue,
+        confirminputValue,
+      });
+      alert('비밀번호가 성공적으로 변경되었습니다.');
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          alert(error.response.data.message);
+        }
+      }
+    }
+  };
+
   return (
     <S_UserInfoArea>
       <S_UserNameContainer>
@@ -68,9 +87,18 @@ function UserInfoArea({ userData }: User) {
         {isEdit ? <UserInfoTextarea /> : userData.description}
       </S_UserDescription>
       <S_TextButtonWrap>
-        <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
-          {isEdit ? 'Save edits' : 'Edit'}
-        </S_TextButton>
+        {isEdit ? (
+          <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
+            Save edits
+          </S_TextButton>
+        ) : (
+          <S_TextButton
+            isTextButtonType="edit"
+            // onClick={clickUpdatedescriptionHandler}
+          >
+            Edit
+          </S_TextButton>
+        )}
         {isChangePassWord && (
           <S_InputWrap>
             <PasswordInput
@@ -80,7 +108,7 @@ function UserInfoArea({ userData }: User) {
             />
             {!validValue && (
               <S_InvalidMessage isShowMessage={!validValue ? 'show' : 'hide'}>
-                Passwords must contain 8 to 16 characters in English, numbers,
+                Passwords must contain 8 to 20 characters in English, numbers,
                 and special characters.
               </S_InvalidMessage>
             )}
@@ -102,12 +130,22 @@ function UserInfoArea({ userData }: User) {
             </S_TextButton>
           </S_InputWrap>
         )}
-        <S_TextButton
-          isTextButtonType="changePassword"
-          onClick={clickChangePassWordHandler}
-        >
-          {isChangePassWord ? 'Save Password' : 'Change Password'}
-        </S_TextButton>
+
+        {isChangePassWord ? (
+          <S_TextButton
+            isTextButtonType="changePassword"
+            onClick={updatePassWordHandler}
+          >
+            Save Password
+          </S_TextButton>
+        ) : (
+          <S_TextButton
+            isTextButtonType="changePassword"
+            onClick={clickChangePassWordHandler}
+          >
+            Change Password
+          </S_TextButton>
+        )}
         <S_TextButton
           isTextButtonType="deleteAccount"
           onClick={() => alert('정말로 탈퇴하시겠습니까?')}
