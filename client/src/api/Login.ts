@@ -1,5 +1,9 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import { LoginValue } from '../pages/Login/Login';
+
+export type LoginValue = {
+  email: string;
+  password: string;
+};
 
 export type FieldError = {
   field: string;

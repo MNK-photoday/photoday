@@ -21,18 +21,13 @@ import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
-import { postLogin } from '../../api/Login';
+import { postLogin, LoginValue } from '../../api/Login';
 import { loginSuccess } from '../../store/authSlice';
 
-export interface LoginValue {
-  email: string;
-  password: string;
-}
-
-export interface ValidityResults {
+export type ValidityResults = {
   isValidEmail: boolean;
   isValidPassword: boolean;
-}
+};
 
 function Login() {
   const dispatch = useDispatch();

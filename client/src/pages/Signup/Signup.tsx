@@ -21,9 +21,10 @@ import { S_TermsGuideModal, S_Ul, S_Li } from './Signup.styles';
 import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
-import { LoginValue, ValidityResults } from '../Login/Login';
+import { ValidityResults } from '../Login/Login';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
 import postSignup from '../../api/Signup';
+import { LoginValue } from '../../api/Login';
 
 function Signup() {
   const [isCheckedTerms, setIsCheckedTerms] = useState(false);
