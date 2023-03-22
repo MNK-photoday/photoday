@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 import {
   S_UserInfoArea,
@@ -18,9 +19,11 @@ import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationL
 import { PasswordInput } from '../../Login/Input/Input';
 import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
 import { User } from '../UserThumnailArea/UserThumnailArea';
-import { updatePasswordUser } from '../../../api/User';
+import { updatePasswordUser, deleteUser } from '../../../api/User';
+import { logout } from '../../../store/authSlice';
 
 function UserInfoArea({ userData }: User) {
+  const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState('');
   const [confirminputValue, setconfirmInputValue] = useState('');
   const [validValue, setValidValue] = useState(true);
@@ -69,6 +72,27 @@ function UserInfoArea({ userData }: User) {
           alert(error.response.data.message);
         }
       }
+    }
+  };
+
+  const deleteUserHandler = async () => {
+    if (confirm('정말로 탈퇴하시겠습니까?')) {
+      try {
+        await deleteUser();
+        dispatch(logout());
+        alert(
+          'potoday 회원탈퇴가 완료되었습니다. 그동안 potoday를 이용해 주셔서 감사합니다.',
+        );
+        window.location.href = '/';
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.response) {
+            alert(error.response.data.message);
+          }
+        }
+      }
+    } else {
+      alert('취소되었습니다!');
     }
   };
 
@@ -130,7 +154,6 @@ function UserInfoArea({ userData }: User) {
             </S_TextButton>
           </S_InputWrap>
         )}
-
         {isChangePassWord ? (
           <S_TextButton
             isTextButtonType="changePassword"
@@ -148,7 +171,7 @@ function UserInfoArea({ userData }: User) {
         )}
         <S_TextButton
           isTextButtonType="deleteAccount"
-          onClick={() => alert('정말로 탈퇴하시겠습니까?')}
+          onClick={deleteUserHandler}
         >
           Delete account
         </S_TextButton>

@@ -24,7 +24,7 @@ export const updatePasswordUser = async ({
   confirminputValue,
 }: newPassword) => {
   const token = localStorage.getItem('accessToken');
-  const response = await axios.post(
+  await axios.post(
     `${import.meta.env.VITE_APP_API}/users/update/password`,
     {
       password: inputValue,
@@ -36,6 +36,16 @@ export const updatePasswordUser = async ({
       },
     },
   );
+};
 
-  return response.data;
+export const deleteUser = async () => {
+  const token = localStorage.getItem('accessToken');
+  await axios.delete<AxiosResponse>(`${import.meta.env.VITE_APP_API}/users`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('userId');
 };
