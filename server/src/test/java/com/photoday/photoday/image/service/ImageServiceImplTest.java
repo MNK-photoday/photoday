@@ -125,7 +125,32 @@ class ImageServiceImplTest {
     }
 
     @Test
-    void getImageTest() {
+    @WithMockUser(username = "default@mail.com")
+    @DisplayName("getImage: 정상 입력")
+    void getImageTest() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = User.builder()
+                .email("owner@mail.com")
+                .name("owner")
+                .password("123456a!")
+                .build();
+        User loginUser = userRepository.save(user);
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        TagDto postTagDto = new TagDto(List.of("background", "blue"));
+        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+
+        String createdImageUrl = "http://createdImageUrl.jpg";
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+
+        ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
+
+        // when
+        ImageDto.Response response = imageService.getImage(image.getImageId());
+
+        // then
+        assertEquals(image.getViewCount() + 1, response.getViewCount());
     }
 
     @Test
