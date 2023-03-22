@@ -2,7 +2,7 @@ package com.photoday.photoday.follow.controller;
 
 import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.follow.mapper.FollowMapper;
-import com.photoday.photoday.follow.service.FollowServiceImpl;
+import com.photoday.photoday.follow.service.FollowService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ class FollowControllerTest {
     @Autowired
     private MockMvc mvc;
     @MockBean
-    FollowServiceImpl followServiceImpl;
+    FollowService followService;
     @MockBean
     FollowMapper followMapper;
 
@@ -43,7 +43,7 @@ class FollowControllerTest {
         FollowDto.ResponseFollowUsers response = getFollowDtoResponseFollowUsers();
 
 
-        given(followServiceImpl.findFollowUser()).willReturn(response);
+        given(followService.findFollowUser()).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
@@ -69,7 +69,7 @@ class FollowControllerTest {
         long followingId = 1L;
         FollowDto.ResponseFollowUsers response = getFollowDtoResponseFollowUsers();
 
-        given(followServiceImpl.registerFollowUser(anyLong())).willReturn(response);
+        given(followService.registerFollowUser(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(

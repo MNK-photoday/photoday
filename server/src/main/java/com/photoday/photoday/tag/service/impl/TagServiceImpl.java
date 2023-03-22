@@ -1,4 +1,4 @@
-package com.photoday.photoday.tag.service;
+package com.photoday.photoday.tag.service.impl;
 
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.image.dto.ImageDto;
@@ -8,6 +8,7 @@ import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.repository.TagRepository;
+import com.photoday.photoday.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,11 +25,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TagServiceImpl {
+public class TagServiceImpl implements TagService {
     private final ImageRepository imageRepository;
     private final TagRepository tagRepository;
     private final ImageMapper imageMapper;
 
+    @Override
     public MultiResponseDto searchByTags(@RequestBody @Valid TagDto tags, Pageable pageable) {
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
@@ -39,6 +41,7 @@ public class TagServiceImpl {
         return new MultiResponseDto(responses, page);
     }
 
+    @Override
     public Tag verifyTag(Tag tag) {
         Optional<Tag> optionalTag = tagRepository.findByName(tag.getName());
         return optionalTag.orElseGet(() -> tagRepository.save(tag));

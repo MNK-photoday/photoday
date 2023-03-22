@@ -3,19 +3,21 @@ package com.photoday.photoday.image.service;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.repository.ImageRepository;
-import com.photoday.photoday.security.service.AuthUserServiceImpl;
+import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,18 +28,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 class ImageServiceImplTest {
     @Autowired
-    ImageServiceImpl imageServiceImpl;
+    ImageService imageService;
     @Autowired
     UserRepository userRepository;
     @Autowired
     ImageRepository imageRepository;
     @MockBean
-    AuthUserServiceImpl authUserServiceImpl;
+    AuthUserService authUserService;
     @MockBean
-    S3ServiceImpl s3ServiceImpl;
+    S3Service s3Service;
 
     @BeforeEach
     void dropRepository() {
@@ -56,17 +59,17 @@ class ImageServiceImplTest {
                 .password("123456a!")
                 .build();
         User loginUser = userRepository.save(user);
-        given(authUserServiceImpl.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
         TagDto tagDto = new TagDto(List.of("background", "blue"));
         MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
-        given(s3ServiceImpl.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
 
         String createdImageUrl = "http://createdImageUrl.jpg";
-        given(s3ServiceImpl.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
 
         // when
-        ImageDto.Response image = imageServiceImpl.createImage(tagDto, multipartFile);
+        ImageDto.Response image = imageService.createImage(tagDto, multipartFile);
 
         // then
         assertNotNull(image.getImageId());
@@ -80,7 +83,7 @@ class ImageServiceImplTest {
         MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "application/pdf", "multipartFile".getBytes());
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> imageServiceImpl.createImage(tagDto, multipartFile));
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.createImage(tagDto, multipartFile));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getExceptionCode().getHttpStatus());
         assertEquals("이미지 타입의 파일이 아닙니다.", exception.getExceptionCode().getMessage());
     }

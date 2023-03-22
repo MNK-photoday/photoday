@@ -8,7 +8,7 @@ import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.security.utils.CookieUtil;
 import com.photoday.photoday.security.utils.UserDataResponder;
 import com.photoday.photoday.user.entity.User;
-import com.photoday.photoday.user.service.UserServiceImpl;
+import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +29,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
     private final RedisService redisService;
     private final UserDataResponder userDataResponder;
@@ -69,8 +69,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private void checkUserStatus(String email) {
         try {
-            User user = userServiceImpl.findUserByEmail(email);
-            userServiceImpl.checkBanTime(user);
+            User user = userService.findUserByEmail(email);
+            userService.checkBanTime(user);
             if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
                 throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
             }

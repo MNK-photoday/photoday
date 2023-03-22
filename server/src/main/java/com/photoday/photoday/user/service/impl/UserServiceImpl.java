@@ -1,16 +1,17 @@
-package com.photoday.photoday.user.service;
+package com.photoday.photoday.user.service.impl;
 
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.repository.ReportRepository;
-import com.photoday.photoday.image.service.S3ServiceImpl;
-import com.photoday.photoday.security.service.AuthUserServiceImpl;
+import com.photoday.photoday.image.service.S3Service;
+import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.mapper.UserMapper;
 import com.photoday.photoday.user.repository.UserRepository;
+import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,15 +33,16 @@ import static com.photoday.photoday.excpetion.ExceptionCode.REPORT_COUNT_EXCEEDS
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
-    private final S3ServiceImpl s3ServiceImpl;
+    private final S3Service s3Service;
     private final UserMapper userMapper;
-    private final AuthUserServiceImpl authUserServiceImpl;
+    private final AuthUserService authUserService;
 
+    @Override
     public UserDto.Response createUser(UserDto.Post userPostDto) {
         User user = userMapper.userPostToUser(userPostDto);
         verifyExistsEmail(user.getEmail());
@@ -57,9 +59,10 @@ public class UserServiceImpl {
         return userMapper.userToUserResponse(createdUser, null);
     }
 
+    @Override
     public User registerUserOAuth2(User user) {
         Optional<User> findUser = userRepository.findByEmail(user.getEmail());
-        if(findUser.isPresent()) {
+        if (findUser.isPresent()) {
             return findUser.get();
         }
         List<String> roles = customAuthorityUtils.createRoles(user.getEmail());
@@ -69,22 +72,24 @@ public class UserServiceImpl {
         return userRepository.save(user);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public UserDto.Response getUser(long userId) {
-        Long loginUserId = authUserServiceImpl.getLoginUserId();
+        Long loginUserId = authUserService.getLoginUserId();
         User targetUser = findVerifiedUser(userId);
         return userMapper.userToUserResponse(targetUser, loginUserId);
     }
 
+    @Override
     public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) {
         User user = userMapper.userUpdateToUser(userUpdateDto);
-        Long loginUserId = authUserServiceImpl.getLoginUserId();
+        Long loginUserId = authUserService.getLoginUserId();
         User verifiedUser = findVerifiedUser(loginUserId);
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
             try {
-                url = s3ServiceImpl.saveImage(multipartFile);
+                url = s3Service.saveImage(multipartFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (NoSuchAlgorithmException e) {
@@ -96,9 +101,10 @@ public class UserServiceImpl {
         return userMapper.userToUserResponse(verifiedUser, loginUserId);
     }
 
+    @Override
     public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
-        if(updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
-            Long loginUserId = authUserServiceImpl.getLoginUserId();
+        if (updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
+            Long loginUserId = authUserService.getLoginUserId();
             User verifiedUser = findVerifiedUser(loginUserId);
             verifiedUser.setPassword(passwordEncoder.encode(updateUserPasswordDto.getPassword()));
             return userMapper.userToUserResponse(verifiedUser, loginUserId);
@@ -107,34 +113,39 @@ public class UserServiceImpl {
         }
     }
 
+    @Override
     public void deleteUser() {
-        Long loginUserId = authUserServiceImpl.getLoginUserId();
+        Long loginUserId = authUserService.getLoginUserId();
         userRepository.deleteById(loginUserId);
     }
 
+    @Override
     public User findVerifiedUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
     }
 
+    @Override
     public void checkUserReportCount(Long userId) {
         List<Report> reportByUser = reportRepository.findReportByUser_UserId(userId);
-        if(reportByUser.size() >= 5) {
+        if (reportByUser.size() >= 5) {
             throw new CustomException(REPORT_COUNT_EXCEEDS_LIMIT);
         }
     }
 
+    @Override
     public User findUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             return user.get();
         } else {
             throw new CustomException(ExceptionCode.USER_NOT_FOUND);
         }
     }
 
+    @Override
     public void checkBanTime(User user) {
-        if(user.getBanTime() != null && LocalDateTime.now().isAfter(user.getBanTime())) {
+        if (user.getBanTime() != null && LocalDateTime.now().isAfter(user.getBanTime())) {
             user.setBanTime(null);
             user.setStatus(User.UserStatus.USER_ACTIVE);
             userRepository.save(user);

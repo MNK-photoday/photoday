@@ -2,7 +2,7 @@ package com.photoday.photoday.follow.controller;
 
 import com.photoday.photoday.dto.SingleResponseDto;
 import com.photoday.photoday.follow.dto.FollowDto;
-import com.photoday.photoday.follow.service.FollowServiceImpl;
+import com.photoday.photoday.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +16,17 @@ import javax.validation.constraints.Positive;
 @RequiredArgsConstructor
 @Validated
 public class FollowController {
-    private final FollowServiceImpl followServiceImpl;
+    private final FollowService followService;
 
     @GetMapping
     public ResponseEntity<?> getFollowUsers() {
-        FollowDto.ResponseFollowUsers response = followServiceImpl.findFollowUser();
+        FollowDto.ResponseFollowUsers response = followService.findFollowUser();
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{followingId}")
     public ResponseEntity<?> followingUser(@PathVariable @Positive long followingId) {
-        FollowDto.ResponseFollowUsers response = followServiceImpl.registerFollowUser(followingId);
+        FollowDto.ResponseFollowUsers response = followService.registerFollowUser(followingId);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 }
