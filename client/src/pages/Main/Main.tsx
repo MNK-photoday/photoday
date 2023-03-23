@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import MainImage from '../../assets/imgs/image1.jpg';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
@@ -14,16 +14,12 @@ import {
 } from './Main.styles';
 import MainSkeleton from '../../components/common/Skeleton/MainSkeleton';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
+import { LoadingContext } from '../../context/LoadintContext';
 
 function Main() {
   const [activeTextBox, setActiveTextBox] = useState(true);
+  const LOADING_CONTENT = useContext(LoadingContext);
 
-  /*로딩상태 전역으로 관리할까 고민 중입니당*/
-  const [loading, setLoading] = useState<boolean>(true);
-  /*임시로 로딩상태 만든 코드*/
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  });
   return (
     <ContainerWrap>
       <Container>
@@ -31,7 +27,7 @@ function Main() {
           <S_SearchContentBox>
             <SearchBar setActiveTextBox={setActiveTextBox} />
             <S_SearchImgBox textBoxActive={activeTextBox}>
-              <ImageCardList width={'240'} />
+              <ImageCardList width={240} height={180} />
             </S_SearchImgBox>
             <S_MainTextBox textBoxActive={activeTextBox}>
               <S_MainTitle>
@@ -41,7 +37,9 @@ function Main() {
             </S_MainTextBox>
           </S_SearchContentBox>
           <S_MainImageContentBox>
-            {!loading ? (
+            {LOADING_CONTENT?.isLoading ? (
+              <MainSkeleton count={2} />
+            ) : (
               <>
                 <S_MainImgBox>
                   <S_MainImg src={MainImage} alt="인기있는 이미지"></S_MainImg>
@@ -50,8 +48,6 @@ function Main() {
                   <S_MainImg src={MainImage} alt="인기있는 이미지"></S_MainImg>
                 </S_MainImgBox>
               </>
-            ) : (
-              <MainSkeleton count={2} />
             )}
           </S_MainImageContentBox>
         </S_MainContentBox>
