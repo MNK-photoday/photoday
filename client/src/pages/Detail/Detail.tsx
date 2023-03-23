@@ -74,6 +74,10 @@ function Detail() {
       });
   }, []);
 
+  const dateTypeConverter = (date: string | undefined) => {
+    return date?.split('T')[0] + ' ' + date?.split('T')[1].split('.')[0];
+  };
+
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const handleOpenModal = (e: React.MouseEvent<HTMLOrSVGElement>) => {
     e.preventDefault();
@@ -112,6 +116,9 @@ function Detail() {
             <S_Contents>
               <img src={detailInfo?.image} alt="테스트이미지" />
             </S_Contents>
+            <S_UploadDateBox>
+              {dateTypeConverter(detailInfo?.createdAt)}
+            </S_UploadDateBox>
             <S_ContentsBottom>
               <S_CountBox>
                 <div>
@@ -123,7 +130,6 @@ function Detail() {
                   {detailInfo?.likeCount}
                 </div>
               </S_CountBox>
-              <S_UploadDateBox>{detailInfo?.createdAt}</S_UploadDateBox>
               <Button variant="point" shape="round" size="medium">
                 Download
               </Button>
