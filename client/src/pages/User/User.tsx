@@ -16,23 +16,6 @@ import { getUser } from '../../api/User';
 import { RootState } from '../../store/store';
 import { setData } from '../../store/userSlice';
 
-// 나중에 데이터 받아올 때 쓸 interface
-export interface DataType {
-  data: UserData[];
-}
-
-export interface UserData {
-  userId: number;
-  name: string;
-  profileImageUrl: string;
-  description: string;
-  likeCount: number;
-  reportCount: number;
-  followerCount: number;
-  followingCount: number;
-  checkFollow: boolean;
-}
-
 function Users() {
   const dispatch = useDispatch();
   const userData = useSelector((state: RootState) => state.user);
