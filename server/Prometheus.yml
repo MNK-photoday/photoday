@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s # 15초마다 매트릭을 수집 default 1분
+  evaluation_interval: 1m # 1분마다 규칙을 평가 default 1분
+
+  external_labels: # 외부 시스템에 표시할 이 서버의 레이블
+    monitor: 'photoday-monitor'
+
+scrape_configs:
+  - job_name: 'photoday' # 잡 이름
+    metrics_path: '/management/prometheus' # 메트릭을 수집할 path 설정
+    static_configs:
+      - targets: ['host.docker.internal:8080'] # 도커 호스트 를 나타냄 즉 localhost:8080으로 된다.
