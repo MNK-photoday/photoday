@@ -5,7 +5,7 @@ import {
   S_ImageCardWrap,
   S_LoaderBar,
 } from './ImageCardList.styles';
-import { postSearchTags } from '../../../api/Image';
+import { postSearchTags } from '../../../api/Search';
 import { ItemContext } from '../../../context/ItemContext';
 import { LoadingContext } from '../../../context/LoadintContext';
 import { SearchContext } from '../../../context/SearchContext';
