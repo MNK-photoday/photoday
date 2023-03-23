@@ -11,19 +11,22 @@ import {
   S_TextButton,
   S_DeleteAccountText,
   S_InputWrap,
+  S_Textarea,
 } from './UserInfoArea.styles';
-import UserInfoTextarea from './UserInfoTextarea/UserInfoTextarea';
+// import UserInfoTextarea from './UserInfoTextarea/UserInfoTextarea';
 import { FaHeart } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
 import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
 import { PasswordInput } from '../../Login/Input/Input';
 import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
 import { User } from '../UserThumnailArea/UserThumnailArea';
-import { updatePasswordUser, deleteUser } from '../../../api/User';
+import { updatePasswordUser, deleteUser, updateUser } from '../../../api/User';
 import { logout } from '../../../store/authSlice';
+import { setData } from '../../../store/userSlice';
 
 function UserInfoArea({ userData }: User) {
   const dispatch = useDispatch();
+  const [textareaValue, setTextareaValue] = useState(userData.description);
   const [inputValue, setInputValue] = useState('');
   const [confirminputValue, setconfirmInputValue] = useState('');
   const [validValue, setValidValue] = useState(true);
@@ -52,6 +55,13 @@ function UserInfoArea({ userData }: User) {
   ) => {
     const value = e.target.value;
     setconfirmInputValue(value);
+  };
+
+  const changedescriptionHandler = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const value = e.target.value;
+    setTextareaValue(value);
   };
 
   const clickChangePassWordHandler = () => {
@@ -96,6 +106,20 @@ function UserInfoArea({ userData }: User) {
     }
   };
 
+  const clickUpdatedescriptionHandler = async () => {
+    try {
+      setIsEdit(!isEdit);
+      const response = await updateUser(textareaValue);
+      dispatch(setData(response));
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          alert(error.response.data.message);
+        }
+      }
+    }
+  };
+
   return (
     <S_UserInfoArea>
       <S_UserNameContainer>
@@ -108,18 +132,26 @@ function UserInfoArea({ userData }: User) {
         <S_UserLikeAndReport>{userData.reportCount}</S_UserLikeAndReport>
       </S_UserNameContainer>
       <S_UserDescription isEdit={isEdit}>
-        {isEdit ? <UserInfoTextarea /> : userData.description}
+        {isEdit ? (
+          <S_Textarea
+            name="user description"
+            value={textareaValue}
+            onChange={changedescriptionHandler}
+          />
+        ) : (
+          userData.description
+        )}
       </S_UserDescription>
       <S_TextButtonWrap>
         {isEdit ? (
-          <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
+          <S_TextButton
+            isTextButtonType="edit"
+            onClick={clickUpdatedescriptionHandler}
+          >
             Save edits
           </S_TextButton>
         ) : (
-          <S_TextButton
-            isTextButtonType="edit"
-            // onClick={clickUpdatedescriptionHandler}
-          >
+          <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
             Edit
           </S_TextButton>
         )}

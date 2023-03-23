@@ -49,3 +49,41 @@ export const deleteUser = async () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('userId');
 };
+
+export const updateUser = async (textareaValue: string) => {
+  const userUpdateDto = new Blob(
+    [JSON.stringify({ description: textareaValue })],
+    { type: 'application/json' },
+  );
+
+  const formdata = new FormData();
+  formdata.append('userUpdateDto', userUpdateDto);
+
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.post(
+    `${import.meta.env.VITE_APP_API}/users/update`,
+    formdata,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: token,
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const getFollows = async () => {
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.get<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/follows`,
+    {
+      headers: {
+        Authorization: token,
+      },
+    },
+  );
+
+  return response.data;
+};
