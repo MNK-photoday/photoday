@@ -74,8 +74,21 @@ mail:
     member:
       registration: Photoday 임시비밀번호 안내 이메일입니다.
 management:
-  endpoint:
+  info:
+    env:
+      enabled: true
   endpoints:
     web:
-      base-path: /application
+      exposure:
+        include: info, health, prometheus
+        exclude:
+      base-path: /management
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: Photoday
 
