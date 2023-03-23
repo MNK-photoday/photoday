@@ -19,8 +19,8 @@ import {
 import TagList from '../../components/Upload/Tag/TagList';
 import axios from 'axios';
 
-type UploadImage = {
-  file: File;
+export type UploadImage = {
+  file: any;
   thumbnail: string;
   type: string;
   name: string;
