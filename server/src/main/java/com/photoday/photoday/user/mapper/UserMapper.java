@@ -31,7 +31,7 @@ public class UserMapper {
     }
 
     public UserDto.Response userToUserResponse(User targetUser, Long userId) { //TODO 팔로우 확인
-        boolean checkFollow = userId != null && targetUser.getFollowing().stream().anyMatch(fw -> Objects.equals(fw.getFollower().getUserId(), userId));
+        boolean checkFollow = userId != null && targetUser.getFollower().stream().anyMatch(fw -> Objects.equals(fw.getFollowing().getUserId(), userId));
 
         UserDto.Response response = new UserDto.Response();
 
