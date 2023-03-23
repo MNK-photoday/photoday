@@ -377,6 +377,17 @@ class ImageServiceImplTest {
     }
 
     @Test
+    @DisplayName("findVerifiedImage: 존재하는 이미지 찾기")
     void findVerifiedImageTest() {
+        // given
+        User owner = getUser("owner@email.com", "owner");
+        Image image = getImage(owner);
+        Image save = imageRepository.save(image);
+
+        // when
+        Image verifiedImage = imageService.findVerifiedImage(save.getImageId());
+
+        // then
+        assertEquals(verifiedImage.getImageId(), save.getImageId());
     }
 }
