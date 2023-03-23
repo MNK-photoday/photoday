@@ -44,7 +44,7 @@ class TagControllerTest {
         MultiValueMap<String, String> params = getParams("createdAt,desc");
         MultiResponseDto<?> response = getMultiResponseDtoPageResponse();
 
-        given(tagService.searchByTags(any(TagDto.class), any(Pageable.class))).willReturn(response);
+        given(tagService.searchByTags(any(String.class), any(Pageable.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
