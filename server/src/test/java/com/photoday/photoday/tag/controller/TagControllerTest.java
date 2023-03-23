@@ -1,7 +1,6 @@
 package com.photoday.photoday.tag.controller;
 
 import com.photoday.photoday.dto.MultiResponseDto;
-import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.service.TagService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +18,10 @@ import org.springframework.util.MultiValueMap;
 
 import static com.photoday.photoday.helper.snippets.RestDocsSnippets.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,19 +39,19 @@ class TagControllerTest {
     @DisplayName("searchByTags: 정상 입력")
     void searchByTags() throws Exception {
         // given
-        String content = getTagDto();
+        String tags = "background blue";
         MultiValueMap<String, String> params = getParams("createdAt,desc");
         MultiResponseDto<?> response = getMultiResponseDtoPageResponse();
 
-        given(tagService.searchByTags(any(String.class), any(Pageable.class))).willReturn(response);
+        given(tagService.searchByTags(anyString(), any(Pageable.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
-                post("/api/tags/search")
+                get("/api/tags/search")
                         .params(params)
+                        .param("tags", tags)
                         .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content));
+                        .contentType(MediaType.APPLICATION_JSON));
 
         // then
         actions.andDo(print())
@@ -60,8 +59,7 @@ class TagControllerTest {
                 .andDo(document("get-search-tags",
                         getRequestPreprocessor(),
                         getResponsePreprocessor(),
-                        getRequestFieldsTagDto(),
-                        getRequestParameterImageDtoBookmarkAndSearchResponse(),
+                        getRequestParametersSearchByTags(),
                         getResponseFieldsImageDtoBookmarkAndSearchResponse()));
     }
 }
