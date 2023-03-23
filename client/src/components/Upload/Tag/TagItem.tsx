@@ -6,6 +6,7 @@ import { Tags } from '../../../pages/Upload/Upload';
 const TagItemWrap = styled.button<{ isModificationMode?: boolean }>`
   ${Flex}
   margin-right: 5px;
+  margin-bottom: 5px;
   padding: 9px 7px 7px;
   background-color: ${({ isModificationMode }) =>
     isModificationMode ? '#67cd92' : 'var(--color-primary-green)'};

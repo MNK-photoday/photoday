@@ -1,8 +1,14 @@
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 export type LoginValue = {
   email: string;
   password: string;
+};
+
+export type User = {
+  userId: number;
+  userProfileImage: string;
+  userName: string;
 };
 
 export type FieldError = {
@@ -23,7 +29,7 @@ export const postLogin = async (
   loginForm: LoginValue,
   keepLoggedIn: boolean,
 ) => {
-  const response = await axios.post<undefined, AxiosResponse<ErrorResponse>>(
+  const response = await axios.post<undefined, AxiosResponse>(
     `${import.meta.env.VITE_APP_API}/auth/login`,
     {
       email: loginForm.email,
@@ -31,9 +37,12 @@ export const postLogin = async (
     },
   );
 
-  const accessToken: string | undefined = response.headers.authorization;
+  const accessToken = response.headers.authorization;
+  const userId = response.data.userId;
 
   if (keepLoggedIn && accessToken) {
     localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('userId', userId);
   }
+  return userId;
 };
