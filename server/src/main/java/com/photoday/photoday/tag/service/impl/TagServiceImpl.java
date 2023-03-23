@@ -5,7 +5,6 @@ import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.image.mapper.ImageMapper;
 import com.photoday.photoday.image.repository.ImageRepository;
-import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
 import com.photoday.photoday.tag.repository.TagRepository;
 import com.photoday.photoday.tag.service.TagService;
@@ -15,9 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,10 +30,13 @@ public class TagServiceImpl implements TagService {
     private final ImageMapper imageMapper;
 
     @Override
-    public MultiResponseDto searchByTags(@RequestBody @Valid TagDto tags, Pageable pageable) {
+    public MultiResponseDto searchByTags(@RequestParam String tags, Pageable pageable) {
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
-        Page<Image> page = imageRepository.findAllByTag(tags.getTags(), pageRequest);
+        String[] tagArr = tags.split(",|\\s");
+        List<String> tagList = Arrays.stream(tagArr).collect(Collectors.toList());
+
+        Page<Image> page = imageRepository.findAllByTag(tagList, pageRequest);
         List<ImageDto.PageResponse> responses = page.stream()
                 .map(imageMapper::imageToPageResponse).collect(Collectors.toList());
 
