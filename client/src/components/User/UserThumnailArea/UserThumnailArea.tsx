@@ -17,7 +17,7 @@ export type User = {
 
 function UserThumnailArea({ userData }: User) {
   const [followModal, setFollowModal] = useState(false);
-  console.log(userData);
+
   const clickFollowModalHandler = () => {
     setFollowModal(!followModal);
   };

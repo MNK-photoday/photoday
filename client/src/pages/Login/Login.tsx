@@ -51,7 +51,7 @@ function Login() {
 
     try {
       const response = await postLogin(loginForm, keepLoggedIn);
-      await dispatch(login(response));
+      dispatch(login(response));
       window.location.href = '/';
     } catch (error) {
       if (error instanceof AxiosError) {
