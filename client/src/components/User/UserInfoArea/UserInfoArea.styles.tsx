@@ -11,14 +11,23 @@ export const S_UserNameContainer = styled.div`
   display: flex;
   align-items: center;
 
-  .likeicon {
-    margin-right: 15px;
+  .likeIcon {
     color: var(--color-primary-red);
+    margin-right: 15px;
   }
 
-  .reporticon {
+  .reportIcon {
     color: var(--color-primary-black);
     margin-right: 15px;
+  }
+
+  .followIcon {
+    color: var(--color-primary-green);
+    margin-right: 30px;
+
+    &:hover {
+      color: #41d862;
+    }
   }
 `;
 
