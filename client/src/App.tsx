@@ -9,12 +9,32 @@ import Upload from './pages/Upload/Upload';
 import TagSearch from './pages/Search/Search';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import Detail from './pages/Detail/Detail';
+import ItemStore from './context/ItemContext';
+import React, { ReactNode } from 'react';
+import LoadingStore from './context/LoadintContext';
+import SearchStore from './context/SearchContext';
+import PageNumStore from './context/PageNumContext';
+
+const AppProvider = ({
+  contexts,
+  children,
+}: {
+  contexts: any[];
+  children: React.ReactNode;
+}) =>
+  contexts.reduce(
+    (prev, context) =>
+      React.createElement(context, {
+        children: prev,
+      }),
+    children,
+  );
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: '/', // Header, Footer가 있는 페이지
-      element: <Root />, // 템플릿
+      path: '/',
+      element: <Root />,
       children: [
         { path: '/', element: <Main /> },
         {
@@ -49,7 +69,13 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <AppProvider
+      contexts={[ItemStore, LoadingStore, SearchStore, PageNumStore]}
+    >
+      <RouterProvider router={router}></RouterProvider>
+    </AppProvider>
+  );
 }
 
 export default App;
