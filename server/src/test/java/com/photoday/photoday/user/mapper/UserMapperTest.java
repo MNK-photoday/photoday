@@ -75,8 +75,8 @@ class UserMapperTest {
                 .build();
         Follow follow = new Follow();
         follow.setFollowId(1L);
-        follow.setFollower(currentUser);
-        follow.setFollowing(responseUser);
+        follow.setFollower(responseUser);
+        follow.setFollowing(currentUser);
 
         // when
         UserDto.Response response = userMapper.userToUserResponse(responseUser, currentUser.getUserId());
@@ -90,8 +90,8 @@ class UserMapperTest {
         assertEquals(0L, response.getLikeCount());
         assertEquals(0L, response.getReportCount());
         assertEquals(0L, response.getReportCount());
-        assertEquals(0L, response.getFollowerCount());
-        assertEquals(1L, response.getFollowingCount());
+        assertEquals(1L, response.getFollowerCount());
+        assertEquals(0L, response.getFollowingCount());
 
     }
 }

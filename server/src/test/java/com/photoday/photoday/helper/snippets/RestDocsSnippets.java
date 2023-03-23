@@ -163,6 +163,15 @@ public class RestDocsSnippets {
         );
     }
 
+    public static RequestParametersSnippet getRequestParametersSearchByTags() {
+        return requestParameters(
+                parameterWithName("tags").description("검색할 태그 목록"),
+                parameterWithName("page").description("페이지 번호"),
+                parameterWithName("size").description("페이지 별 이미지 수"),
+                parameterWithName("sort").description("정렬 기준: ")
+        );
+    }
+
     public static ResponseHeadersSnippet getResponseHeadersLocation() {
         return responseHeaders(
                 headerWithName(HttpHeaders.LOCATION).description("Location header. 등록된 리소스의 URI")
