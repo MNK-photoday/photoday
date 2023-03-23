@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
-import { useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { useRef, useState, useEffect } from 'react';
 import {
   S_UserThumnailArea,
   S_UserProfileIamge,
@@ -29,12 +29,7 @@ function UserThumnailArea({ userData, isMyPage }: User) {
 
   useEffect(() => {
     handleUpload();
-
-    // return () => window.URL.revokeObjectURL()
   }, [file]);
-
-  console.log('지금 올린 파일', file?.name);
-  console.log('현재 프로필 데이터', userData.profileImageUrl);
 
   const clickFollowModalHandler = () => {
     setFollowModal(!followModal);
@@ -75,7 +70,6 @@ function UserThumnailArea({ userData, isMyPage }: User) {
   };
 
   const handleUpload = async () => {
-    console.log('실행은 돼?...');
     const FILE_SIZE_LIMIT = 1024 * 1024 * 10;
     if (!file) {
       return;

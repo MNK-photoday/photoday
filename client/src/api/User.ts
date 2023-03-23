@@ -123,13 +123,12 @@ export const patchFollow = async (followingId: number | null) => {
 };
 
 export const getUserImages = async (userId: string | null | undefined) => {
-  // console.log('지금 머임?', userId);
   const token = localStorage.getItem('accessToken');
   const response = await axios.get<AxiosResponse>(
     `${import.meta.env.VITE_APP_API}/images/user/${userId}`,
     {
       headers: {
-        Authorization: token, // 요청에 필요한 토큰 값
+        Authorization: token,
       },
       params: {
         size: 5, // 페이지당 이미지 개수
@@ -138,6 +137,4 @@ export const getUserImages = async (userId: string | null | undefined) => {
       },
     },
   );
-
-  // console.log('요청은 잘 감 ?', response.data);
 };

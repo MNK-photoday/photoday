@@ -19,12 +19,10 @@ import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
 import { User } from '../UserThumnailArea/UserThumnailArea';
 import { updatePasswordUser, deleteUser, updateUser } from '../../../api/User';
 import { logout } from '../../../store/authSlice';
-import { setData, follow } from '../../../store/userSlice';
+import { setData } from '../../../store/userSlice';
 import { FaRegHeart } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
-import { RiUserUnfollowFill } from 'react-icons/ri';
-import { AiOutlineLike } from 'react-icons/ai';
-import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
+import { FiUserPlus, FiUserMinus } from 'react-icons/fi';
 import { patchFollow } from '../../../api/User';
 
 function UserInfoArea({ userData, isMyPage }: User) {
@@ -37,8 +35,6 @@ function UserInfoArea({ userData, isMyPage }: User) {
   const [isChangePassWord, setIsChangePassWord] = useState(false);
   const VALUE_TYPE = 'password';
   const confirmValue = inputValue !== confirminputValue;
-
-  // console.log('크크', isMyPage);
 
   useEffect(() => {
     validateValue({ inputValue, setValidValue, VALUE_TYPE });
@@ -129,12 +125,10 @@ function UserInfoArea({ userData, isMyPage }: User) {
     try {
       const response = await patchFollow(userData.userId);
       dispatch(setData(response));
-      // dispatch(follow());
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
-          // alert(error.response.data.message);
-          console.log(error.response);
+          alert(error.response.data.message);
         }
       }
     }
