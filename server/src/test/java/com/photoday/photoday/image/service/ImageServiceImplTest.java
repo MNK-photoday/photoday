@@ -240,7 +240,7 @@ class ImageServiceImplTest {
     }
 
     @Test
-    @WithMockUser("loginUser@mail.com")
+    @WithMockUser("owner@email.com")
     @DisplayName("createReport: 게시글 작성자가 신고 불가")
     void createReportCannotReportMyselfTest() {
         // given
@@ -309,36 +309,6 @@ class ImageServiceImplTest {
         assertTrue(LocalDateTime.now().plusWeeks(1).minusMinutes(1).isBefore(user.getBanTime()));
     }
 
-    private static Report getReport(Image savedImage, User user1) {
-        Report report = new Report();
-        report.setImage(savedImage);
-        report.setUser(user1);
-        return report;
-    }
-
-    private Image getImage(User user) {
-        Image image = Image.builder()
-                .imageUrl("http://imageUrl.jpg")
-                .createdAt(LocalDateTime.now())
-                .user(user)
-                .imageHashValue("imageHashValue")
-                .build();
-        return imageRepository.save(image);
-    }
-
-    private User getUser(String email, String owner) {
-        User user = User.builder()
-                .email(email)
-                .name(owner)
-                .password("123456a!")
-                .build();
-        return userRepository.save(user);
-    }
-
-    private static MockMultipartFile getMultipartFile(String contentType) {
-        return new MockMultipartFile("multipartFile", "originalFileName", contentType, "multipartFile".getBytes());
-    }
-
     @Test
     @WithMockUser("loginUser@email.com")
     @DisplayName("updateList: 한 번 눌렀을 때 좋아요 추가")
@@ -403,5 +373,35 @@ class ImageServiceImplTest {
         CustomException exception = assertThrows(CustomException.class, () -> imageService.findVerifiedImage(save.getImageId() + 1));
         assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
         assertEquals("이미지가 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    private static Report getReport(Image savedImage, User user1) {
+        Report report = new Report();
+        report.setImage(savedImage);
+        report.setUser(user1);
+        return report;
+    }
+
+    private Image getImage(User user) {
+        Image image = Image.builder()
+                .imageUrl("http://imageUrl.jpg")
+                .createdAt(LocalDateTime.now())
+                .user(user)
+                .imageHashValue("imageHashValue")
+                .build();
+        return imageRepository.save(image);
+    }
+
+    private User getUser(String email, String owner) {
+        User user = User.builder()
+                .email(email)
+                .name(owner)
+                .password("123456a!")
+                .build();
+        return userRepository.save(user);
+    }
+
+    private static MockMultipartFile getMultipartFile(String contentType) {
+        return new MockMultipartFile("multipartFile", "originalFileName", contentType, "multipartFile".getBytes());
     }
 }
