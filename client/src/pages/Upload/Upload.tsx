@@ -20,7 +20,7 @@ import TagList from '../../components/Upload/Tag/TagList';
 import axios from 'axios';
 
 export type UploadImage = {
-  file: any;
+  file: File;
   thumbnail: string;
   type: string;
   name: string;
