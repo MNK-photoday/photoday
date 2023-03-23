@@ -358,6 +358,25 @@ class ImageServiceImplTest {
     }
 
     @Test
+    @WithMockUser("loginUser@email.com")
+    @DisplayName("updateList: 두 번 눌렀을 때 좋아요 취소")
+    void updateLikeCancelTest() {
+        // given
+        User owner = getUser("owner@email.com", "owner");
+        Image image = getImage(owner);
+
+        User loginUser = getUser("loginUser@email.com", "loginUser");
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        imageService.updateLike(image.getImageId());
+
+        // when
+        ImageDto.Response response = imageService.updateLike(image.getImageId());
+
+        // then
+        assertFalse(response.isLike());
+    }
+
+    @Test
     void findVerifiedImageTest() {
     }
 }
