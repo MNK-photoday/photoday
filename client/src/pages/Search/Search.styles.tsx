@@ -38,7 +38,4 @@ export const S_Tag = styled.span`
 
 export const S_ImageCardBox = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 5px;
 `;
