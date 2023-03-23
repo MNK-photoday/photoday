@@ -39,10 +39,10 @@ export const postLogin = async (
 
   const accessToken = response.headers.authorization;
   const userId = response.data.userId;
-
+  // 유지 안 했을 때는?
   if (keepLoggedIn && accessToken) {
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('userId', userId);
+    localStorage.setItem('id', userId);
   }
   return userId;
 };
