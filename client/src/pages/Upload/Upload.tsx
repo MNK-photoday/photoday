@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '../../components/common/Button/Button';
 import { Container, ContainerWrap } from '../../styles/Layout';
@@ -10,13 +11,20 @@ import {
   S_ButtonContainer,
   S_UploadBox,
   S_UploadTitle,
+  S_PreviewInfo,
+  S_PreviewWrapper,
+  S_FileSizeWarning,
+  S_FileSizePreview,
 } from './Upload.styles';
 import TagList from '../../components/Upload/Tag/TagList';
+import axios from 'axios';
 
 type UploadImage = {
   file: File;
   thumbnail: string;
   type: string;
+  name: string;
+  size: string;
 };
 
 export type Tags = {
@@ -25,6 +33,7 @@ export type Tags = {
 };
 
 function Upload() {
+  const navigate = useNavigate();
   const chooseFileRef = useRef<HTMLInputElement>(null);
 
   const [imagefile, setImagefile] = useState<UploadImage | null>(null);
@@ -32,6 +41,18 @@ function Upload() {
   const [tags, setTags] = useState<Tags[]>([]);
   const [tagCount, setTagCount] = useState<number>(0);
   const [inputValue, setInputValue] = useState('');
+
+  const fileSizeCalculator = (dataSize: number, unit: string) => {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const index = units.indexOf(unit.toUpperCase());
+    let size = dataSize;
+
+    for (let i = 0; i < index; i++) {
+      size /= 1024;
+    }
+
+    return size.toFixed(2) + ' ' + units[index];
+  };
 
   const fileInputClickHandler = () => {
     chooseFileRef.current?.click();
@@ -44,6 +65,8 @@ function Upload() {
         file: fileList[0],
         thumbnail: URL.createObjectURL(fileList[0]),
         type: fileList[0].type,
+        name: fileList[0].name,
+        size: fileSizeCalculator(fileList[0].size, 'MB'),
       });
     }
   };
@@ -55,11 +78,53 @@ function Upload() {
       file: fileList[0],
       thumbnail: URL.createObjectURL(fileList[0]),
       type: fileList[0].type,
+      name: fileList[0].name,
+      size: fileSizeCalculator(fileList[0].size, 'MB'),
     });
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLInputElement>) => {
     event.preventDefault();
+  };
+
+  const fileUploadHandler = () => {
+    const FILE_SIZE_LIMIT = 1024 * 1024 * 10;
+    if (imagefile !== null && tags.length > 0) {
+      if (tags.length > 20) {
+        return alert('Only 20 tags can be created');
+      } else if (imagefile.file.size > FILE_SIZE_LIMIT) {
+        return alert('File size should not exceed 10MB');
+      }
+
+      const tagsBlob = new Blob(
+        [JSON.stringify({ tags: tags.map((tag) => tag.name) })],
+        { type: 'application/json' },
+      );
+
+      const formData = new FormData();
+      formData.append('file', imagefile.file);
+      formData.append('post', tagsBlob);
+
+      const token = localStorage.getItem('accessToken');
+
+      axios
+        .post(`${import.meta.env.VITE_APP_API}/images`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: token,
+          },
+        })
+        .then((response) => {
+          navigate(`/detail/${response.data.data.imageId}`);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (imagefile === null) {
+      alert('Please choose an image');
+    } else if (tags.length === 0) {
+      alert('Please add at least one tag');
+    }
   };
 
   const inputTagHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,11 +157,20 @@ function Upload() {
               onChange={uploadImageHandler}
             />
           </S_FileBox>
-          {/* 아래는 미리보기 기능을 위한 임시 코드입니다. */}
           {imagefile && (
-            <div>
+            <S_PreviewWrapper>
               <img src={imagefile.thumbnail} alt="thumbnail" />
-            </div>
+              <S_PreviewInfo>
+                <p>{imagefile.name}</p>
+                {imagefile.file.size > 1024 * 1024 * 10 ? (
+                  <S_FileSizeWarning>
+                    File size should not exceed 10MB
+                  </S_FileSizeWarning>
+                ) : (
+                  <S_FileSizePreview>{imagefile.size}</S_FileSizePreview>
+                )}
+              </S_PreviewInfo>
+            </S_PreviewWrapper>
           )}
           <S_UploadBottom>
             <S_TagContainer>
@@ -111,14 +185,19 @@ function Upload() {
             </S_TagContainer>
             <S_ButtonContainer>
               <Button
-                variant={'primary'}
-                shape={'round'}
-                size={'medium'}
+                variant="primary"
+                shape="round"
+                size="medium"
                 clickEventHandler={fileInputClickHandler}
               >
                 Choose file
               </Button>
-              <Button variant={'point'} shape={'round'} size={'medium'}>
+              <Button
+                variant="point"
+                shape="round"
+                size="medium"
+                clickEventHandler={fileUploadHandler}
+              >
                 Upload file
               </Button>
             </S_ButtonContainer>
