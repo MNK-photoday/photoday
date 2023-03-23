@@ -1,30 +1,54 @@
+import { useState, useEffect } from 'react';
 import {
   S_UserPageSubTitleWrap,
   S_UserPageSubTitlePoint,
-  S_BookmarkButton,
+  S_Tab,
 } from './UserPageSubTitle.styles';
-import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
+import { getUserImages } from '../../../api/User';
 
-interface User {
+type User = {
   userName: string;
-}
+  isMyPage: boolean;
+  id: string | null;
+  userId: string | undefined;
+};
 
-function UserPageSubTitle({ userName }: User) {
+function UserPageSubTitle({ userName, isMyPage, id, userId }: User) {
+  const [posts, setPosts] = useState([]);
+  const [currentTap, setCurrentTap] = useState('user');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getUserImages(isMyPage ? id : userId);
+      } catch (error) {
+        alert(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const userTapHandler = () => {
+    setCurrentTap('user');
+  };
+
+  const bookmarkTapHandler = () => {
+    setCurrentTap('bookmark');
+  };
+
   return (
-    <S_UserPageSubTitleWrap>
-      <h2>
+    <S_UserPageSubTitleWrap currentTap={currentTap}>
+      <S_Tab className="user" onClick={userTapHandler}>
         <S_UserPageSubTitlePoint>{userName}</S_UserPageSubTitlePoint>
         's pho
         <S_UserPageSubTitlePoint>to</S_UserPageSubTitlePoint>
         day
-      </h2>
-      {/* 북마크 버튼 누르면 유저가 북마크한 게시물 나옴, 북마크 아이콘 고민 중 */}
-      <S_BookmarkButton>
-        <FaRegBookmark className="bookmarkIcon" />
-      </S_BookmarkButton>
-      <S_BookmarkButton>
-        <FaBookmark className="bookmarkIcon" />
-      </S_BookmarkButton>
+      </S_Tab>
+      {isMyPage && (
+        <S_Tab className="bookmark" onClick={bookmarkTapHandler}>
+          Bookmark
+        </S_Tab>
+      )}
     </S_UserPageSubTitleWrap>
   );
 }
