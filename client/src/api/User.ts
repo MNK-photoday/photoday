@@ -56,13 +56,13 @@ export const updateUser = async (textareaValue: string) => {
     { type: 'application/json' },
   );
 
-  const formdata = new FormData();
-  formdata.append('userUpdateDto', userUpdateDto);
+  const formData = new FormData();
+  formData.append('userUpdateDto', userUpdateDto);
 
   const token = localStorage.getItem('accessToken');
   const response = await axios.post(
     `${import.meta.env.VITE_APP_API}/users/update`,
-    formdata,
+    formData,
     {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -71,6 +71,26 @@ export const updateUser = async (textareaValue: string) => {
     },
   );
 
+  return response.data;
+};
+
+export const updateFile = async (file: File) => {
+  console.log('이제 막 서버로 보내려고 받은 파일 =>', file);
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.post(
+    `${import.meta.env.VITE_APP_API}/users/update`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: token,
+      },
+    },
+  );
+  console.log('서버 응답 =>', response.data.data.profileImageUrl);
   return response.data;
 };
 
@@ -86,4 +106,38 @@ export const getFollows = async () => {
   );
 
   return response.data;
+};
+
+export const patchFollow = async (followingId: number | null) => {
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.patch<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/follows/${followingId}`,
+    null,
+    {
+      headers: {
+        Authorization: token,
+      },
+    },
+  );
+  return response.data;
+};
+
+export const getUserImages = async (userId: string | null | undefined) => {
+  // console.log('지금 머임?', userId);
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.get<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/images/user/${userId}`,
+    {
+      headers: {
+        Authorization: token, // 요청에 필요한 토큰 값
+      },
+      params: {
+        size: 5, // 페이지당 이미지 개수
+        page: 1, // 페이지 번호
+        sort: 'imageId,desc', // 정렬 방식 (imageId 기준으로 내림차순)
+      },
+    },
+  );
+
+  // console.log('요청은 잘 감 ?', response.data);
 };
