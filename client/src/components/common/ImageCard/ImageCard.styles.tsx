@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_CardImagePicture = styled.div`
-  margin: 5px;
   position: relative;
 `;
 
@@ -11,12 +10,14 @@ export const S_CardImageLink = styled(Link)`
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
   overflow: hidden;
 `;
 export const S_CardImage = styled.img`
   max-width: 100%;
   max-height: 100%;
   width: 100%;
+  object-fit: cover;
 `;
 
 export const S_OverlayControls = styled.div`
