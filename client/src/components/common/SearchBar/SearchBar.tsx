@@ -1,42 +1,52 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
-
+import { useNavigate } from 'react-router-dom';
+import { ItemContext } from '../../../context/ItemContext';
+import { PageNumContext } from '../../../context/PageNumContext';
+import { SearchContext } from '../../../context/SearchContext';
 import { S_SearchBarInput, S_SearchBarWrap } from './SearchBar.styles';
 
 type SearchBarProps = {
-  setActiveTextBox?: (isActive: boolean) => void;
+  setActiveTextBox?: React.Dispatch<React.SetStateAction<boolean>>;
   activeSearchBar?: boolean;
 };
 
 function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
+  const [isInputNull, setIsInputNull] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isInputNull, setIsInputNull] = useState(false);
-  const [searchWord, setSearchWord] = useState<string[]>([]);
+  const navigate = useNavigate();
 
-  function keydownhandler(event: React.KeyboardEvent<HTMLInputElement>) {
+  const ITEM_CONTEXT = useContext(ItemContext);
+  const SEARCH_CONTENT = useContext(SearchContext);
+  const PAGE_NUM_CONTENT = useContext(PageNumContext);
+
+  const keydownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       let currentWord = inputRef.current?.value;
       if (currentWord === '') {
         setTimeout(() => {
           setIsInputNull(true);
-        }, 100);
+        }, 300);
       } else {
-        if (setActiveTextBox) {
-          setActiveTextBox(false);
-        }
-        if (currentWord !== undefined) {
-          setSearchWord(currentWord.split(/, | |,/));
+        if (setActiveTextBox) setActiveTextBox(false);
+        if (currentWord) {
+          SEARCH_CONTENT?.setSearchWord(currentWord.split(/, | |,/));
         }
       }
+      if (activeSearchBar) {
+        navigate('/tags');
+      }
       setIsInputNull(false);
+      ITEM_CONTEXT?.setItems([]);
+      PAGE_NUM_CONTENT?.setPageNumber(1);
     }
-  }
-  console.log(searchWord);
+  };
+
   return (
     <S_SearchBarWrap active={activeSearchBar}>
       <BsSearch className="search-icon" />
       <S_SearchBarInput
-        onKeyPress={keydownhandler}
+        onKeyPress={keydownHandler}
         ref={inputRef}
         isInputNull={isInputNull}
       ></S_SearchBarInput>
