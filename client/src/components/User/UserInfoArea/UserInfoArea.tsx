@@ -13,7 +13,6 @@ import {
   S_InputWrap,
   S_Textarea,
 } from './UserInfoArea.styles';
-// import UserInfoTextarea from './UserInfoTextarea/UserInfoTextarea';
 import { FaHeart } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
 import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
