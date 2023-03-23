@@ -390,4 +390,18 @@ class ImageServiceImplTest {
         // then
         assertEquals(verifiedImage.getImageId(), save.getImageId());
     }
+
+    @Test
+    @DisplayName("findVerifiedImage: 존재하지 않는 이미지 찾기")
+    void findVerifiedImageFailTest() {
+        // given
+        User owner = getUser("owner@email.com", "owner");
+        Image image = getImage(owner);
+        Image save = imageRepository.save(image);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.findVerifiedImage(save.getImageId() + 1));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
+        assertEquals("이미지가 없습니다.", exception.getExceptionCode().getMessage());
+    }
 }
