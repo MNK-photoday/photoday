@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import Button from '../../components/common/Button/Button';
 import { FaHeart, FaBookmark } from 'react-icons/fa';
@@ -23,15 +23,56 @@ import TEST_USER from '../../assets/imgs/userDefaultProfile.png';
 import TagList from '../../components/Upload/Tag/TagList';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
 import DetailModal from './DetailModal';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { Tags } from '../Upload/Upload';
+
+type DetailInfo = {
+  image: string;
+  userName: string;
+  userProfileImage: string;
+  viewCount: number;
+  likeCount: number;
+  tags: string[];
+  userLike: boolean;
+  userBookmark: boolean;
+  createdAt: string;
+};
 function Detail() {
-  const TEST_USERNAME = 'JangEunsu';
-  const TEST_VIEW = '123,201,012';
-  const TEST_LIKE = '33,221,031';
-  const TEST_TAGS = [
-    { id: 1, name: '석양' },
-    { id: 2, name: '풍경' },
-  ];
-  const TEST_UPLOAD_DATE = '2020-01-01';
+  const [detailInfo, setDetailInfo] = useState<DetailInfo>();
+  const [tags, setTags] = useState<Tags[]>([]);
+  const { id } = useParams();
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_APP_API}/images/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        const response = res.data.data;
+        setDetailInfo({
+          image: response.imageUrl,
+          userName: response.owner.name,
+          userProfileImage: response.owner.profileImageUrl,
+          viewCount: response.viewCount,
+          likeCount: response.likeCount,
+          tags: response.tags,
+          userLike: response.like,
+          userBookmark: response.bookmark,
+          createdAt: response.createdAt,
+        });
+        if (response.tags.length > 0) {
+          const objectArray: Tags[] = response.tags.map(
+            (tag: string, index: number) => {
+              return { id: index, name: tag };
+            },
+          );
+          setTags(objectArray);
+          console.log(objectArray);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const handleOpenModal = (e: React.MouseEvent<HTMLOrSVGElement>) => {
@@ -47,9 +88,12 @@ function Detail() {
             <S_ContentsTop>
               <S_UserBox>
                 <div className="user-profile">
-                  <img src={TEST_USER} alt="user_profile_image" />
+                  <img
+                    src={detailInfo?.userProfileImage}
+                    alt="user_profile_image"
+                  />
                 </div>
-                <div className="user-name">{TEST_USERNAME}</div>
+                <div className="user-name">{detailInfo?.userName}</div>
                 <div className="user-follow">
                   <FiUserPlus size={20} />
                 </div>
@@ -66,26 +110,26 @@ function Detail() {
               </S_IconBox>
             </S_ContentsTop>
             <S_Contents>
-              <img src={TEST_IMAGE} alt="테스트이미지" />
+              <img src={detailInfo?.image} alt="테스트이미지" />
             </S_Contents>
             <S_ContentsBottom>
               <S_CountBox>
                 <div>
                   <GrView size={20} className="view-icon" />
-                  {TEST_VIEW}
+                  {detailInfo?.viewCount}
                 </div>
                 <div>
                   <FaHeart size={18} className="like-icon" />
-                  {TEST_LIKE}
+                  {detailInfo?.likeCount}
                 </div>
               </S_CountBox>
-              <S_UploadDateBox>{TEST_UPLOAD_DATE}</S_UploadDateBox>
+              <S_UploadDateBox>{detailInfo?.createdAt}</S_UploadDateBox>
               <Button variant="point" shape="round" size="medium">
                 Download
               </Button>
             </S_ContentsBottom>
           </S_PicBox>
-          <TagList tags={TEST_TAGS} isModificationMode={false} />
+          <TagList tags={tags} isModificationMode={false} />
           <S_SeachList>
             <ImageCardList width="400" />
           </S_SeachList>
