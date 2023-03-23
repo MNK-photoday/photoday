@@ -316,11 +316,11 @@ class ImageServiceImplTest {
         return report;
     }
 
-    private Image getImage(User owner) {
+    private Image getImage(User user) {
         Image image = Image.builder()
                 .imageUrl("http://imageUrl.jpg")
                 .createdAt(LocalDateTime.now())
-                .user(owner)
+                .user(user)
                 .imageHashValue("imageHashValue")
                 .build();
         return imageRepository.save(image);
@@ -340,7 +340,21 @@ class ImageServiceImplTest {
     }
 
     @Test
+    @WithMockUser("loginUser@email.com")
+    @DisplayName("updateList: 한 번 눌렀을 때 좋아요 추가")
     void updateLikeTest() {
+        // given
+        User owner = getUser("owner@email.com", "owner");
+        Image image = getImage(owner);
+
+        User loginUser = getUser("loginUser@email.com", "loginUser");
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        // when
+        ImageDto.Response response = imageService.updateLike(image.getImageId());
+
+        // then
+        assertTrue(response.isLike());
     }
 
     @Test
