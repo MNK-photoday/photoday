@@ -46,7 +46,7 @@ function App() {
           element: <Upload />,
         },
         {
-          path: '/detail',
+          path: '/detail/:id',
           element: <Detail />,
         },
         {

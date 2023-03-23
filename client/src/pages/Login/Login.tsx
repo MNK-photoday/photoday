@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { AxiosError } from 'axios';
 import {
   S_LinkTo,
   S_ImgContainer,
@@ -21,18 +22,13 @@ import LoginLogo from '../../components/Login/LoginLogo/LoginLogo';
 import GoogleButton from '../../components/Login/GoogleButton/GoogleButton';
 import { S_InputContainerWrap } from '../../components/Login/Input/Input.styles';
 import { validateLogin } from '../../components/Login/LoginValidationLogic/LoginValidationLogic';
-import { postLogin } from '../../api/Login';
-import { loginSuccess } from '../../store/authSlice';
+import { postLogin, LoginValue } from '../../api/Login';
+import { login } from '../../store/authSlice';
 
-export interface LoginValue {
-  email: string;
-  password: string;
-}
-
-export interface ValidityResults {
+export type ValidityResults = {
   isValidEmail: boolean;
   isValidPassword: boolean;
-}
+};
 
 function Login() {
   const dispatch = useDispatch();
@@ -50,10 +46,20 @@ function Login() {
     validateLogin({ loginForm, setValidations });
   }, [loginForm]);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await postLogin(loginForm, keepLoggedIn);
-    await dispatch(loginSuccess());
+
+    try {
+      const response = await postLogin(loginForm, keepLoggedIn);
+      await dispatch(login(response));
+      window.location.href = '/';
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          alert(error.response.data.message);
+        }
+      }
+    }
   };
 
   const changeEmailAndPasswordValueHandler = (
@@ -80,7 +86,7 @@ function Login() {
     <S_LoginContainerWrap>
       <S_ImgContainer />
       <S_ContentSection>
-        <S_LoginContainer onSubmit={handleLogin}>
+        <S_LoginContainer onSubmit={loginHandler}>
           <LoginLogo />
           <S_InputContainerWrap>
             <EmailInput
@@ -103,7 +109,7 @@ function Login() {
               <S_InvalidMessage
                 isShowMessage={!validations.isValidPassword ? 'show' : 'hide'}
               >
-                Passwords must contain 8 to 16 characters in English, numbers,
+                Passwords must contain 8 to 20 characters in English, numbers,
                 and special characters.
               </S_InvalidMessage>
             )}
