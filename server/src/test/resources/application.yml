@@ -6,7 +6,7 @@ spring:
     password: ${TEST_DB_PSW}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   output:
     ansi:
