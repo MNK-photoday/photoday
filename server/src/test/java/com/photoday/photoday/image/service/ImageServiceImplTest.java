@@ -52,24 +52,18 @@ class ImageServiceImplTest {
     }
 
     @Test
-    @WithMockUser(username = "default@mail.com")
+    @WithMockUser(username = "loginUser@email.com")
     @DisplayName("createImage: 정상 입력")
     void createImageTest() throws IOException, NoSuchAlgorithmException {
         // given
-        User user = User.builder()
-                .email("default@mail.com")
-                .name("default")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
         TagDto tagDto = new TagDto(List.of("background", "blue"));
-        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
-        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        MultipartFile multipartFile = getMultipartFile("image/jpeg");
 
-        String createdImageUrl = "http://createdImageUrl.jpg";
-        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://createdImageUrl.jpg");
 
         // when
         ImageDto.Response image = imageService.createImage(tagDto, multipartFile);
@@ -83,7 +77,7 @@ class ImageServiceImplTest {
     void createImageTestWrongContentType() {
         // given
         TagDto tagDto = new TagDto(List.of("background", "blue"));
-        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "application/pdf", "multipartFile".getBytes());
+        MultipartFile multipartFile = getMultipartFile("application/pdf");
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () -> imageService.createImage(tagDto, multipartFile));
@@ -92,34 +86,28 @@ class ImageServiceImplTest {
     }
 
     @Test
-    @WithMockUser(username = "default@mail.com")
+    @WithMockUser(username = "loginUser@email.com")
     @DisplayName("updateImageTags: 정상 입력")
     void updateImageTagsTest() throws IOException, NoSuchAlgorithmException {
         // given
-        User user = User.builder()
-                .email("default@mail.com")
-                .name("default")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
-        TagDto postTagDto = new TagDto(List.of("background", "blue"));
-        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
+        TagDto post = new TagDto(List.of("background", "blue"));
+        MultipartFile multipartFile = getMultipartFile("image/jpeg");
+
         given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://createdImageUrl.jpg");
 
-        String createdImageUrl = "http://createdImageUrl.jpg";
-        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+        ImageDto.Response image = imageService.createImage(post, multipartFile);
 
-        ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
-
-        TagDto patchTagDto = new TagDto(List.of("tag", "will", "be", "change!"));
+        TagDto patch = new TagDto(List.of("tags", "will", "be", "change!"));
 
         // when
-        ImageDto.Response response = imageService.updateImageTags(image.getImageId(), patchTagDto);
+        ImageDto.Response response = imageService.updateImageTags(image.getImageId(), patch);
 
         // then
-        assertTrue(response.getTags().contains("tag"));
+        assertTrue(response.getTags().contains("tags"));
         assertTrue(response.getTags().contains("will"));
         assertTrue(response.getTags().contains("be"));
         assertTrue(response.getTags().contains("change!"));
@@ -128,24 +116,18 @@ class ImageServiceImplTest {
     }
 
     @Test
-    @WithMockUser(username = "default@mail.com")
+    @WithMockUser(username = "loginUser@email.com")
     @DisplayName("getImage: 정상 입력")
     void getImageTest() throws IOException, NoSuchAlgorithmException {
         // given
-        User user = User.builder()
-                .email("owner@mail.com")
-                .name("owner")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
         TagDto postTagDto = new TagDto(List.of("background", "blue"));
-        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
-        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        MultipartFile multipartFile = getMultipartFile("image/jpeg");
 
-        String createdImageUrl = "http://createdImageUrl.jpg";
-        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://createdImageUrl.jpg");
 
         ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
 
@@ -160,54 +142,31 @@ class ImageServiceImplTest {
     @DisplayName("deleteImage: 잘못된 유저")
     void deleteImageTest() {
         // given
-        User user = User.builder()
-                .email("loginUser@mail.com")
-                .name("loginUser")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
-        User creator = User.builder()
-                .email("owner@email.com")
-                .name("owner")
-                .password("123456a!")
-                .build();
-        User owner = userRepository.save(creator);
-
-        Image image = Image.builder()
-                .imageUrl("http://imageUrl.jpg")
-                .createdAt(LocalDateTime.now())
-                .user(owner)
-                .imageHashValue("imageHashValue")
-                .build();
-        Image save = imageRepository.save(image);
+        User owner = getUser("owner@email.com", "owner");
+        Image image = getImage(owner);
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> imageService.deleteImage(save.getImageId()));
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.deleteImage(image.getImageId()));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
         assertEquals("게시물 작성자가 아닙니다.", exception.getExceptionCode().getMessage());
     }
 
     @Test
-    @WithMockUser("owner@mail.com")
+    @WithMockUser("loginUser@email.com")
     @DisplayName("updateBookmark: 한 번 눌렀을 때 북마크 추가")
     void updateBookmarkTest() throws IOException, NoSuchAlgorithmException {
         // given
-        User user = User.builder()
-                .email("owner@mail.com")
-                .name("owner")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
         TagDto postTagDto = new TagDto(List.of("background", "blue"));
-        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
-        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        MultipartFile multipartFile = getMultipartFile("image/jpeg");
 
-        String createdImageUrl = "http://createdImageUrl.jpg";
-        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://createdImageUrl.jpg");
 
         ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
 
@@ -219,24 +178,18 @@ class ImageServiceImplTest {
     }
 
     @Test
-    @WithMockUser("owner@mail.com")
+    @WithMockUser("loginUser@email.com")
     @DisplayName("updateBookmark: 두 번 눌렀을 때 북마크 취소")
     void updateBookmarkCancelTest() throws IOException, NoSuchAlgorithmException {
         // given
-        User user = User.builder()
-                .email("owner@mail.com")
-                .name("owner")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@mail.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
         TagDto postTagDto = new TagDto(List.of("background", "blue"));
-        MultipartFile multipartFile = new MockMultipartFile("multipartFile", "originalFileName", "image/jpeg", "multipartFile".getBytes());
-        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        MultipartFile multipartFile = getMultipartFile("image/jpeg");
 
-        String createdImageUrl = "http://createdImageUrl.jpg";
-        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(createdImageUrl);
+        given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://createdImageUrl.jpg");
 
         ImageDto.Response image = imageService.createImage(postTagDto, multipartFile);
 
@@ -249,35 +202,18 @@ class ImageServiceImplTest {
     }
 
     @Test
-    @WithMockUser("loginUser@mail.com")
+    @WithMockUser("loginUser@email.com")
     @DisplayName("createReport: 한 번 눌렀을 때 신고 성공")
     void createReportTest() {
         // given
-        User user = User.builder()
-                .email("loginUser@mail.com")
-                .name("loginUser")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
-        User creator = User.builder()
-                .email("owner@email.com")
-                .name("owner")
-                .password("123456a!")
-                .build();
-        User owner = userRepository.save(creator);
-
-        Image image = Image.builder()
-                .imageUrl("http://imageUrl.jpg")
-                .createdAt(LocalDateTime.now())
-                .user(owner)
-                .imageHashValue("imageHashValue")
-                .build();
-        Image savedImage = imageRepository.save(image);
+        User owner = getUser("owner@email.com", "owner");
+        Image image = getImage(owner);
 
         // when
-        ImageDto.Response response = imageService.createReport(savedImage.getImageId());
+        ImageDto.Response response = imageService.createReport(image.getImageId());
 
         // then
         assertTrue(response.isReport());
@@ -288,32 +224,16 @@ class ImageServiceImplTest {
     @DisplayName("createReport: 두 번 눌렀을 때 신고 불가")
     void createReportFailTest() {
         // given
-        User user = User.builder()
-                .email("loginUser@mail.com")
-                .name("loginUser")
-                .password("123456a!")
-                .build();
-        User loginUser = userRepository.save(user);
+        User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
-        User creator = User.builder()
-                .email("owner@email.com")
-                .name("owner")
-                .password("123456a!")
-                .build();
-        User owner = userRepository.save(creator);
+        User owner = getUser("owner@email.com", "owner");
+        Image image = getImage(owner);
 
-        Image image = Image.builder()
-                .imageUrl("http://imageUrl.jpg")
-                .createdAt(LocalDateTime.now())
-                .user(owner)
-                .imageHashValue("imageHashValue")
-                .build();
-        Image savedImage = imageRepository.save(image);
-        imageService.createReport(savedImage.getImageId());
+        imageService.createReport(image.getImageId());
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> imageService.createReport(savedImage.getImageId()));
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.createReport(image.getImageId()));
         assertEquals(HttpStatus.CONFLICT, exception.getExceptionCode().getHttpStatus());
         assertEquals("이미 신고한 게시물입니다.", exception.getExceptionCode().getMessage());
     }
@@ -323,24 +243,13 @@ class ImageServiceImplTest {
     @DisplayName("createReport: 게시글 작성자가 신고 불가")
     void createReportCannotReportMyselfTest() {
         // given
-        User creator = User.builder()
-                .email("owner@email.com")
-                .name("owner")
-                .password("123456a!")
-                .build();
-        User owner = userRepository.save(creator);
+        User owner = getUser("owner@email.com", "owner");
         given(authUserService.getLoginUserId()).willReturn(owner.getUserId());
 
-        Image image = Image.builder()
-                .imageUrl("http://imageUrl.jpg")
-                .createdAt(LocalDateTime.now())
-                .user(owner)
-                .imageHashValue("imageHashValue")
-                .build();
-        Image savedImage = imageRepository.save(image);
+        Image image = getImage(owner);
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> imageService.createReport(savedImage.getImageId()));
+        CustomException exception = assertThrows(CustomException.class, () -> imageService.createReport(image.getImageId()));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
         assertEquals("본인 게시물을 신고할 수 없습니다.", exception.getExceptionCode().getMessage());
     }
@@ -365,8 +274,8 @@ class ImageServiceImplTest {
 
         Image image = imageRepository.save(savedImage);
 
-        User user5 = getUser("user5@email.com", "user5");
-        given(authUserService.getLoginUserId()).willReturn(user5.getUserId());
+        User loginUser = getUser("loginUser@email.com", "loginUser");
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
 
         // when
         ImageDto.Response response = imageService.createReport(image.getImageId());
@@ -399,6 +308,10 @@ class ImageServiceImplTest {
                 .password("123456a!")
                 .build();
         return userRepository.save(user);
+    }
+
+    private static MockMultipartFile getMultipartFile(String contentType) {
+        return new MockMultipartFile("multipartFile", "originalFileName", contentType, "multipartFile".getBytes());
     }
 
     @Test
