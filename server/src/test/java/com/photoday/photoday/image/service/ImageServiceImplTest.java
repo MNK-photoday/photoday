@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -257,7 +258,7 @@ class ImageServiceImplTest {
     @Test
     @WithMockUser("loginUser@mail.com")
     @DisplayName("createReport: 신고 5회시 게시물 삭제")
-    void createReportImageOwnerBanTest() {
+    void createReportImageDeleteTest() {
         // given
         User owner = getUser("owner@email.com", "owner");
         Image savedImage = getImage(owner);
@@ -282,6 +283,30 @@ class ImageServiceImplTest {
 
         // then
         assertNull(response);
+    }
+
+    @Test
+    @WithMockUser("loginUser@mail.com")
+    @DisplayName("createReport: 신고 10회 시 유저 밴")
+    void createReportImageOwnerBanTest() {
+        // given
+        User owner = getUser("owner@email.com", "owner");
+        owner.setReportedCount(9);
+        userRepository.save(owner);
+        Image image = getImage(owner);
+
+        User loginUser = getUser("loginUser@email.com", "loginUser");
+        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+
+        imageService.createReport(image.getImageId());
+
+        // when
+        Optional<User> optionalUser = userRepository.findById(owner.getUserId());
+        User user = optionalUser.get();
+
+        // then
+        assertEquals(User.UserStatus.USER_BANED, user.getStatus());
+        assertTrue(LocalDateTime.now().plusWeeks(1).minusMinutes(1).isBefore(user.getBanTime()));
     }
 
     private static Report getReport(Image savedImage, User user1) {
