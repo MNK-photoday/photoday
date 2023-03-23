@@ -107,3 +107,17 @@ export const S_InputWrap = styled.form`
     bottom: 0px;
   }
 `;
+
+export const S_Textarea = styled.textarea`
+  border-radius: var(--box-radius-3);
+  border: 1px solid var(--color-primary-gray30);
+
+  width: 80%;
+  height: 110px;
+  padding: 10px;
+  resize: none;
+
+  &:focus {
+    outline: 2px solid var(--color-primary-green);
+  }
+`;
