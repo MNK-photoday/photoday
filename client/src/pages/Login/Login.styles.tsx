@@ -61,6 +61,11 @@ type LinkProps = {
   isaccount: string;
 };
 
+export const S_LinkToWrap = styled.div`
+  display: flex;
+  justify-content: end;
+`;
+
 export const S_LinkTo = styled(Link)<LinkProps>`
   color: var(--color-primary-green);
   margin-left: 10px;
@@ -72,11 +77,12 @@ export const S_LinkTo = styled(Link)<LinkProps>`
     font-size: var(--font-size-sm);
     font-weight: normal;
     display: flex;
-    justify-content: end;
     position: relative;
     bottom: 10px;
-  `};
-
+    width: 120px;
+    
+    `};
+  /* display: inline-flex */
   &:hover {
     color: hsl(140, 40%, 44%);
   }
