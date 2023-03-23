@@ -3,6 +3,7 @@ package com.photoday.photoday.image.service;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
+import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
@@ -322,7 +323,6 @@ class ImageServiceImplTest {
     @DisplayName("createReport: 게시글 작성자가 신고 불가")
     void createReportCannotReportMyselfTest() {
         // given
-
         User creator = User.builder()
                 .email("owner@email.com")
                 .name("owner")
@@ -343,6 +343,62 @@ class ImageServiceImplTest {
         CustomException exception = assertThrows(CustomException.class, () -> imageService.createReport(savedImage.getImageId()));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
         assertEquals("본인 게시물을 신고할 수 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
+    @WithMockUser("loginUser@mail.com")
+    @DisplayName("createReport: 신고 5회시 게시물 삭제")
+    void createReportImageOwnerBanTest() {
+        // given
+        User owner = getUser("owner@email.com", "owner");
+        Image savedImage = getImage(owner);
+
+        User user1 = getUser("user1@email.com", "user1");
+        User user2 = getUser("user2@email.com", "user2");
+        User user3 = getUser("user3@email.com", "user3");
+        User user4 = getUser("user4@email.com", "user4");
+
+        getReport(savedImage, user1);
+        getReport(savedImage, user2);
+        getReport(savedImage, user3);
+        getReport(savedImage, user4);
+
+        Image image = imageRepository.save(savedImage);
+
+        User user5 = getUser("user5@email.com", "user5");
+        given(authUserService.getLoginUserId()).willReturn(user5.getUserId());
+
+        // when
+        ImageDto.Response response = imageService.createReport(image.getImageId());
+
+        // then
+        assertNull(response);
+    }
+
+    private static Report getReport(Image savedImage, User user1) {
+        Report report = new Report();
+        report.setImage(savedImage);
+        report.setUser(user1);
+        return report;
+    }
+
+    private Image getImage(User owner) {
+        Image image = Image.builder()
+                .imageUrl("http://imageUrl.jpg")
+                .createdAt(LocalDateTime.now())
+                .user(owner)
+                .imageHashValue("imageHashValue")
+                .build();
+        return imageRepository.save(image);
+    }
+
+    private User getUser(String email, String owner) {
+        User user = User.builder()
+                .email(email)
+                .name(owner)
+                .password("123456a!")
+                .build();
+        return userRepository.save(user);
     }
 
     @Test

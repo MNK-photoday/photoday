@@ -65,6 +65,9 @@ public class ImageController {
     @PostMapping("/{imageId}/reports")
     public ResponseEntity<?> createReport(@PathVariable @Positive Long imageId) {
         ImageDto.Response response = imageService.createReport(imageId);
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 

@@ -147,14 +147,20 @@ public class ImageServiceImpl implements ImageService {
         Image image = findVerifiedImage(imageId);
 
         Long userId = authUserService.getLoginUserId();
-        if (image.getUser().getUserId() == userId)
+        if (image.getUser().getUserId() == userId) {
             throw new CustomException(ExceptionCode.CANNOT_REPORT_MYSELF);
+        }
 
         User user = userService.findVerifiedUser(userId);
         userService.checkUserReportCount(userId);
 
         Optional<Report> optionalReport = image.getReportList().stream()
                 .filter(r -> r.getUser().getUserId() == userId).findFirst();
+
+        if (image.getReportList().size() >= 4) {
+            imageRepository.delete(image);
+            return null;
+        }
 
         if (optionalReport.isPresent()) {
             throw new CustomException(ALREADY_REPORTED);
@@ -169,11 +175,6 @@ public class ImageServiceImpl implements ImageService {
             if (image.getUser().getReportedCount() == 10) {
                 image.getUser().setStatus(User.UserStatus.USER_BANED);
                 image.getUser().setBanTime(LocalDateTime.now().plusWeeks(1));
-            }
-
-            //TODO 게시물 삭제 기능 -- 삭제 후 리턴 추후 확인 필요
-            if (image.getReportList().size() >= 5) {
-                imageRepository.deleteById(imageId);
             }
         }
 
