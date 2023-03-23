@@ -31,6 +31,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
 
         Long userId = authUserService.getLoginUserId();
-        if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
+        if (!Objects.equals(image.getUser().getUserId(), userId)) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
 
         List<Tag> tagList = tagMapper.dtoToTag(patch);
         image.getImageTagList().clear();
@@ -103,7 +104,7 @@ public class ImageServiceImpl implements ImageService {
     public void deleteImage(long imageId) {
         Image image = findVerifiedImage(imageId);
         Long userId = authUserService.getLoginUserId();
-        if (image.getUser().getUserId() != userId) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
+        if (!Objects.equals(image.getUser().getUserId(), userId)) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
         imageRepository.deleteById(imageId);
     }
 
@@ -114,7 +115,7 @@ public class ImageServiceImpl implements ImageService {
         User user = userService.findVerifiedUser(userId);
 
         Optional<Bookmark> bookmark = image.getBookmarkList().stream()
-                .filter(b -> b.getUser().getUserId() == userId)
+                .filter(b -> Objects.equals(b.getUser().getUserId(), userId))
                 .findFirst();
 
         if (bookmark.isPresent()) {
@@ -147,14 +148,21 @@ public class ImageServiceImpl implements ImageService {
         Image image = findVerifiedImage(imageId);
 
         Long userId = authUserService.getLoginUserId();
-        if (image.getUser().getUserId() == userId)
+        if (Objects.equals(image.getUser().getUserId(), userId)) {
             throw new CustomException(ExceptionCode.CANNOT_REPORT_MYSELF);
+        }
 
         User user = userService.findVerifiedUser(userId);
         userService.checkUserReportCount(userId);
 
         Optional<Report> optionalReport = image.getReportList().stream()
-                .filter(r -> r.getUser().getUserId() == userId).findFirst();
+                .filter(r -> Objects.equals(r.getUser().getUserId(), userId))
+                .findFirst();
+
+        if (image.getReportList().size() >= 4) {
+            imageRepository.delete(image);
+            return null;
+        }
 
         if (optionalReport.isPresent()) {
             throw new CustomException(ALREADY_REPORTED);
@@ -170,11 +178,6 @@ public class ImageServiceImpl implements ImageService {
                 image.getUser().setStatus(User.UserStatus.USER_BANED);
                 image.getUser().setBanTime(LocalDateTime.now().plusWeeks(1));
             }
-
-            //TODO 게시물 삭제 기능 -- 삭제 후 리턴 추후 확인 필요
-            if (image.getReportList().size() >= 5) {
-                imageRepository.deleteById(imageId);
-            }
         }
 
         return imageMapper.imageToResponse(image);
@@ -187,7 +190,7 @@ public class ImageServiceImpl implements ImageService {
         User user = userService.findVerifiedUser(userId);
 
         Optional<Like> like = image.getLikeList().stream()
-                .filter(l -> l.getUser().getUserId() == userId)
+                .filter(l -> Objects.equals(l.getUser().getUserId(), userId))
                 .findFirst();
 
         if (like.isPresent()) {
