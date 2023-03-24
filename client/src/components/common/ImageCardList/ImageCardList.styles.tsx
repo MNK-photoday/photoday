@@ -1,11 +1,16 @@
 import styled from 'styled-components';
-import { ImageCardListProps } from './ImageCardList';
+
+type ImageCardBoxProps = {
+  width: number;
+  height?: number;
+  matrix: 'columns' | 'rows';
+};
 
 export const S_ImageCardWrap = styled.article`
   width: 100%;
 `;
 
-export const S_ImageCardBox = styled.div<ImageCardListProps>`
+export const S_ImageCardBox = styled.div<ImageCardBoxProps>`
   width: 100%;
   display: grid;
   ${({ width, matrix }) =>
@@ -19,4 +24,5 @@ export const S_ImageCardBox = styled.div<ImageCardListProps>`
 
 export const S_LoaderBar = styled.div`
   height: 20px;
+  color: var(--color-primary-black);
 `;
