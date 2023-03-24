@@ -47,6 +47,8 @@ public class UserMapper {
         response.setMyPage(userId != null && userId.equals(targetUser.getUserId()));
         response.setCheckAdmin(checkAdmin);
 
+        response.setMyPage(userId != null && userId.equals(targetUser.getUserId()));
+
         return response;
     }
 }
