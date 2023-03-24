@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto.Response getUser(long userId) {
-        Long loginUserId = authUserService.getLoginUserId();
+        Long loginUserId = authUserService.checkLogin();
         User targetUser = findVerifiedUser(userId);
         return userMapper.userToUserResponse(targetUser, loginUserId);
     }
