@@ -153,10 +153,7 @@ function UserInfoArea({ userData, isMyPage }: User) {
             />
           ))}
         <FaRegHeart size={22} className="likeIcon" />
-        {/* <AiOutlineLike size={25} className="likeIcon" /> */}
         <S_UserLikeAndReport>{userData.likeCount}</S_UserLikeAndReport>
-        {/* <TbPhotoCancel size={25} className="reporticon" /> */}
-        {/* <RiAlarmWarningLine size={25} className="reporticon" /> */}
         <IoWarningOutline size={25} className="reportIcon" />
         <S_UserLikeAndReport>{userData.reportCount}</S_UserLikeAndReport>
       </S_UserNameContainer>
