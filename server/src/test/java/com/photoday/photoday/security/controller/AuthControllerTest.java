@@ -26,6 +26,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -103,6 +104,25 @@ class AuthControllerTest {
     }
 
     @Test
-    void setNewPassword() {
+    @DisplayName("password: 정상 입력")
+    void setNewPassword() throws Exception {
+        // given
+        String email = "user@email.com";
+        User user = User.builder().userId(1L).name("user").email(email).build();
+
+        given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
+        // when
+        ResultActions actions = mvc.perform(
+                post("/api/auth/password")
+                        .param("email", email)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("password",
+                        getRequestPreprocessor(),
+                        getResponsePreprocessor(),
+                        getRequestParametersEmail()));
     }
 }
