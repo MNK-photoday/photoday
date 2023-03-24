@@ -120,6 +120,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto.Response deleteProfileImage() {
+        Long loginUserId = authUserService.getLoginUserId();
+        User verifiedUser = findVerifiedUser(loginUserId);
+
+        verifiedUser.setProfileImageUrl("https://ifh.cc/g/zPrPfv.png");
+
+        return userMapper.userToUserResponse(verifiedUser, loginUserId);
+    }
+
+    @Override
     public User findVerifiedUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
