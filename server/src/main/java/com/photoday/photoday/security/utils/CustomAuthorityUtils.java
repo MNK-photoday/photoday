@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class CustomAuthorityUtils {
-    @Value("${main.address.admin")
+    @Value("${mail.address.admin}")
     private String adminMailAddress;
 
-    private final List<String> ADMIN_ROLES_STRING = List.of("ADMIN", "USER");
+    private final List<String> ADMIN_ROLES_STRING = List.of("ADMIN");
     private final List<String> USER_ROLES_STRING = List.of("USER");
 
     public List<String> createRoles(String email) {
