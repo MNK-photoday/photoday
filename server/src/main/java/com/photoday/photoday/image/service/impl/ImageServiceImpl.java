@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -215,6 +216,15 @@ public class ImageServiceImpl implements ImageService {
                 = imageList.stream().map(imageMapper::imageToPageResponse).collect(Collectors.toList());
 
         return new MultiResponseDto(responses, page);
+    }
+
+    @Override
+    public List<ImageDto.Response> getMainImages() {
+        Pageable pageRequest = PageRequest.of(0, 10);
+        Page<Image> page = imageRepository.findMainImages(pageRequest);
+        List<Image> mainImages = page.getContent();
+        List<ImageDto.Response> responses = mainImages.stream().map(imageMapper::imageToResponse).collect(Collectors.toList());
+        return responses;
     }
 
     @Override
