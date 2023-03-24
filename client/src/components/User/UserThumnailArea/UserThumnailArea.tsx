@@ -28,14 +28,14 @@ function UserThumnailArea({ userData, isMyPage }: User) {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    handleUpload();
+    uploadHandler();
   }, [file]);
 
   const clickFollowModalHandler = () => {
     setFollowModal(!followModal);
   };
 
-  const uploadClickhandler = () => {
+  const uploadClickHandler = () => {
     inputFileRef.current?.click();
   };
 
@@ -51,7 +51,7 @@ function UserThumnailArea({ userData, isMyPage }: User) {
     return size.toFixed(2) + ' ' + units[index];
   };
 
-  const fileChangehandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
       const fileList = e.target.files[0];
       console.log(fileList);
@@ -65,11 +65,11 @@ function UserThumnailArea({ userData, isMyPage }: User) {
           size: fileSizeCalculator(fileList.size, 'MB'),
         };
       });
-      handleUpload();
+      uploadHandler();
     }
   };
 
-  const handleUpload = async () => {
+  const uploadHandler = async () => {
     const FILE_SIZE_LIMIT = 1024 * 1024 * 10;
     if (!file) {
       return;
@@ -108,14 +108,14 @@ function UserThumnailArea({ userData, isMyPage }: User) {
             type="file"
             accept="image/*"
             style={{ display: 'none' }}
-            onChange={fileChangehandler}
+            onChange={fileChangeHandler}
             ref={inputFileRef}
           />
           <Button
             variant="point"
             shape="default"
             size="large"
-            clickEventHandler={uploadClickhandler}
+            clickEventHandler={uploadClickHandler}
           >
             Upload Image
           </Button>
