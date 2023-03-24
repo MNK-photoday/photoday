@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
@@ -52,7 +53,7 @@ class ImageMapperTest {
 //        assertThrows(NullPointerException.class, ()->method.invoke(imageMapper, image));
 
         given(authUserServiceImpl.checkLogin()).willReturn(null);
-        given(userMapper.userToUserResponse(Mockito.any(User.class), Mockito.anyLong())).willReturn(new UserDto.Response());
+        given(userMapper.userToUserResponse(Mockito.any(User.class), Mockito.anyLong(), anyBoolean())).willReturn(new UserDto.Response());
 
         // when
         ImageDto.PageResponse pageResponse = imageMapper.imageToPageResponse(image);
@@ -81,10 +82,10 @@ class ImageMapperTest {
                 .build();
 
         UserDto.Response responseUser = new UserDto.Response(1L, "홍길동", "profileImageUrl", "hi", 1, 1,
-                1, 1, false, false);
+                1, 1, false, false, false);
 
         given(authUserServiceImpl.checkLogin()).willReturn(1L);
-        given(userMapper.userToUserResponse(Mockito.any(User.class), anyLong())).willReturn(responseUser);
+        given(userMapper.userToUserResponse(Mockito.any(User.class), anyLong(), anyBoolean())).willReturn(responseUser);
 
         //when
         ImageDto.Response response = imageMapper.imageToResponse(image);

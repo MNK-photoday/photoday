@@ -58,7 +58,7 @@ public class RestDocsSnippets {
 
     public static UserDto.Response getUserDtoResponse() {
         return new UserDto.Response(1L, "짱구", "http://profile-url.jpg", "짱구입니다.",
-                0, 0, 0, 0, false, false);
+                0, 0, 0, 0, false, false, false);
     }
 
     public static String getTagDto() {
