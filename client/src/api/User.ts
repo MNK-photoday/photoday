@@ -47,7 +47,7 @@ export const deleteUser = async () => {
   });
 
   localStorage.removeItem('accessToken');
-  localStorage.removeItem('userId');
+  localStorage.removeItem('id');
 };
 
 export const updateUser = async (textareaValue: string) => {
