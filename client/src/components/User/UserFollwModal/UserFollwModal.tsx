@@ -3,7 +3,7 @@ import {
   S_UserFollwModalContainer,
   S_UserFollwListContainer,
 } from './UserFollwModal.styles';
-// import ModalListItem from './ModalListItem';
+import ModalListItem from './ModalListItem';
 import Button from '../../common/Button/Button';
 import { getFollows } from '../../../api/User';
 
@@ -47,16 +47,10 @@ function UserFollwModal({ setFollowModal }: Modal) {
   return (
     <S_UserFollwModalContainer>
       <S_UserFollwListContainer>
-        {/* {followList.map((follow, idx) => (
+        {/* 추후에 서버에서 수정 되면 구현 
+        {followList.map((follow, idx) => (
           <ModalListItem key={idx} follow={follow} />
         ))} */}
-        {/* <ModalListItem />
-        <ModalListItem />
-        <ModalListItem />
-        <ModalListItem />
-        <ModalListItem />
-        <ModalListItem />
-        <ModalListItem /> */}
       </S_UserFollwListContainer>
       <Button
         variant="point"
