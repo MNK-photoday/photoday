@@ -78,6 +78,6 @@ public class ImageMapper {
 
     private UserDto.Response getOwner(Image image) {
         Long loginUserId = authUserService.checkLogin();
-        return userMapper.userToUserResponse(image.getUser(), loginUserId);
+        return userMapper.userToUserResponse(image.getUser(), loginUserId, false);
     }
 }
