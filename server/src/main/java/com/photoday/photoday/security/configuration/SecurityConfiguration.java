@@ -73,6 +73,9 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/*/images/*/reports").authenticated()
                         .antMatchers(HttpMethod.PATCH, "/*/images/*/likes").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/tags/search/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/*/auth/reissue").permitAll()
+                        .antMatchers(HttpMethod.GET, "/*/auth/logout").authenticated()
+                        .antMatchers(HttpMethod.POST, "/*/auth/password").permitAll()
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2

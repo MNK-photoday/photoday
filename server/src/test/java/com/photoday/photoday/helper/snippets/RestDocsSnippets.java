@@ -58,7 +58,7 @@ public class RestDocsSnippets {
 
     public static UserDto.Response getUserDtoResponse() {
         return new UserDto.Response(1L, "짱구", "http://profile-url.jpg", "짱구입니다.",
-                0, 0, 0, 0, false);
+                0, 0, 0, 0, false, false, false);
     }
 
     public static String getTagDto() {
@@ -96,6 +96,13 @@ public class RestDocsSnippets {
         );
     }
 
+    public static RequestFieldsSnippet getRequestFieldsLoginDto() {
+        return requestFields(
+                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+        );
+    }
+
     public static RequestFieldsSnippet getRequestFieldsTagDto() {
         return requestFields(
                 fieldWithPath("tags").type(JsonFieldType.ARRAY).description("태그 데이터")
@@ -117,6 +124,12 @@ public class RestDocsSnippets {
     public static PathParametersSnippet getPathParametersFollowingId() {
         return pathParameters(
                 parameterWithName("followingId").description("팔로우 대상 식별자")
+        );
+    }
+
+    public static RequestParametersSnippet getRequestParametersEmail() {
+        return requestParameters(
+                parameterWithName("email").description("재발급 받을 아이디, 재발급 받을 이메일")
         );
     }
 
@@ -175,6 +188,12 @@ public class RestDocsSnippets {
     public static ResponseHeadersSnippet getResponseHeadersLocation() {
         return responseHeaders(
                 headerWithName(HttpHeaders.LOCATION).description("Location header. 등록된 리소스의 URI")
+        );
+    }
+
+    public static ResponseHeadersSnippet getResponseHeadersAccessToken() {
+        return responseHeaders(
+                headerWithName(HttpHeaders.AUTHORIZATION).description("access-token. jwt 액세스 토큰")
         );
     }
 

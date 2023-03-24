@@ -5,21 +5,14 @@ import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 class UserMapperTest {
-    @Autowired
-    UserMapper userMapper;
+    UserMapper userMapper = new UserMapper();
 
     @Test
     @DisplayName("userPostToUser: 정상 작동")
