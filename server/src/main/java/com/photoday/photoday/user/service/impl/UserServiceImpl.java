@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         String name = getNameFromUser(user);
         user.setName(name);
         User createdUser = userRepository.save(user);
-        return userMapper.userToUserResponse(createdUser, null);
+        return userMapper.userToUserResponse(createdUser, null, false);
     }
 
     @Override
@@ -77,7 +77,10 @@ public class UserServiceImpl implements UserService {
     public UserDto.Response getUser(long userId) {
         Long loginUserId = authUserService.checkLogin();
         User targetUser = findVerifiedUser(userId);
-        return userMapper.userToUserResponse(targetUser, loginUserId);
+
+        boolean checkAdmin = checkAdmin(loginUserId);
+
+        return userMapper.userToUserResponse(targetUser, loginUserId, checkAdmin);
     }
 
     @Override
@@ -85,6 +88,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.userUpdateToUser(userUpdateDto);
         Long loginUserId = authUserService.getLoginUserId();
         User verifiedUser = findVerifiedUser(loginUserId);
+        boolean checkAdmin = checkAdmin(loginUserId);
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
@@ -98,7 +102,7 @@ public class UserServiceImpl implements UserService {
             verifiedUser.setProfileImageUrl(url);
         });
         Optional.ofNullable(user.getDescription()).ifPresent(verifiedUser::setDescription);
-        return userMapper.userToUserResponse(verifiedUser, loginUserId);
+        return userMapper.userToUserResponse(verifiedUser, loginUserId, checkAdmin);
     }
 
     @Override
@@ -107,26 +111,33 @@ public class UserServiceImpl implements UserService {
             Long loginUserId = authUserService.getLoginUserId();
             User verifiedUser = findVerifiedUser(loginUserId);
             verifiedUser.setPassword(passwordEncoder.encode(updateUserPasswordDto.getPassword()));
-            return userMapper.userToUserResponse(verifiedUser, loginUserId);
+            boolean checkAdmin = checkAdmin(loginUserId);
+            return userMapper.userToUserResponse(verifiedUser, loginUserId, checkAdmin);
         } else {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
     }
 
     @Override
-    public void deleteUser() {
+    public void deleteUser(Long userId) {
         Long loginUserId = authUserService.getLoginUserId();
-        userRepository.deleteById(loginUserId);
+
+        List<String> roles = findVerifiedUser(loginUserId).getRoles();
+        if(roles.contains("ADMIN") || userId.equals(loginUserId)) {
+            userRepository.deleteById(userId);
+        } else {
+            throw new CustomException(ExceptionCode.USER_INFO_NOT_MATCH);
+        }
     }
 
     @Override
     public UserDto.Response deleteProfileImage() {
         Long loginUserId = authUserService.getLoginUserId();
         User verifiedUser = findVerifiedUser(loginUserId);
-
+        boolean checkAdmin = checkAdmin(loginUserId);
         verifiedUser.setProfileImageUrl("https://ifh.cc/g/zPrPfv.png");
 
-        return userMapper.userToUserResponse(verifiedUser, loginUserId);
+        return userMapper.userToUserResponse(verifiedUser, loginUserId, checkAdmin);
     }
 
     @Override
@@ -160,6 +171,17 @@ public class UserServiceImpl implements UserService {
             user.setStatus(User.UserStatus.USER_ACTIVE);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public boolean checkAdmin(Long loginUserId) {
+        boolean checkAdmin = false;
+        List<String> roles = findVerifiedUser(loginUserId).getRoles();
+        if(roles.contains("ADMIN")) {
+            checkAdmin = true;
+        }
+
+        return checkAdmin;
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")

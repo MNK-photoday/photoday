@@ -5,6 +5,7 @@ import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.mapper.UserMapper;
+import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ImageMapper {
     private final UserMapper userMapper;
     private final AuthUserService authUserService;
+    private final UserService userService;
 
     public ImageDto.PageResponse imageToPageResponse(Image image){
         return ImageDto.PageResponse.builder()
@@ -78,6 +80,7 @@ public class ImageMapper {
 
     private UserDto.Response getOwner(Image image) {
         Long loginUserId = authUserService.checkLogin();
-        return userMapper.userToUserResponse(image.getUser(), loginUserId);
+        boolean checkAdmin = userService.checkAdmin(loginUserId);
+        return userMapper.userToUserResponse(image.getUser(), loginUserId, checkAdmin);
     }
 }

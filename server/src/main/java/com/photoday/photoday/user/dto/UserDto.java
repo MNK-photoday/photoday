@@ -59,5 +59,6 @@ public class UserDto {
         private int followingCount;
         private boolean checkFollow;
         private boolean myPage;
+        private boolean checkAdmin;
     }
 }

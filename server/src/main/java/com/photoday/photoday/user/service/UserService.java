@@ -14,7 +14,7 @@ public interface UserService {
 
     UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto);
 
-    void deleteUser();
+    void deleteUser(Long userId);
 
     User findVerifiedUser(Long userId);
 
@@ -26,4 +26,5 @@ public interface UserService {
 
     void checkBanTime(User user);
 
+    boolean checkAdmin(Long loginUserId);
 }
