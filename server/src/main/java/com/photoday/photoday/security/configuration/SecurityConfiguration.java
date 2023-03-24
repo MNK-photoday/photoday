@@ -62,7 +62,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/*/users").permitAll()
                         .antMatchers(HttpMethod.POST, "/*/users/update").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/users/**").permitAll()
-                        .antMatchers(HttpMethod.DELETE, "/*/users/**").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/*/users").authenticated()
                         .antMatchers(HttpMethod.PATCH, "/*/follows/*").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/follows/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/*/images").authenticated()
