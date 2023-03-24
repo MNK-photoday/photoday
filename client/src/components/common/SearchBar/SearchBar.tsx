@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ItemContext } from '../../../context/ItemContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import { SearchContext } from '../../../context/SearchContext';
@@ -29,13 +29,9 @@ function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
         }, 300);
       } else {
         if (setActiveTextBox) setActiveTextBox(false);
-        if (currentWord) {
-          SEARCH_CONTENT?.setSearchWord(currentWord.split(/, | |,/));
-        }
+        if (currentWord) SEARCH_CONTENT?.setSearchWord(currentWord);
       }
-      if (activeSearchBar) {
-        navigate('/tags');
-      }
+      if (activeSearchBar) navigate(`/tags/${currentWord}`);
       setIsInputNull(false);
       ITEM_CONTEXT?.setItems([]);
       PAGE_NUM_CONTENT?.setPageNumber(1);

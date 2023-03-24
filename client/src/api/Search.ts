@@ -1,18 +1,15 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export const postSearchTags = async (
-  searchWord: string[],
+  searchWord: string,
   pageNumber: number,
+  filter: string,
 ) => {
-  const data = {
-    tags: searchWord,
-  };
   try {
-    const response: AxiosResponse = await axios.post(
+    const response: AxiosResponse = await axios.get(
       `${
         import.meta.env.VITE_APP_API
-      }/tags/search?size=9&page=${pageNumber}&sort=imageId,desc`,
-      data,
+      }/tags/search?size=9&page=${pageNumber}&sort=imageId,${filter}&tags=${searchWord}`,
     );
     return response.data;
   } catch (error) {

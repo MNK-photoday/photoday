@@ -50,7 +50,7 @@ function App() {
           element: <Detail />,
         },
         {
-          path: '/tags',
+          path: '/tags/:search',
           element: <TagSearch />,
         },
         {

@@ -11,11 +11,13 @@ import { LoadingContext } from '../../../context/LoadintContext';
 import { SearchContext } from '../../../context/SearchContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import ImageCardSkeleton from '../Skeleton/ImageCardSkeleton';
+import { useLocation, useParams } from 'react-router-dom';
 
 export type ImageCardListProps = {
   width: number;
   height?: number;
   matrix?: 'columns' | 'rows';
+  filter?: string;
 };
 
 export type ImageItemProps = {
@@ -29,6 +31,7 @@ function ImageCardList({
   width,
   height,
   matrix = 'columns',
+  filter = 'desc',
 }: ImageCardListProps) {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>();
@@ -39,11 +42,20 @@ function ImageCardList({
   const SEARCH_CONTEXT = useContext(SearchContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
+  const { search } = useParams();
+  const { pathname } = useLocation();
+
   useEffect(() => {
-    if (SEARCH_CONTEXT?.searchWord.length !== 0) {
+    if (pathname !== '/') {
       fetchData();
     }
-  }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber]);
+  }, []);
+
+  useEffect(() => {
+    if (search?.length !== 0) {
+      fetchData();
+    }
+  }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
 
   useEffect(() => {
     if (LOADING_CONTEXT?.isLoading) {
@@ -70,8 +82,9 @@ function ImageCardList({
   const fetchData = async () => {
     LOADING_CONTEXT?.setIsLoading(true);
     postSearchTags(
-      SEARCH_CONTEXT?.searchWord ?? [],
+      pathname !== '/' ? search ?? '' : SEARCH_CONTEXT?.searchWord ?? '',
       PAGE_NUM_CONTEXT?.pageNumber ?? 1,
+      filter,
     ).then((response) => {
       ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
         ...prev,
