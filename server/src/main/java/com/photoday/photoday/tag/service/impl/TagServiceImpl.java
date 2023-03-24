@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +29,7 @@ public class TagServiceImpl implements TagService {
     private final ImageMapper imageMapper;
 
     @Override
-    public MultiResponseDto searchByTags(@RequestParam String tags, Pageable pageable) {
+    public MultiResponseDto searchByTags(String tags, Pageable pageable) {
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         String[] tagArr = tags.split(",|\\s");

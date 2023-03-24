@@ -26,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -134,6 +135,7 @@ class UserControllerTest {
         String userUpdateDto = getUpdateUserJsonBody("짱구");
         MockMultipartFile content = getMockMultipartFile("userUpdateDto", userUpdateDto);
         UserDto.Response response = getUserDtoResponse();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
         given(userService.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
 
@@ -142,6 +144,7 @@ class UserControllerTest {
                 multipart("/api/users/update")
                         .file("file", "example".getBytes())
                         .file(content)
+                        .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType("multipart/form-data")
                         .characterEncoding("UTF-8"));
@@ -153,6 +156,9 @@ class UserControllerTest {
                 .andDo(document("update-user",
                         getRequestPreprocessor(),
                         getResponsePreprocessor(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
                         getResponsePartUpdateUser(),
                         getRequestPartFieldUpdateUser(),
                         getResponseFieldsUserDtoResponse()));
@@ -165,6 +171,7 @@ class UserControllerTest {
         String userPatchDto = getUpdateUserJsonBody("짱구입니다.");
         MockMultipartFile content = getMockMultipartFile("userUpdateDto", userPatchDto);
         UserDto.Response response = getUserDtoResponse();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
         given(userService.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
 
@@ -172,6 +179,7 @@ class UserControllerTest {
         ResultActions actions = mvc.perform(
                 multipart("/api/users/update")
                         .file(content)
+                        .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType("multipart/form-data")
                         .characterEncoding("UTF-8"));
@@ -187,12 +195,14 @@ class UserControllerTest {
     void updateUserUpdateOnlyFile() throws Exception {
         // given
         UserDto.Response response = getUserDtoResponse();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
         given(userService.updateUser(any(UserDto.Update.class), any(MultipartFile.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
                 multipart("/api/users/update")
+                        .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType("multipart/form-data")
                         .characterEncoding("UTF-8"));
@@ -234,11 +244,14 @@ class UserControllerTest {
     @DisplayName("deleteUser: 정상 입력")
     void deleteUser() throws Exception {
         // given
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
+
         doNothing().when(userService).deleteUser();
 
         // when
         ResultActions actions = mvc.perform(
-                delete("/api/users"));
+                delete("/api/users")
+                        .header("Authorization", "Bearer " + accessToken));
 
         // then
         actions

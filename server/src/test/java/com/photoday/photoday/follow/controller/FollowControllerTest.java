@@ -3,6 +3,8 @@ package com.photoday.photoday.follow.controller;
 import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.follow.mapper.FollowMapper;
 import com.photoday.photoday.follow.service.FollowService;
+import com.photoday.photoday.helper.security.SecurityTestHelper;
+import com.photoday.photoday.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static com.photoday.photoday.helper.snippets.RestDocsSnippets.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -31,17 +35,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FollowControllerTest {
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private SecurityTestHelper helper;
     @MockBean
     FollowService followService;
     @MockBean
     FollowMapper followMapper;
+    @MockBean
+    UserService userService;
 
     @Test
     @DisplayName("getFollowUsers: 정상 입력")
     void getFollowUsers() throws Exception {
         // given
         FollowDto.ResponseFollowUsers response = getFollowDtoResponseFollowUsers();
-
 
         given(followService.findFollowUser()).willReturn(response);
 
@@ -68,12 +75,14 @@ class FollowControllerTest {
         // given
         long followingId = 1L;
         FollowDto.ResponseFollowUsers response = getFollowDtoResponseFollowUsers();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
         given(followService.registerFollowUser(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
                 patch("/api/follows/{followingId}", followingId)
+                        .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON));
 
