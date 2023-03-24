@@ -143,10 +143,13 @@ type ImageListResponse = {
 export const getUserPosts = async (
   userId: string | null | undefined,
   paginate: number,
+  currentTap: string,
 ) => {
   const token = localStorage.getItem('accessToken');
   const response = await axios.get<ImageListResponse>(
-    `${import.meta.env.VITE_APP_API}/images/user/${userId}`,
+    currentTap === 'user'
+      ? `${import.meta.env.VITE_APP_API}/images/user/${userId}`
+      : `${import.meta.env.VITE_APP_API}/images/bookmarks`,
     {
       headers: {
         Authorization: token,

@@ -31,7 +31,11 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getUserPosts(isMyPage ? id : userId, paginate);
+        const response = await getUserPosts(
+          isMyPage ? id : userId,
+          paginate,
+          currentTap,
+        );
         const postData = response.data;
         const paginationData: PageInfo = response.pageInfo;
         setPosts(postData);
@@ -41,7 +45,7 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
       }
     };
     fetchData();
-  }, [paginate]);
+  }, [paginate, currentTap]);
 
   const userTapHandler = () => {
     setCurrentTap('user');
