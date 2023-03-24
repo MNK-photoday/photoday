@@ -13,11 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,22 +25,11 @@ public class FollowServiceImpl implements FollowService {
     private final AuthUserService authUserService;
 
     @Override
-    public FollowDto.ResponseFollowUsers findFollowUser() {
+    public FollowDto.ResponseFollowUsers findFollowUser(Long userId) {
         Long loginUserId = authUserService.getLoginUserId();
+        User verifiedUser = userService.findVerifiedUser(userId);
 
-        List<Follow> follower = followRepository.findFollowByFollower_UserId(loginUserId);
-        List<Follow> following = followRepository.findFollowByFollowing_UserId(loginUserId);
-
-        //사용자가 팔로우한 사람
-        List<User> userFollowing = following.stream().map(Follow::getFollower).collect(Collectors.toList());
-        //사용자를 팔로우한 사람
-        List<User> userFollower = follower.stream().map(Follow::getFollowing).collect(Collectors.toList());
-
-        Map<String, List<User>> follow = new HashMap<>();
-        follow.put("following", userFollowing);
-        follow.put("follower", userFollower);
-
-        return followMapper.followUserListToResponseFollowUsers(follow, loginUserId);
+        return followMapper.followUserListToResponseFollowUsers(verifiedUser, loginUserId);
     }
 
     @Override
@@ -71,7 +56,6 @@ public class FollowServiceImpl implements FollowService {
             followRepository.save(follow);
         }
 
-        return findFollowUser();
+        return followMapper.followUserListToResponseFollowUsers(targetUser, loginUserId);
     }
-
 }

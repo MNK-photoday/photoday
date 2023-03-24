@@ -18,9 +18,9 @@ import javax.validation.constraints.Positive;
 public class FollowController {
     private final FollowService followService;
 
-    @GetMapping
-    public ResponseEntity<?> getFollowUsers() {
-        FollowDto.ResponseFollowUsers response = followService.findFollowUser();
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getFollowUsers(@PathVariable @Positive Long userId) {
+        FollowDto.ResponseFollowUsers response = followService.findFollowUser(userId);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
