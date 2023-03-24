@@ -18,12 +18,13 @@ import { UploadImage } from '../../../pages/Upload/Upload';
 
 export type User = {
   userData: UserData;
-  isMyPage: boolean;
+  myPage: boolean;
 };
 
-function UserThumnailArea({ userData, isMyPage }: User) {
+function UserThumnailArea({ userData, myPage }: User) {
   const dispatch = useDispatch();
-  const [followModal, setFollowModal] = useState(false);
+  const [followerModal, setFollowerModal] = useState(false);
+  const [followingModal, setFollowingModal] = useState(false);
   const [file, setFile] = useState<UploadImage | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -31,8 +32,14 @@ function UserThumnailArea({ userData, isMyPage }: User) {
     uploadHandler();
   }, [file]);
 
-  const clickFollowModalHandler = () => {
-    setFollowModal(!followModal);
+  const clickFollowerModalHandler = () => {
+    setFollowerModal(!followerModal);
+    setFollowingModal(false);
+  };
+
+  const clickFollowingModalHandler = () => {
+    setFollowingModal(!followingModal);
+    setFollowerModal(false);
   };
 
   const uploadClickHandler = () => {
@@ -54,7 +61,7 @@ function UserThumnailArea({ userData, isMyPage }: User) {
   const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
       const fileList = e.target.files[0];
-      console.log(fileList);
+
       setFile((state) => {
         return {
           ...state,
@@ -102,16 +109,16 @@ function UserThumnailArea({ userData, isMyPage }: User) {
     <S_UserThumnailArea>
       <S_UserProfileIamge alt="user profile" src={userData.profileImageUrl} />
       <S_UserFollowContainer>
-        <S_UserFollowWrap onClick={clickFollowModalHandler}>
+        <S_UserFollowWrap onClick={clickFollowerModalHandler}>
           <S_UserFollowCount>{userData.followerCount}</S_UserFollowCount>
           <S_UserFollow>Follower</S_UserFollow>
         </S_UserFollowWrap>
-        <S_UserFollowWrap onClick={clickFollowModalHandler}>
+        <S_UserFollowWrap onClick={clickFollowingModalHandler}>
           <S_UserFollowCount>{userData.followingCount}</S_UserFollowCount>
           <S_UserFollow>Following</S_UserFollow>
         </S_UserFollowWrap>
       </S_UserFollowContainer>
-      {isMyPage && (
+      {myPage && (
         <>
           <input
             type="file"
@@ -138,7 +145,20 @@ function UserThumnailArea({ userData, isMyPage }: User) {
           </Button>
         </>
       )}
-      {followModal && <UserFollwModal setFollowModal={setFollowModal} />}
+      {followerModal && (
+        <UserFollwModal
+          tap="follower"
+          myPage={myPage}
+          setFollowerModal={setFollowerModal}
+        />
+      )}
+      {followingModal && (
+        <UserFollwModal
+          tap="following"
+          myPage={myPage}
+          setFollowingModal={setFollowingModal}
+        />
+      )}
     </S_UserThumnailArea>
   );
 }
