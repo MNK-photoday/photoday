@@ -18,12 +18,12 @@ import { BsCamera } from 'react-icons/bs';
 
 type User = {
   userName: string;
-  isMyPage: boolean;
+  myPage: boolean;
   id: string | null;
   userId: string | undefined;
 };
 
-function UserContentSection({ userName, isMyPage, id, userId }: User) {
+function UserContentSection({ userName, myPage, id, userId }: User) {
   const [posts, setPosts] = useState<Image[]>([]);
   const [pagination, setPagination] = useState<PageInfo>({
     pageNumber: 1,
@@ -38,7 +38,7 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
     const fetchData = async () => {
       try {
         const response = await getUserPosts(
-          isMyPage ? id : userId,
+          myPage ? id : userId,
           paginate,
           currentTap,
         );
@@ -72,7 +72,7 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
           <S_UserPageSubTitlePoint>to</S_UserPageSubTitlePoint>
           day
         </S_Tab>
-        {isMyPage && (
+        {myPage && (
           <S_Tab className="bookmark" onClick={bookmarkTapHandler}>
             Bookmark
           </S_Tab>
