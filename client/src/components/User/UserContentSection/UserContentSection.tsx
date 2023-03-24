@@ -68,12 +68,7 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
       </S_UserPageSubTitleWrap>
       <S_UserPhotoContentContainer>
         {posts.map((post: Image) => (
-          <S_ImageCardBox
-            key={post.imageId}
-            width={240}
-            height={180}
-            matrix="columns"
-          >
+          <S_ImageCardBox key={post.imageId} width={240} height={220}>
             <ImageCard item={post} />
           </S_ImageCardBox>
         ))}
