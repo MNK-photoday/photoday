@@ -27,7 +27,7 @@ function Users() {
       }
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <ContainerWrap>
