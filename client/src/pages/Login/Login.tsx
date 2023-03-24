@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 import {
   S_LinkTo,
+  S_LinkToWrap,
   S_ImgContainer,
   S_ContentSection,
   S_LoginContainer,
@@ -51,7 +52,7 @@ function Login() {
 
     try {
       const response = await postLogin(loginForm, keepLoggedIn);
-      await dispatch(login(response));
+      dispatch(login(response));
       window.location.href = '/';
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -114,9 +115,11 @@ function Login() {
               </S_InvalidMessage>
             )}
           </S_InputContainerWrap>
-          <S_LinkTo to="/account-recovery" isaccount="true">
-            Forgot password?
-          </S_LinkTo>
+          <S_LinkToWrap>
+            <S_LinkTo to="/account-recovery" isaccount="true">
+              Forgot password?
+            </S_LinkTo>
+          </S_LinkToWrap>
           <S_CheckBoxContainer>
             <CheckBox
               isChecked={keepLoggedIn}
@@ -144,6 +147,9 @@ function Login() {
             <S_LinkTo to="/signup" isaccount="false">
               Sign Up
             </S_LinkTo>
+            <a href="http://43.201.114.127:8080/oauth2/authorization/google">
+              gdgd
+            </a>
           </S_LinkToTextContainer>
         </S_LoginContainer>
       </S_ContentSection>

@@ -3,13 +3,13 @@ import checkAuth from '../api/Auth';
 
 type AuthState = {
   isLoggedIn: boolean;
-  userId: string | null;
+  id: string | null;
 };
 
-const id = localStorage.getItem('userId');
+const userId = localStorage.getItem('id');
 const initialState: AuthState = {
   isLoggedIn: checkAuth(),
-  userId: id ? id : null,
+  id: userId ? userId : null,
 };
 
 const authSlice = createSlice({
@@ -18,11 +18,11 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<string>) => {
       state.isLoggedIn = true;
-      state.userId = action.payload;
+      state.id = action.payload;
     },
     logout: (state) => {
       state.isLoggedIn = false;
-      state.userId = null;
+      state.id = null;
     },
     setLoggedIn: (state, action: PayloadAction<boolean>) => {
       state.isLoggedIn = action.payload;

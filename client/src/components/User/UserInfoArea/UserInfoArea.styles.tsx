@@ -11,14 +11,23 @@ export const S_UserNameContainer = styled.div`
   display: flex;
   align-items: center;
 
-  .likeicon {
-    margin-right: 15px;
+  .likeIcon {
     color: var(--color-primary-red);
+    margin-right: 15px;
   }
 
-  .reporticon {
+  .reportIcon {
     color: var(--color-primary-black);
     margin-right: 15px;
+  }
+
+  .followIcon {
+    color: var(--color-primary-green);
+    margin-right: 30px;
+
+    &:hover {
+      color: #41d862;
+    }
   }
 `;
 
@@ -105,5 +114,19 @@ export const S_InputWrap = styled.form`
 
   p {
     bottom: 0px;
+  }
+`;
+
+export const S_Textarea = styled.textarea`
+  border-radius: var(--box-radius-3);
+  border: 1px solid var(--color-primary-gray30);
+
+  width: 80%;
+  height: 110px;
+  padding: 10px;
+  resize: none;
+
+  &:focus {
+    outline: 2px solid var(--color-primary-green);
   }
 `;
