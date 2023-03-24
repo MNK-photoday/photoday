@@ -51,4 +51,10 @@ public class UserController {
         userService.deleteUser();
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/delete/image")
+    public ResponseEntity<?> deleteProfileImage() {
+        UserDto.Response response = userService.deleteProfileImage();
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
 }

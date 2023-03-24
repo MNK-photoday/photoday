@@ -22,6 +22,8 @@ public interface UserService {
 
     User findUserByEmail(String email);
 
+    UserDto.Response deleteProfileImage();
+
     void checkBanTime(User user);
 
 }
