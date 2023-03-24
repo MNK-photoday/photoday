@@ -12,7 +12,7 @@ import {
 import Button from '../../common/Button/Button';
 import UserFollwModal from '../UserFollwModal/UserFollwModal';
 import { UserData } from '../../../store/userSlice';
-import { updateFile } from '../../../api/User';
+import { updateFile, deleteProfile } from '../../../api/User';
 import { setData } from '../../../store/userSlice';
 import { UploadImage } from '../../../pages/Upload/Upload';
 
@@ -89,6 +89,15 @@ function UserThumnailArea({ userData, isMyPage }: User) {
     }
   };
 
+  const deleteProfileHandler = async () => {
+    try {
+      const response = await deleteProfile();
+      dispatch(setData(response));
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <S_UserThumnailArea>
       <S_UserProfileIamge alt="user profile" src={userData.profileImageUrl} />
@@ -119,7 +128,12 @@ function UserThumnailArea({ userData, isMyPage }: User) {
           >
             Upload Image
           </Button>
-          <Button variant="point" shape="default" size="XLarge">
+          <Button
+            variant="point"
+            shape="default"
+            size="XLarge"
+            clickEventHandler={deleteProfileHandler}
+          >
             Remove Image
           </Button>
         </>

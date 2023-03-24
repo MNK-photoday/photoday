@@ -1,14 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 
 export const getUser = async (userId: string | null) => {
-  const token = localStorage.getItem('accessToken');
   const response = await axios.get<AxiosResponse>(
     `${import.meta.env.VITE_APP_API}/users/${userId}`,
-    {
-      headers: {
-        Authorization: token,
-      },
-    },
   );
 
   return response.data;
@@ -158,6 +152,20 @@ export const getUserPosts = async (
         size: 6,
         page: paginate,
         sort: 'imageId,desc',
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const deleteProfile = async () => {
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.delete<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/users/delete/profile-image`,
+    {
+      headers: {
+        Authorization: token,
       },
     },
   );
