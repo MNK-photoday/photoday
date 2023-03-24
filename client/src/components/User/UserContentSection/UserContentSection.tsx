@@ -51,14 +51,16 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
       }
     };
     fetchData();
-  }, [paginate, currentTap]);
+  }, [paginate, currentTap, userId]);
 
   const userTapHandler = () => {
     setCurrentTap('user');
+    setPaginate(1);
   };
 
   const bookmarkTapHandler = () => {
     setCurrentTap('bookmark');
+    setPaginate(1);
   };
 
   return (
