@@ -14,7 +14,6 @@ export const S_MainContentBox = styled.div`
   @media screen and (max-width: 1024px) {
     flex-wrap: wrap;
     width: 100%;
-    height: fit-content;
     padding: 0 30px;
   }
 `;
@@ -23,7 +22,7 @@ export const S_SearchContentBox = styled.section`
   width: 48%;
   height: 450px;
   position: relative;
-  margin: 31px 0;
+  padding: 30px 0px;
 
   @media screen and (max-width: 1024px) {
     width: 100%;
