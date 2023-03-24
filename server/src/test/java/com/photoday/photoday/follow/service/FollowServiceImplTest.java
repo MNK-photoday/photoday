@@ -69,10 +69,11 @@ class FollowServiceImplTest {
 
         FollowDto.ResponseFollowUsers response = followService.registerFollowUser(follower.getUserId());
 
-        assertEquals(1, response.getUserFollowerCount());
-        assertEquals(0, response.getUserFollowingCount());
-        assertTrue(response.getUserFollower().get(0).isCheckFollow());
-        assertEquals(0, response.getUserFollowingCount());
+        assertEquals(following.getUserId(), response.getUserFollower().get(0).getUserId());
+        assertEquals(following.getName(), response.getUserFollower().get(0).getName());
+        assertTrue(response.getUserFollowing().isEmpty());
+        assertEquals(1L, response.getUserFollowerCount());
+        assertEquals(0L, response.getUserFollowingCount());
     }
 
     private User getUser(String email, String owner) {

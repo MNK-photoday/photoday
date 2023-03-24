@@ -10,7 +10,7 @@ team 맑은 눈의 광인
 v1.0.0, 2023.03.15
 
 ***
-== UserController
+== User
 === 회원 가입
 .curl-request
 include::{snippets}/post-user/curl-request.adoc[]
@@ -75,7 +75,59 @@ include::{snippets}/delete-User/http-request.adoc[]
 .http-response
 include::{snippets}/delete-User/http-response.adoc[]
 
-== FollowController
+=== 로그인
+.curl-request
+include::{snippets}/login/curl-request.adoc[]
+
+.http-request
+include::{snippets}/login/http-request.adoc[]
+
+.request-fields
+include::{snippets}/login/request-fields.adoc[]
+
+.http-response
+include::{snippets}/login/http-response.adoc[]
+
+.response-headers
+include::{snippets}/login/response-headers.adoc[]
+
+=== 로그아웃
+.curl-request
+include::{snippets}/logout/curl-request.adoc[]
+
+.http-request
+include::{snippets}/logout/http-request.adoc[]
+
+.http-response
+include::{snippets}/logout/http-response.adoc[]
+
+=== 리프레시 토큰 재발급
+.curl-request
+include::{snippets}/reissue/curl-request.adoc[]
+
+.http-request
+include::{snippets}/reissue/http-request.adoc[]
+
+.http-response
+include::{snippets}/reissue/http-response.adoc[]
+
+.response-headers
+include::{snippets}/reissue/response-headers.adoc[]
+
+=== 비밀번호 재발급
+.curl-request
+include::{snippets}/password/curl-request.adoc[]
+
+.http-request
+include::{snippets}/password/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/password/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/password/http-response.adoc[]
+
+== Follow
 === 팔로우 설정 / 취소
 .curl-request
 include::{snippets}/patch-following-user/curl-request.adoc[]
@@ -105,7 +157,7 @@ include::{snippets}/get-follow-users/http-response.adoc[]
 .response-fields
 include::{snippets}/get-follow-users/response-fields.adoc[]
 
-== ImageController
+== Image
 === 이미지 등록
 .curl-request
 include::{snippets}/create-Image/curl-request.adoc[]
@@ -231,7 +283,7 @@ include::{snippets}/patch-likes/http-response.adoc[]
 .response-fields
 include::{snippets}/patch-likes/response-fields.adoc[]
 
-== TagController
+== Tag
 === 태그로 조회하기
 .curl-request
 include::{snippets}/get-search-tags/curl-request.adoc[]

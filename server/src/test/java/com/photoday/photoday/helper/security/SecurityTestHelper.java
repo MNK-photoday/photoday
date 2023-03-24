@@ -27,4 +27,12 @@ public class SecurityTestHelper {
         return accessToken;
     }
 
+    public String getRefreshToken(String email) {
+        User user = new User();
+        user.setEmail(email);
+        String refreshToken = jwtProvider.delegateRefreshToken(user);
+        given(userService.findUserByEmail(anyString())).willReturn(user);
+        return refreshToken;
+    }
+
 }
