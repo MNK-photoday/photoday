@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 public interface ImageService {
     ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException;
@@ -28,6 +29,8 @@ public interface ImageService {
     ImageDto.Response updateLike(long imageId);
 
     MultiResponseDto getUserImages(long userId, Pageable pageable);
+
+    List<ImageDto.Response> getMainImages();
 
     Image findVerifiedImage(long imageId);
 }

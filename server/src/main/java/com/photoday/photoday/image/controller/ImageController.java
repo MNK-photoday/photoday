@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/images")
@@ -81,5 +82,11 @@ public class ImageController {
     public ResponseEntity<?> getUserImages(@PathVariable @Positive Long userId, Pageable pageable) {
         MultiResponseDto userImages = imageService.getUserImages(userId, pageable);
         return new ResponseEntity<>(userImages, HttpStatus.OK);
+    }
+
+    @GetMapping("/main")
+    public ResponseEntity<?> getMainImages() {
+        List<ImageDto.Response> mainImages = imageService.getMainImages();
+        return new ResponseEntity<>(mainImages, HttpStatus.OK);
     }
 }
