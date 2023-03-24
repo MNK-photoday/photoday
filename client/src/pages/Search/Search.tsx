@@ -9,6 +9,7 @@ import {
   S_SelectContentBox,
   S_TagContentBox,
 } from './Search.styles';
+import { useState } from 'react';
 
 function Search() {
   /*임시 태그*/
@@ -17,6 +18,7 @@ function Search() {
     { id: 2, name: '풍경' },
     { id: 3, name: '나무' },
   ];
+  const [isSelect, setIsSelect] = useState('desc');
 
   return (
     <ContainerWrap>
@@ -27,10 +29,15 @@ function Search() {
               <TagList tags={TEST_TAGS} />
             </S_TagContentBox>
             <S_SelectContentBox>
-              <SelectBox />
+              <SelectBox isSelect={isSelect} setIsSelect={setIsSelect} />
             </S_SelectContentBox>
           </S_SearchMenuBox>
-          <ImageCardList width={477} height={350} matrix="columns" />
+          <ImageCardList
+            width={477}
+            height={350}
+            matrix="columns"
+            filter={isSelect}
+          />
         </S_SearchBox>
       </S_SearchContainer>
     </ContainerWrap>
