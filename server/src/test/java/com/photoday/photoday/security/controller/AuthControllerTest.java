@@ -23,6 +23,7 @@ import java.util.Optional;
 import static com.photoday.photoday.helper.snippets.RestDocsSnippets.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +36,8 @@ class AuthControllerTest {
 
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private SecurityTestHelper helper;
     @Autowired
     private SecurityTestHelper securityTestHelper;
     @MockBean
@@ -74,7 +77,29 @@ class AuthControllerTest {
     }
 
     @Test
-    void logout() {
+    @DisplayName("logout: 정상 입력")
+    void logout() throws Exception {
+        // given
+        String accessToken = helper.getAccessToken("user@email.com", List.of("USER"));
+        String refreshToken = securityTestHelper.getRefreshToken("user@email.com");
+        Cookie cookie = new Cookie("Refresh", refreshToken);
+
+        doNothing().when(redisService).deleteValues(anyString());
+
+        // when
+        ResultActions actions = mvc.perform(
+                get("/api/auth/logout")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(cookie)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("logout",
+                        getRequestPreprocessor(),
+                        getResponsePreprocessor()));
     }
 
     @Test
