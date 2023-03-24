@@ -1,8 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 
 export const getUser = async (userId: string | null) => {
+  const token = localStorage.getItem('accessToken');
   const response = await axios.get<AxiosResponse>(
     `${import.meta.env.VITE_APP_API}/users/${userId}`,
+    {
+      headers: {
+        Authorization: token,
+      },
+    },
   );
 
   return response.data;
@@ -87,10 +93,10 @@ export const updateFile = async (file: File) => {
   return response.data;
 };
 
-export const getFollows = async () => {
+export const getFollows = async (userId: string | null | undefined) => {
   const token = localStorage.getItem('accessToken');
   const response = await axios.get<AxiosResponse>(
-    `${import.meta.env.VITE_APP_API}/follows`,
+    `${import.meta.env.VITE_APP_API}/follows/${userId}`,
     {
       headers: {
         Authorization: token,
