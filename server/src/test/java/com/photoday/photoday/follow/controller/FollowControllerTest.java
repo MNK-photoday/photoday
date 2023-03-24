@@ -48,13 +48,14 @@ class FollowControllerTest {
     @DisplayName("getFollowUsers: 정상 입력")
     void getFollowUsers() throws Exception {
         // given
+        long userId = 1L;
         FollowDto.ResponseFollowUsers response = getFollowDtoResponseFollowUsers();
 
-        given(followService.findFollowUser()).willReturn(response);
+        given(followService.findFollowUser(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
-                get("/api/follows")
+                get("/api/follows/{userId}", userId)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON));
 
