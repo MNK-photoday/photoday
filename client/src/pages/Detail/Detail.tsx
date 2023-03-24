@@ -84,6 +84,21 @@ function Detail() {
     setIsOpenModal(!isOpenModal);
   };
   const handleCloseModal = () => setIsOpenModal(false);
+
+  const extractFileExtensionFromUrl = (url: string): string | null => {
+    const match = url.match(/\.([a-z0-9]+)(?:[\?#]|$)/i);
+    return match ? match[1].toLowerCase() : null;
+  };
+
+  const imageDownloadHandler = () => {
+    if (detailInfo) {
+      const link = document.createElement('a');
+      const fileExtension = extractFileExtensionFromUrl(detailInfo.image);
+      link.download = `photoday_download${id}.${fileExtension}`;
+      link.href = detailInfo?.image;
+      link.click();
+    }
+  };
   return (
     <ContainerWrap>
       <Container>
@@ -114,7 +129,7 @@ function Detail() {
               </S_IconBox>
             </S_ContentsTop>
             <S_Contents>
-              <img src={detailInfo?.image} alt="테스트이미지" />
+              <img src={detailInfo?.image} alt="상세이미지" />
             </S_Contents>
             <S_UploadDateBox>
               {dateTypeConverter(detailInfo?.createdAt)}
@@ -130,7 +145,12 @@ function Detail() {
                   {detailInfo?.likeCount}
                 </div>
               </S_CountBox>
-              <Button variant="point" shape="round" size="medium">
+              <Button
+                variant="point"
+                shape="round"
+                size="medium"
+                clickEventHandler={imageDownloadHandler}
+              >
                 Download
               </Button>
             </S_ContentsBottom>
