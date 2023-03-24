@@ -45,6 +45,8 @@ public class UserMapper {
         response.setFollowerCount(targetUser.getFollower() != null ? targetUser.getFollower().size() : 0);
         response.setFollowingCount(targetUser.getFollowing() != null ? targetUser.getFollowing().size() : 0);
 
+        response.setMyPage(userId != null && userId.equals(targetUser.getUserId()));
+
         return response;
     }
 }
