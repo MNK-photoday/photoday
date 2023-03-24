@@ -42,8 +42,6 @@ function UserFollwModal({ setFollowModal }: Modal) {
     fetchData();
   }, []);
 
-  console.log('??', followList);
-
   return (
     <S_UserFollwModalContainer>
       <S_UserFollwListContainer>
