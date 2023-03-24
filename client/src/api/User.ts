@@ -51,18 +51,37 @@ export const deleteUser = async () => {
 };
 
 export const updateUser = async (textareaValue: string) => {
+  const token = localStorage.getItem('accessToken');
   const userUpdateDto = new Blob(
     [JSON.stringify({ description: textareaValue })],
     { type: 'application/json' },
   );
 
-  const formdata = new FormData();
-  formdata.append('userUpdateDto', userUpdateDto);
+  const formData = new FormData();
+  formData.append('userUpdateDto', userUpdateDto);
 
-  const token = localStorage.getItem('accessToken');
   const response = await axios.post(
     `${import.meta.env.VITE_APP_API}/users/update`,
-    formdata,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: token,
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const updateFile = async (file: File) => {
+  const token = localStorage.getItem('accessToken');
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await axios.post(
+    `${import.meta.env.VITE_APP_API}/users/update`,
+    formData,
     {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -81,6 +100,61 @@ export const getFollows = async () => {
     {
       headers: {
         Authorization: token,
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const patchFollow = async (followingId: number | null) => {
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.patch<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/follows/${followingId}`,
+    null,
+    {
+      headers: {
+        Authorization: token,
+      },
+    },
+  );
+  return response.data;
+};
+
+export type Image = {
+  imageId: number;
+  imageUrl: string;
+  like: boolean;
+  bookmark: boolean;
+};
+
+export type PageInfo = {
+  pageNumber: number;
+  size: number;
+  totalPages: number;
+  totalElements: number;
+};
+
+type ImageListResponse = {
+  data: Image[];
+  pageInfo: PageInfo;
+};
+
+export const getUserPosts = async (
+  userId: string | null | undefined,
+  paginate: number,
+) => {
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.get<ImageListResponse>(
+    `${import.meta.env.VITE_APP_API}/images/user/${userId}`,
+    {
+      headers: {
+        Authorization: token,
+      },
+      params: {
+        size: 6,
+        page: paginate,
+        sort: 'imageId,desc',
       },
     },
   );

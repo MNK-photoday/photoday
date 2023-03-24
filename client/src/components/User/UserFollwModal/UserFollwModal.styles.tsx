@@ -6,13 +6,14 @@ export const S_UserFollwModalContainer = styled.div`
   height: 280px;
   border: var(--color-input-box-line);
   border-radius: var(--box-radius-3);
+  background-color: var(--white);
 
   /* 
   위치 고민 중입니다...
   1번 위치
   */
   top: 125px;
-  left: 50px;
+  /* left: 50px; */
 
   /* 2번 위치 */
   /* top: 340px;
@@ -27,4 +28,12 @@ export const S_UserFollwListContainer = styled.div`
   height: 100%;
   overflow: scroll;
   overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: var(--color-primary-gray20);
+  }
 `;

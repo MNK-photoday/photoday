@@ -42,6 +42,10 @@ function App() {
           element: <User />,
         },
         {
+          path: '/users/:userId',
+          element: <User />,
+        },
+        {
           path: '/upload',
           element: <Upload />,
         },

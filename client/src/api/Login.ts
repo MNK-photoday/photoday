@@ -42,7 +42,7 @@ export const postLogin = async (
 
   if (keepLoggedIn && accessToken) {
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('userId', userId);
+    localStorage.setItem('id', userId);
   }
   return userId;
 };
