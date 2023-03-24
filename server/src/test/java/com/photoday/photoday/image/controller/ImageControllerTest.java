@@ -194,12 +194,14 @@ class ImageControllerTest {
         // given
         MultiValueMap<String, String> params = getParams("createAt,desc");
         MultiResponseDto response = getMultiResponseDtoPageResponse();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
         given(imageService.getBookmarkImages(any(Pageable.class))).willReturn(response);
 
         // when
         ResultActions actions = mvc.perform(
                 get("/api/images/bookmarks")
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .queryParams(params));
 
