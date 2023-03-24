@@ -7,6 +7,11 @@ import {
   S_ModalNavLink,
 } from './HeaderModal.styles';
 
+const logoutHandler = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('id');
+};
+
 function HeaderModal() {
   return (
     <S_HeaderModalWrap>
@@ -16,7 +21,9 @@ function HeaderModal() {
       </S_ModalNavBox>
       <S_ModalNavBox>
         <IoLogOut className="logout-icon" />
-        <S_ModalNavLink to="/logout">Logout</S_ModalNavLink>
+        <S_ModalNavLink to="/" onClick={logoutHandler}>
+          Logout
+        </S_ModalNavLink>
       </S_ModalNavBox>
     </S_HeaderModalWrap>
   );
