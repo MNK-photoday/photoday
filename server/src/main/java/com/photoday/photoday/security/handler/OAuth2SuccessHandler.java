@@ -58,16 +58,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie refreshTokenCookie = CookieUtil.createCookie("Refresh", refreshToken);
         response.addCookie(refreshTokenCookie);
+        response.addHeader("Authorization", accessToken);
 
-        String uri = createURI(accessToken).toString();
+        String uri = createURI(user).toString();
         log.info("OAuth 인증 성공");
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private URI createURI(String accessToken) {
+    private URI createURI(User user) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("access_token", accessToken);
-//        queryParams.add("refresh_token", refreshToken);
+        queryParams.add("userId", user.getUserId().toString());
+        queryParams.add("userEmail", user.getEmail());
+        queryParams.add("userProfileImage", user.getProfileImageUrl());
 
         return UriComponentsBuilder
                 .newInstance()
