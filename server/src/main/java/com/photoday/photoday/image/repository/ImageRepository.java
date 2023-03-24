@@ -24,4 +24,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Page<Image> findAllUserImages(Pageable pageable, Long userId);
 
     boolean existsByImageHashValue(String imageHashValue);
+
+    @Query(value = "SELECT i FROM Image i ORDER BY i.likeList.size DESC")
+    Page<Image> findMainImages(Pageable pageable);
 }
