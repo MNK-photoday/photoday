@@ -80,8 +80,8 @@ class ImageMapperTest {
                 .reportList(new ArrayList<>())
                 .build();
 
-        UserDto.Response responseUser = new UserDto.Response(1L, "홍길동",
-                "profileImageUrl", "hi", 1, 1, 1, 1, false);
+        UserDto.Response responseUser = new UserDto.Response(1L, "홍길동", "profileImageUrl", "hi", 1, 1,
+                1, 1, false, false);
 
         given(authUserServiceImpl.checkLogin()).willReturn(1L);
         given(userMapper.userToUserResponse(Mockito.any(User.class), anyLong())).willReturn(responseUser);
