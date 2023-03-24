@@ -51,6 +51,7 @@ export const deleteUser = async () => {
 };
 
 export const updateUser = async (textareaValue: string) => {
+  const token = localStorage.getItem('accessToken');
   const userUpdateDto = new Blob(
     [JSON.stringify({ description: textareaValue })],
     { type: 'application/json' },
@@ -59,7 +60,6 @@ export const updateUser = async (textareaValue: string) => {
   const formData = new FormData();
   formData.append('userUpdateDto', userUpdateDto);
 
-  const token = localStorage.getItem('accessToken');
   const response = await axios.post(
     `${import.meta.env.VITE_APP_API}/users/update`,
     formData,
@@ -75,11 +75,10 @@ export const updateUser = async (textareaValue: string) => {
 };
 
 export const updateFile = async (file: File) => {
-  console.log('이제 막 서버로 보내려고 받은 파일 =>', file);
+  const token = localStorage.getItem('accessToken');
   const formData = new FormData();
   formData.append('file', file);
 
-  const token = localStorage.getItem('accessToken');
   const response = await axios.post(
     `${import.meta.env.VITE_APP_API}/users/update`,
     formData,
@@ -90,7 +89,7 @@ export const updateFile = async (file: File) => {
       },
     },
   );
-  console.log('서버 응답 =>', response.data.data.profileImageUrl);
+
   return response.data;
 };
 
@@ -122,19 +121,43 @@ export const patchFollow = async (followingId: number | null) => {
   return response.data;
 };
 
-export const getUserImages = async (userId: string | null | undefined) => {
+export type Image = {
+  imageId: number;
+  imageUrl: string;
+  like: boolean;
+  bookmark: boolean;
+};
+
+export type PageInfo = {
+  pageNumber: number;
+  size: number;
+  totalPages: number;
+  totalElements: number;
+};
+
+type ImageListResponse = {
+  data: Image[];
+  pageInfo: PageInfo;
+};
+
+export const getUserPosts = async (
+  userId: string | null | undefined,
+  paginate: number,
+) => {
   const token = localStorage.getItem('accessToken');
-  const response = await axios.get<AxiosResponse>(
+  const response = await axios.get<ImageListResponse>(
     `${import.meta.env.VITE_APP_API}/images/user/${userId}`,
     {
       headers: {
         Authorization: token,
       },
       params: {
-        size: 5, // 페이지당 이미지 개수
-        page: 1, // 페이지 번호
-        sort: 'imageId,desc', // 정렬 방식 (imageId 기준으로 내림차순)
+        size: 6,
+        page: paginate,
+        sort: 'imageId,desc',
       },
     },
   );
+
+  return response.data;
 };
