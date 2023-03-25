@@ -10,14 +10,12 @@ import {
 } from './Main.styles';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
 import { LoadingContext } from '../../context/LoadintContext';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/authSlice';
 import { socialLogin } from '../../api/Login';
 import MainImageCard from '../../components/common/ImageCard/MainImageCard';
 
 function Main() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [activeTextBox, setActiveTextBox] = useState(true);
 
@@ -28,7 +26,7 @@ function Main() {
       const url = window.location.href.split('?')[0];
       window.history.replaceState({}, document.title, url);
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <ContainerWrap>
