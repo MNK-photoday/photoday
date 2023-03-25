@@ -9,6 +9,7 @@ export const S_UserFollwModalContainer = styled.div`
   border-radius: var(--box-radius-3);
   background-color: var(--white);
   top: 270px;
+  z-index: 1;
 `;
 
 export const S_UserFollwListContainer = styled.div`
