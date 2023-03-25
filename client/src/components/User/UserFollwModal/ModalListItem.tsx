@@ -1,13 +1,12 @@
 import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
-import { Link } from 'react-router-dom';
 import {
   S_ModalListItemContainer,
   S_UserProfile,
   S_UserIntroductionWrap,
   S_UserName,
 } from './ModalListItem.styles';
-import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
+import { FiUserPlus, FiUserMinus } from 'react-icons/fi';
 import { Follow } from './UserFollwModal';
 import { patchFollow } from '../../../api/User';
 import { setFollower, setfollowing } from '../../../store/userSlice';
@@ -15,10 +14,11 @@ import { setFollower, setfollowing } from '../../../store/userSlice';
 type FollowData = {
   user: Follow;
   tap: string;
+  id: number;
   setFollowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function ModalListItem({ user, tap, setFollowModal }: FollowData) {
+function ModalListItem({ user, tap, id, setFollowModal }: FollowData) {
   const dispatch = useDispatch();
   const followHandler = async (type: string) => {
     try {
@@ -52,19 +52,20 @@ function ModalListItem({ user, tap, setFollowModal }: FollowData) {
           {user.name.length > 10 ? `${user.name.slice(0, 10)}...` : user.name}
         </S_UserName>
       </S_UserIntroductionWrap>
-      {user.checkFollow ? (
-        <FiUserMinus
-          className="follwIcon"
-          size={22}
-          onClick={() => followHandler('minus')}
-        />
-      ) : (
-        <FiUserPlus
-          className="follwIcon"
-          size={22}
-          onClick={() => followHandler('plus')}
-        />
-      )}
+      {user.userId !== id &&
+        (user.checkFollow ? (
+          <FiUserMinus
+            className="follwIcon"
+            size={22}
+            onClick={() => followHandler('minus')}
+          />
+        ) : (
+          <FiUserPlus
+            className="follwIcon"
+            size={22}
+            onClick={() => followHandler('plus')}
+          />
+        ))}
     </S_ModalListItemContainer>
   );
 }

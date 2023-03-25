@@ -61,6 +61,7 @@ function UserFollwModal({ tap, myPage, setFollowModal }: Modal) {
               key={user.userId}
               user={user}
               tap={tap}
+              id={Number(id)}
               setFollowModal={setFollowModal}
             />
           ))
