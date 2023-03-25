@@ -1,15 +1,13 @@
-import { S_MainImgBox } from '../../../pages/Main/Main.styles';
+import { S_MainImageContentWrap } from '../ImageCard/MainImageCard.styles';
 import Skeleton from './Skeleton';
 
-function MainSkeleton({ count }: { count: number }) {
+function MainSkeleton({ count }: any) {
   return (
-    <>
+    <S_MainImageContentWrap>
       {Array.from({ length: count }).map((_, index) => (
-        <S_MainImgBox key={index}>
-          <Skeleton width={700} height={400} animation={true} />
-        </S_MainImgBox>
+        <Skeleton key={index} height={380} animation={true} />
       ))}
-    </>
+    </S_MainImageContentWrap>
   );
 }
 

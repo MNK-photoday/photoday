@@ -13,12 +13,6 @@ export const S_CardImageLink = styled(Link)`
   display: flex;
   overflow: hidden;
 `;
-export const S_CardImage = styled.img`
-  max-width: 100%;
-  max-height: 100%;
-  width: 100%;
-  object-fit: cover;
-`;
 
 export const S_OverlayControls = styled.div`
   width: 100%;
