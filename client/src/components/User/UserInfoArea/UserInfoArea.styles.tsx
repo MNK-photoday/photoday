@@ -82,7 +82,7 @@ export const S_TextButton = styled.button<{ isTextButtonType: TextButtonType }>`
   font-size: var(--font-size-sm);
   display: flex;
   text-decoration: underline;
-  width: auto;
+  width: 104px;
   margin-right: 20px;
   ${({ isTextButtonType }) => TextButtonCss[isTextButtonType]}
 
