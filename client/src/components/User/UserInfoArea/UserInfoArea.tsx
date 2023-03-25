@@ -12,6 +12,7 @@ import {
   S_DeleteAccountText,
   S_InputWrap,
   S_Textarea,
+  S_TextButtonContainer,
 } from './UserInfoArea.styles';
 import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
 import { PasswordInput } from '../../Login/Input/Input';
@@ -177,12 +178,20 @@ function UserInfoArea({ userData, myPage }: User) {
       {myPage && (
         <S_TextButtonWrap>
           {isEdit ? (
-            <S_TextButton
-              isTextButtonType="edit"
-              onClick={clickUpdatedescriptionHandler}
-            >
-              Save edits
-            </S_TextButton>
+            <S_TextButtonContainer>
+              <S_TextButton
+                isTextButtonType="edit"
+                onClick={clickUpdatedescriptionHandler}
+              >
+                Save edits
+              </S_TextButton>
+              <S_TextButton
+                isTextButtonType="cancel"
+                onClick={clickEditHandler}
+              >
+                Cancel
+              </S_TextButton>
+            </S_TextButtonContainer>
           ) : (
             <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
               Edit
@@ -213,21 +222,23 @@ function UserInfoArea({ userData, myPage }: User) {
                   Passwords do not match.
                 </S_InvalidMessage>
               )}
+            </S_InputWrap>
+          )}
+          {isChangePassWord ? (
+            <S_TextButtonContainer>
+              <S_TextButton
+                isTextButtonType="changePassword"
+                onClick={updatePassWordHandler}
+              >
+                Save Password
+              </S_TextButton>
               <S_TextButton
                 isTextButtonType="cancel"
                 onClick={clickChangePassWordHandler}
               >
                 Cancel
               </S_TextButton>
-            </S_InputWrap>
-          )}
-          {isChangePassWord ? (
-            <S_TextButton
-              isTextButtonType="changePassword"
-              onClick={updatePassWordHandler}
-            >
-              Save Password
-            </S_TextButton>
+            </S_TextButtonContainer>
           ) : (
             <S_TextButton
               isTextButtonType="changePassword"
