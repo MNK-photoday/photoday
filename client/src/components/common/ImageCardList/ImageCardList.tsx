@@ -24,7 +24,7 @@ export type ImageItemProps = {
   imageId: number;
   mageUrl: string;
   like: boolean;
-  bookmark: false;
+  bookmark: boolean;
 };
 
 function ImageCardList({

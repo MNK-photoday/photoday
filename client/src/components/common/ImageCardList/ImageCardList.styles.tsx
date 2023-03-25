@@ -24,5 +24,8 @@ export const S_ImageCardBox = styled.div<ImageCardBoxProps>`
 
 export const S_LoaderBar = styled.div`
   height: 20px;
-  color: var(--color-primary-black);
+  color: var(--color-primary-gray30);
+  font-size: var(--font-size-m);
+  text-align: center;
+  padding: 10px 0;
 `;
