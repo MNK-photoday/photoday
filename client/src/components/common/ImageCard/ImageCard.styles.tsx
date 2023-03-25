@@ -1,3 +1,4 @@
+import { FaBookmark, FaHeart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { RowFlex } from '../../../styles/GlobalStyles';
@@ -40,21 +41,24 @@ export const S_OverlayControlsBox = styled.div`
 
 export const S_IconBox = styled.div`
   margin-right: 15px;
+`;
 
-  .like-icon {
-    font-size: 20px;
-    color: #fff;
-    &:hover {
-      cursor: pointer;
-      color: var(--color-primary-green);
-    }
+export const Heart = styled(FaHeart)<{ activelike: any }>`
+  font-size: 20px;
+  color: ${({ activelike }) =>
+    activelike === 'true' ? 'var(--color-primary-green)' : '#fff'};
+  &:hover {
+    cursor: pointer;
+    color: var(--color-primary-green);
   }
-  .bookmark-icon {
-    font-size: 18px;
-    color: #fff;
-    &:hover {
-      cursor: pointer;
-      color: var(--color-primary-green);
-    }
+`;
+
+export const Bookmark = styled(FaBookmark)<{ activebookmark: any }>`
+  font-size: 18px;
+  color: ${({ activebookmark }) =>
+    activebookmark === 'true' ? 'var(--color-primary-green)' : '#fff'};
+  &:hover {
+    cursor: pointer;
+    color: var(--color-primary-green);
   }
 `;
