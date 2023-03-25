@@ -247,6 +247,24 @@ function UserInfoArea({ userData, myPage }: User) {
               Change Password
             </S_TextButton>
           )}
+          {!userData.checkAdmin && (
+            <>
+              <S_TextButton
+                isTextButtonType="deleteAccount"
+                onClick={deleteUserHandler}
+              >
+                Delete account
+              </S_TextButton>
+              <S_DeleteAccountText>
+                Once you delete your account, there is no going back. Please be
+                certain.
+              </S_DeleteAccountText>
+            </>
+          )}
+        </S_TextButtonWrap>
+      )}
+      {userData.checkAdmin && (
+        <>
           <S_TextButton
             isTextButtonType="deleteAccount"
             onClick={deleteUserHandler}
@@ -257,7 +275,7 @@ function UserInfoArea({ userData, myPage }: User) {
             Once you delete your account, there is no going back. Please be
             certain.
           </S_DeleteAccountText>
-        </S_TextButtonWrap>
+        </>
       )}
     </S_UserInfoArea>
   );
