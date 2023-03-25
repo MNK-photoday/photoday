@@ -1,17 +1,17 @@
 import React from 'react';
-import { S_GoogleButtonCSS } from './GoogleButton.styles';
+import { S_GoogleButton } from './GoogleButton.styles';
 import { FcGoogle } from 'react-icons/fc';
 
-interface IProps {
+type Children = {
   children: React.ReactNode;
-}
+};
 
-function GoogleButton({ children }: IProps) {
+function GoogleButton({ children }: Children) {
   return (
-    <S_GoogleButtonCSS>
+    <S_GoogleButton type="a" href={import.meta.env.VITE_GOOGLE_AUTH_URL}>
       <FcGoogle className="google-icon" size={20} />
       {children}
-    </S_GoogleButtonCSS>
+    </S_GoogleButton>
   );
 }
 

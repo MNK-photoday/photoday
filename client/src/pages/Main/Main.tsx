@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import MainImage from '../../assets/imgs/image1.jpg';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
@@ -15,10 +15,25 @@ import {
 import MainSkeleton from '../../components/common/Skeleton/MainSkeleton';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
 import { LoadingContext } from '../../context/LoadintContext';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/authSlice';
+import { socialLogin } from '../../api/Login';
 
 function Main() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [activeTextBox, setActiveTextBox] = useState(true);
   const LOADING_CONTENT = useContext(LoadingContext);
+
+  useEffect(() => {
+    if (window.location.href.includes('userId')) {
+      const { userId, userProfileImage } = socialLogin();
+      dispatch(login({ userId, userProfileImage }));
+      const url = window.location.href.split('?')[0];
+      window.history.replaceState({}, document.title, url);
+    }
+  }, [navigate]);
 
   return (
     <ContainerWrap>

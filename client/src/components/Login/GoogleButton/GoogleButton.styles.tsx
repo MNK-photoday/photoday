@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BorderCSS } from '../Input/Input.styles';
 
-export const S_GoogleButtonCSS = styled.button`
+export const S_GoogleButton = styled.a`
   ${BorderCSS}
   display: flex;
   justify-content: center;
