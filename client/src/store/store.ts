@@ -22,5 +22,5 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 
 ! state 상태를 ts로 정의해 주어야 함으로 아래와 같이 RootState 타입을 import 해 지정합니다.
-const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+const auth = useSelector((state: RootState) => state.auth);
 */

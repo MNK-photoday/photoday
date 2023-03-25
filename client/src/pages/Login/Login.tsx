@@ -52,7 +52,8 @@ function Login() {
 
     try {
       const response = await postLogin(loginForm, keepLoggedIn);
-      dispatch(login(response));
+      const { userId, userProfileImage } = response;
+      dispatch(login({ userId, userProfileImage }));
       window.location.href = '/';
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -147,9 +148,6 @@ function Login() {
             <S_LinkTo to="/signup" isaccount="false">
               Sign Up
             </S_LinkTo>
-            <a href="http://43.201.114.127:8080/oauth2/authorization/google">
-              gdgd
-            </a>
           </S_LinkToTextContainer>
         </S_LoginContainer>
       </S_ContentSection>
