@@ -33,12 +33,13 @@ function UserContentSection({ userName, myPage, id, userId }: User) {
   });
   const [currentTap, setCurrentTap] = useState('user');
   const [paginate, setPaginate] = useState(1);
+  const isMyPage = userId === id || userId === undefined;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getUserPosts(
-          myPage ? id : userId,
+          isMyPage ? id : userId,
           paginate,
           currentTap,
         );
