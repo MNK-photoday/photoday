@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { useContext, useState, useEffect } from 'react';
-=======
-import { useState } from 'react';
->>>>>>> 9dbe0701323679a6dd8328df0c57233d9239d90f
 import { Container, ContainerWrap } from '../../styles/Layout';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
 import {
@@ -13,15 +9,12 @@ import {
   S_MainTitle,
 } from './Main.styles';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
-<<<<<<< HEAD
 import { LoadingContext } from '../../context/LoadintContext';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/authSlice';
 import { socialLogin } from '../../api/Login';
-=======
 import MainImageCard from '../../components/common/ImageCard/MainImageCard';
->>>>>>> 9dbe0701323679a6dd8328df0c57233d9239d90f
 
 function Main() {
   const navigate = useNavigate();
