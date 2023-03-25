@@ -39,10 +39,24 @@ export const postLogin = async (
 
   const accessToken = response.headers.authorization;
   const userId = response.data.userId;
+  const userProfileImage = response.data.userProfileImage;
 
   if (keepLoggedIn && accessToken) {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('id', userId);
   }
-  return userId;
+
+  return { userId, userProfileImage };
+};
+
+export const socialLogin = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId: any = urlParams.get('userId');
+  const userProfileImage: string | null = urlParams.get('userProfileImage');
+  const authorization: any = `Bearer ${urlParams.get('accessToken')}`;
+
+  localStorage.setItem('accessToken', authorization);
+  localStorage.setItem('id', userId);
+
+  return { userId, userProfileImage };
 };

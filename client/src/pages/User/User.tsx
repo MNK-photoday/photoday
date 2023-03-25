@@ -35,7 +35,7 @@ function Users() {
       }
     };
     fetchData();
-  }, [userId, followerCount, followingCount, myPage]);
+  }, [userId, followerCount, followingCount]);
 
   return (
     <ContainerWrap>

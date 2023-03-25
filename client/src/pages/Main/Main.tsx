@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
 import {
@@ -9,10 +9,24 @@ import {
   S_MainTitle,
 } from './Main.styles';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
+import { LoadingContext } from '../../context/LoadintContext';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/authSlice';
+import { socialLogin } from '../../api/Login';
 import MainImageCard from '../../components/common/ImageCard/MainImageCard';
 
 function Main() {
+  const dispatch = useDispatch();
   const [activeTextBox, setActiveTextBox] = useState(true);
+
+  useEffect(() => {
+    if (window.location.href.includes('userId')) {
+      const { userId, userProfileImage } = socialLogin();
+      dispatch(login({ userId, userProfileImage }));
+      const url = window.location.href.split('?')[0];
+      window.history.replaceState({}, document.title, url);
+    }
+  }, []);
 
   return (
     <ContainerWrap>
