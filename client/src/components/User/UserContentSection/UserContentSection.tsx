@@ -99,17 +99,10 @@ function UserContentSection({ userName, myPage, id, userId }: User) {
         // 아이콘 문구 고민 중
         <S_NoPostsGuideContainer>
           <S_NoPostsGuideIcon>
-            <CiImageOff size={150} />
+            <CiImageOff size={130} />
+            {/* <BsCamera size={110} /> */}
           </S_NoPostsGuideIcon>
-          <S_NoPostsGuide>No posts found</S_NoPostsGuide>
-          {/* <S_NoPostsGuideIcon>
-            <CiCamera size={150} />
-          </S_NoPostsGuideIcon>
-          <S_NoPostsGuide>No posts found</S_NoPostsGuide> */}
-          {/* <S_NoPostsGuideIcon>
-            <BsCamera size={130} />
-          </S_NoPostsGuideIcon>
-          <S_NoPostsGuide>Have no posts</S_NoPostsGuide> */}
+          <S_NoPostsGuide>Have no posts</S_NoPostsGuide>
         </S_NoPostsGuideContainer>
       )}
     </>

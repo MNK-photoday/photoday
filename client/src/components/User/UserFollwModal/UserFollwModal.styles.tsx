@@ -8,21 +8,7 @@ export const S_UserFollwModalContainer = styled.div`
   border: var(--color-input-box-line);
   border-radius: var(--box-radius-3);
   background-color: var(--white);
-
-  /* 
-  위치 고민 중입니다...
-  1번 위치
-  */
-  top: 280px;
-  left: 300px;
-
-  /* 2번 위치 */
-  /* top: 340px;
-  left: 300px; */
-
-  /* 3번 위치 */
-  /* top: 340px;
-  display: flex; */
+  top: 270px;
 `;
 
 export const S_UserFollwListContainer = styled.div`
