@@ -6,22 +6,20 @@ import {
   S_UserProfile,
   S_UserIntroductionWrap,
   S_UserName,
-  S_UserDescription,
 } from './ModalListItem.styles';
 import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
 import { Follow } from './UserFollwModal';
-import { setData } from '../../../store/userSlice';
 import { patchFollow } from '../../../api/User';
 import { setFollower, setfollowing } from '../../../store/userSlice';
 
 type FollowData = {
   user: Follow;
   tap: string;
+  setFollowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function ModalListItem({ user, tap }: FollowData) {
+function ModalListItem({ user, tap, setFollowModal }: FollowData) {
   const dispatch = useDispatch();
-  console.log('뭐고', user);
   const followHandler = async (type: string) => {
     try {
       await patchFollow(user.userId);
@@ -47,7 +45,10 @@ function ModalListItem({ user, tap }: FollowData) {
     <S_ModalListItemContainer>
       <S_UserProfile alt="user profile" src={user.userProfileImage} />
       <S_UserIntroductionWrap>
-        <S_UserName to={`/users/${user.userId}`}>
+        <S_UserName
+          to={`/users/${user.userId}`}
+          onClick={() => setFollowModal(false)}
+        >
           {user.name.length > 10 ? `${user.name.slice(0, 10)}...` : user.name}
         </S_UserName>
       </S_UserIntroductionWrap>

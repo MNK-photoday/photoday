@@ -23,8 +23,8 @@ export type User = {
 
 function UserThumnailArea({ userData, myPage }: User) {
   const dispatch = useDispatch();
-  const [followerModal, setFollowerModal] = useState(false);
-  const [followingModal, setFollowingModal] = useState(false);
+  const [followModal, setFollowModal] = useState(false);
+  const [currentTap, setCurrentTap] = useState('follower');
   const [file, setFile] = useState<UploadImage | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -33,13 +33,13 @@ function UserThumnailArea({ userData, myPage }: User) {
   }, [file]);
 
   const clickFollowerModalHandler = () => {
-    setFollowerModal(!followerModal);
-    setFollowingModal(false);
+    setFollowModal(!followModal);
+    setCurrentTap('follower');
   };
 
   const clickFollowingModalHandler = () => {
-    setFollowingModal(!followingModal);
-    setFollowerModal(false);
+    setFollowModal(!followModal);
+    setCurrentTap('following');
   };
 
   const uploadClickHandler = () => {
@@ -145,18 +145,11 @@ function UserThumnailArea({ userData, myPage }: User) {
           </Button>
         </>
       )}
-      {followerModal && (
+      {followModal && (
         <UserFollwModal
-          tap="follower"
+          tap={currentTap === 'follower' ? 'follower' : 'following'}
           myPage={myPage}
-          setFollowerModal={setFollowerModal}
-        />
-      )}
-      {followingModal && (
-        <UserFollwModal
-          tap="following"
-          myPage={myPage}
-          setFollowingModal={setFollowingModal}
+          setFollowModal={setFollowModal}
         />
       )}
     </S_UserThumnailArea>

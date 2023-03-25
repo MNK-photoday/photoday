@@ -16,7 +16,10 @@ function Users() {
   const id = useSelector((state: RootState) => state.auth.id); // my id
   const userData = useSelector((state: RootState) => state.user);
   const myPage = useSelector((state: RootState) => state.user.myPage);
-  const checkFollow = useSelector(
+  const followerCount = useSelector(
+    (state: RootState) => state.user.followerCount,
+  );
+  const followingCount = useSelector(
     (state: RootState) => state.user.followingCount,
   );
 
@@ -32,7 +35,7 @@ function Users() {
       }
     };
     fetchData();
-  }, [userId, checkFollow]);
+  }, [userId, followerCount, followingCount, myPage]);
 
   return (
     <ContainerWrap>

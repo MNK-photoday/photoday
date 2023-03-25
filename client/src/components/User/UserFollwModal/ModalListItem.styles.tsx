@@ -43,7 +43,3 @@ export const S_UserName = styled(Link)`
   margin-right: 15px;
   height: 40px;
 `;
-
-export const S_UserDescription = styled.span`
-  font-size: var(--font-size-xs);
-`;

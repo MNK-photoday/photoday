@@ -22,16 +22,10 @@ export type Follow = {
 type Modal = {
   tap: 'follower' | 'following';
   myPage: boolean;
-  setFollowerModal?: React.Dispatch<React.SetStateAction<boolean>>;
-  setFollowingModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setFollowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function UserFollwModal({
-  tap,
-  myPage,
-  setFollowerModal,
-  setFollowingModal,
-}: Modal) {
+function UserFollwModal({ tap, myPage, setFollowModal }: Modal) {
   const [followList, setFollowList] = useState<Follow[]>([]);
   const id = useSelector((state: RootState) => state.auth.id);
   const followerCount = useSelector(
@@ -46,7 +40,6 @@ function UserFollwModal({
     const fetchData = async () => {
       try {
         const response = await getFollows(myPage ? id : userId);
-
         if (tap === 'follower') {
           setFollowList(response.data.userFollower);
         } else {
@@ -59,20 +52,17 @@ function UserFollwModal({
     fetchData();
   }, [tap, followerCount, followingCount]);
 
-  const clickModalHandler = () => {
-    if (tap === 'follower' && setFollowerModal) {
-      setFollowerModal(false);
-    } else if (tap === 'following' && setFollowingModal) {
-      setFollowingModal(false);
-    }
-  };
-
   return (
     <S_UserFollwModalContainer>
       <S_UserFollwListContainer>
         {followList.length ? (
           followList.map((user) => (
-            <ModalListItem key={user.userId} user={user} tap={tap} />
+            <ModalListItem
+              key={user.userId}
+              user={user}
+              tap={tap}
+              setFollowModal={setFollowModal}
+            />
           ))
         ) : (
           <S_NoFollowGuide>
@@ -86,7 +76,7 @@ function UserFollwModal({
         shape="default"
         size="XXLarge"
         fullWidth
-        clickEventHandler={clickModalHandler}
+        clickEventHandler={() => setFollowModal(false)}
       >
         Close
       </Button>
