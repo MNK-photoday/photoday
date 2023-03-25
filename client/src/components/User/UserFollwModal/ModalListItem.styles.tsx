@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const S_ModalListItemContainer = styled.div`
   display: flex;
@@ -33,12 +34,12 @@ export const S_UserIntroductionWrap = styled.div`
   width: 50%;
 `;
 
-export const S_UserName = styled.span`
+export const S_UserName = styled(Link)`
+  display: flex;
+  align-items: center;
   font-size: var(--font-size-sm);
   font-weight: bold;
   margin-bottom: 5px;
-`;
-
-export const S_UserDescription = styled.span`
-  font-size: var(--font-size-xs);
+  margin-right: 15px;
+  height: 40px;
 `;

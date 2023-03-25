@@ -18,12 +18,12 @@ import { BsCamera } from 'react-icons/bs';
 
 type User = {
   userName: string;
-  isMyPage: boolean;
+  myPage: boolean;
   id: string | null;
   userId: string | undefined;
 };
 
-function UserContentSection({ userName, isMyPage, id, userId }: User) {
+function UserContentSection({ userName, myPage, id, userId }: User) {
   const [posts, setPosts] = useState<Image[]>([]);
   const [pagination, setPagination] = useState<PageInfo>({
     pageNumber: 1,
@@ -33,6 +33,7 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
   });
   const [currentTap, setCurrentTap] = useState('user');
   const [paginate, setPaginate] = useState(1);
+  const isMyPage = userId === id || userId === undefined;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +73,7 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
           <S_UserPageSubTitlePoint>to</S_UserPageSubTitlePoint>
           day
         </S_Tab>
-        {isMyPage && (
+        {myPage && (
           <S_Tab className="bookmark" onClick={bookmarkTapHandler}>
             Bookmark
           </S_Tab>
@@ -95,20 +96,11 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
           <Pagination pagination={pagination} setPaginate={setPaginate} />
         </>
       ) : (
-        // 아이콘 문구 고민 중
         <S_NoPostsGuideContainer>
           <S_NoPostsGuideIcon>
-            <CiImageOff size={150} />
+            <CiImageOff size={130} />
           </S_NoPostsGuideIcon>
-          <S_NoPostsGuide>No posts found</S_NoPostsGuide>
-          {/* <S_NoPostsGuideIcon>
-            <CiCamera size={150} />
-          </S_NoPostsGuideIcon>
-          <S_NoPostsGuide>No posts found</S_NoPostsGuide> */}
-          {/* <S_NoPostsGuideIcon>
-            <BsCamera size={130} />
-          </S_NoPostsGuideIcon>
-          <S_NoPostsGuide>Have no posts</S_NoPostsGuide> */}
+          <S_NoPostsGuide>Have no posts</S_NoPostsGuide>
         </S_NoPostsGuideContainer>
       )}
     </>

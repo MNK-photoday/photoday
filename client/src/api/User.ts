@@ -93,10 +93,10 @@ export const updateFile = async (file: File) => {
   return response.data;
 };
 
-export const getFollows = async () => {
+export const getFollows = async (userId: string | null | undefined) => {
   const token = localStorage.getItem('accessToken');
   const response = await axios.get<AxiosResponse>(
-    `${import.meta.env.VITE_APP_API}/follows`,
+    `${import.meta.env.VITE_APP_API}/follows/${userId}`,
     {
       headers: {
         Authorization: token,
@@ -158,6 +158,20 @@ export const getUserPosts = async (
         size: 6,
         page: paginate,
         sort: 'imageId,desc',
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const deleteProfile = async () => {
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.delete<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/users/delete/profile-image`,
+    {
+      headers: {
+        Authorization: token,
       },
     },
   );

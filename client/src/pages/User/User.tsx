@@ -8,37 +8,45 @@ import { RootState } from '../../store/store';
 import { setData } from '../../store/userSlice';
 import UserInfoArea from '../../components/User/UserInfoArea/UserInfoArea';
 import UserThumnailArea from '../../components/User/UserThumnailArea/UserThumnailArea';
-import UserPageSubTitle from '../../components/User/UserContentSection/UserContentSection';
+import UserContentSection from '../../components/User/UserContentSection/UserContentSection';
 
 function Users() {
   const dispatch = useDispatch();
   const { userId } = useParams(); // 보려고 하는 user id
   const id = useSelector((state: RootState) => state.auth.id); // my id
   const userData = useSelector((state: RootState) => state.user);
-  const isMyPage = userId === id || userId === undefined;
+  const myPage = useSelector((state: RootState) => state.user.myPage);
+  const followerCount = useSelector(
+    (state: RootState) => state.user.followerCount,
+  );
+  const followingCount = useSelector(
+    (state: RootState) => state.user.followingCount,
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getUser(isMyPage ? id : userId);
+        const response = await getUser(
+          userId === id || userId === undefined ? id : userId,
+        );
         dispatch(setData(response));
       } catch (error) {
         alert(error);
       }
     };
     fetchData();
-  }, [userId]);
+  }, [userId, followerCount, followingCount, myPage]);
 
   return (
     <ContainerWrap>
       <S_UserPageContainer>
         <S_UserSection>
-          <UserThumnailArea userData={userData} isMyPage={isMyPage} />
-          <UserInfoArea userData={userData} isMyPage={isMyPage} />
+          <UserThumnailArea userData={userData} myPage={myPage} />
+          <UserInfoArea userData={userData} myPage={myPage} />
         </S_UserSection>
-        <UserPageSubTitle
+        <UserContentSection
           userName={userData.name}
-          isMyPage={isMyPage}
+          myPage={myPage}
           id={id}
           userId={userId}
         />

@@ -12,18 +12,19 @@ import {
 import Button from '../../common/Button/Button';
 import UserFollwModal from '../UserFollwModal/UserFollwModal';
 import { UserData } from '../../../store/userSlice';
-import { updateFile } from '../../../api/User';
+import { updateFile, deleteProfile } from '../../../api/User';
 import { setData } from '../../../store/userSlice';
 import { UploadImage } from '../../../pages/Upload/Upload';
 
 export type User = {
   userData: UserData;
-  isMyPage: boolean;
+  myPage: boolean;
 };
 
-function UserThumnailArea({ userData, isMyPage }: User) {
+function UserThumnailArea({ userData, myPage }: User) {
   const dispatch = useDispatch();
   const [followModal, setFollowModal] = useState(false);
+  const [currentTap, setCurrentTap] = useState('follower');
   const [file, setFile] = useState<UploadImage | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -31,8 +32,14 @@ function UserThumnailArea({ userData, isMyPage }: User) {
     uploadHandler();
   }, [file]);
 
-  const clickFollowModalHandler = () => {
+  const clickFollowerModalHandler = () => {
     setFollowModal(!followModal);
+    setCurrentTap('follower');
+  };
+
+  const clickFollowingModalHandler = () => {
+    setFollowModal(!followModal);
+    setCurrentTap('following');
   };
 
   const uploadClickHandler = () => {
@@ -54,7 +61,7 @@ function UserThumnailArea({ userData, isMyPage }: User) {
   const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
       const fileList = e.target.files[0];
-      console.log(fileList);
+
       setFile((state) => {
         return {
           ...state,
@@ -89,20 +96,29 @@ function UserThumnailArea({ userData, isMyPage }: User) {
     }
   };
 
+  const deleteProfileHandler = async () => {
+    try {
+      const response = await deleteProfile();
+      dispatch(setData(response));
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <S_UserThumnailArea>
       <S_UserProfileIamge alt="user profile" src={userData.profileImageUrl} />
       <S_UserFollowContainer>
-        <S_UserFollowWrap onClick={clickFollowModalHandler}>
+        <S_UserFollowWrap onClick={clickFollowerModalHandler}>
           <S_UserFollowCount>{userData.followerCount}</S_UserFollowCount>
           <S_UserFollow>Follower</S_UserFollow>
         </S_UserFollowWrap>
-        <S_UserFollowWrap onClick={clickFollowModalHandler}>
+        <S_UserFollowWrap onClick={clickFollowingModalHandler}>
           <S_UserFollowCount>{userData.followingCount}</S_UserFollowCount>
           <S_UserFollow>Following</S_UserFollow>
         </S_UserFollowWrap>
       </S_UserFollowContainer>
-      {isMyPage && (
+      {myPage && (
         <>
           <input
             type="file"
@@ -119,12 +135,23 @@ function UserThumnailArea({ userData, isMyPage }: User) {
           >
             Upload Image
           </Button>
-          <Button variant="point" shape="default" size="XLarge">
+          <Button
+            variant="point"
+            shape="default"
+            size="XLarge"
+            clickEventHandler={deleteProfileHandler}
+          >
             Remove Image
           </Button>
         </>
       )}
-      {followModal && <UserFollwModal setFollowModal={setFollowModal} />}
+      {followModal && (
+        <UserFollwModal
+          tap={currentTap === 'follower' ? 'follower' : 'following'}
+          myPage={myPage}
+          setFollowModal={setFollowModal}
+        />
+      )}
     </S_UserThumnailArea>
   );
 }

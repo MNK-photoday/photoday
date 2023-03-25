@@ -75,9 +75,6 @@ const TextButtonCss = {
 
   cancel: css`
     color: var(--color-primary-black);
-    position: relative;
-    top: 17.5px;
-    left: 100px;
   `,
 };
 
@@ -85,7 +82,8 @@ export const S_TextButton = styled.button<{ isTextButtonType: TextButtonType }>`
   font-size: var(--font-size-sm);
   display: flex;
   text-decoration: underline;
-  width: 110px;
+  width: 104px;
+  margin-right: 20px;
   ${({ isTextButtonType }) => TextButtonCss[isTextButtonType]}
 
   &:hover {
@@ -129,4 +127,8 @@ export const S_Textarea = styled.textarea`
   &:focus {
     outline: 2px solid var(--color-primary-green);
   }
+`;
+
+export const S_TextButtonContainer = styled.div`
+  display: flex;
 `;
