@@ -4,7 +4,7 @@ import { Flex, ColFlex } from '../../../styles/GlobalStyles';
 export const S_UserPageSubTitleWrap = styled.div<{ currentTap: string }>`
   display: flex;
   align-items: center;
-  margin: 13% 8% 2% 8%;
+  margin: 15% 8% 0% 8%;
   height: 5%;
   color: var(--color-primary-black);
   border-bottom: 1px solid #d9d9d96a;
