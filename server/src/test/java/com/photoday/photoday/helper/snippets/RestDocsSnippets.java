@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.headers.RequestHeadersSnippet;
 import org.springframework.restdocs.headers.ResponseHeadersSnippet;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
@@ -28,8 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -168,6 +168,12 @@ public class RestDocsSnippets {
         return new MultiResponseDto<>(content, page);
     }
 
+    public static RequestHeadersSnippet getRequestHeadersAccessToken() {
+        return requestHeaders(
+                headerWithName(HttpHeaders.AUTHORIZATION).description("access-token. jwt 액세스 토큰")
+        );
+    }
+
     public static RequestParametersSnippet getRequestParameterImageDtoBookmarkAndSearchResponse() {
         return requestParameters(
                 parameterWithName("page").description("페이지 번호"),
@@ -208,7 +214,9 @@ public class RestDocsSnippets {
                 fieldWithPath("data.reportCount").type(JsonFieldType.NUMBER).description("받은 신고 수"),
                 fieldWithPath("data.followerCount").type(JsonFieldType.NUMBER).description("좋아요 받은 수"),
                 fieldWithPath("data.followingCount").type(JsonFieldType.NUMBER).description("좋아요 누른 수"),
-                fieldWithPath("data.checkFollow").type(JsonFieldType.BOOLEAN).description("follow 누른 유저인지 여부")
+                fieldWithPath("data.checkFollow").type(JsonFieldType.BOOLEAN).description("follow 누른 유저인지 여부"),
+                fieldWithPath("data.myPage").type(JsonFieldType.BOOLEAN).description("본인 페이지 인지 여부"),
+                fieldWithPath("data.checkAdmin").type(JsonFieldType.BOOLEAN).description("로그인 유저가 관리자인지 여부")
         );
     }
 
@@ -226,6 +234,8 @@ public class RestDocsSnippets {
                 fieldWithPath("data.owner.followerCount").type(JsonFieldType.NUMBER).description("이미지 등록한 유저 팔로우 받은 수"),
                 fieldWithPath("data.owner.followingCount").type(JsonFieldType.NUMBER).description("이미지 등록한 유저 팔로우 하는 수"),
                 fieldWithPath("data.owner.checkFollow").type(JsonFieldType.BOOLEAN).description("이미지 등록한 유저 팔로우헀는지 여부(본인인 경우 false)"),
+                fieldWithPath("data.owner.myPage").type(JsonFieldType.BOOLEAN).description("ㅇㅇ"),
+                fieldWithPath("data.owner.checkAdmin").type(JsonFieldType.BOOLEAN).description("이미지 등록한 유저 팔로우헀는지 여부(본인인 경우 false)"),
                 fieldWithPath("data.imageUrl").type(JsonFieldType.STRING).description("이미지 Url"),
                 fieldWithPath("data.like").type(JsonFieldType.BOOLEAN).description("현재 유저의 이미지 좋아요 여부"),
                 fieldWithPath("data.likeCount").type(JsonFieldType.NUMBER).description("이미지 좋아요 받은 수"),

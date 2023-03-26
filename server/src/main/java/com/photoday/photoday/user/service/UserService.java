@@ -18,7 +18,7 @@ public interface UserService {
 
     User findVerifiedUser(Long userId);
 
-    void checkUserReportCount(Long userId);
+    void checkUserReportCount(User user);
 
     User findUserByEmail(String email);
 

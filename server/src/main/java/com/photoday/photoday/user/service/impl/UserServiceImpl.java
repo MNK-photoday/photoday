@@ -26,8 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.photoday.photoday.excpetion.ExceptionCode.PASSWORD_NOT_MATCH;
-import static com.photoday.photoday.excpetion.ExceptionCode.REPORT_COUNT_EXCEEDS_LIMIT;
+import static com.photoday.photoday.excpetion.ExceptionCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +55,7 @@ public class UserServiceImpl implements UserService {
         String name = getNameFromUser(user);
         user.setName(name);
         User createdUser = userRepository.save(user);
-        return userMapper.userToUserResponse(createdUser, null, false);
+        return userMapper.userToUserResponse(createdUser, null);
     }
 
     @Override
@@ -75,20 +74,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto.Response getUser(long userId) {
-        Long loginUserId = authUserService.checkLogin();
+//        Long loginUserId = authUserService.checkLogin();
+//        boolean checkAdmin = checkAdmin(loginUserId);
         User targetUser = findVerifiedUser(userId);
+        User loginUser = authUserService.getLoginUser().orElse(null);
 
-        boolean checkAdmin = checkAdmin(loginUserId);
-
-        return userMapper.userToUserResponse(targetUser, loginUserId, checkAdmin);
+        return userMapper.userToUserResponse(targetUser, loginUser);
     }
 
     @Override
     public UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile) {
         User user = userMapper.userUpdateToUser(userUpdateDto);
-        Long loginUserId = authUserService.getLoginUserId();
-        User verifiedUser = findVerifiedUser(loginUserId);
-        boolean checkAdmin = checkAdmin(loginUserId);
+//        Long loginUserId = authUserService.getLoginUserId();
+//        User verifiedUser = findVerifiedUser(loginUserId);
+//        boolean checkAdmin = checkAdmin(loginUserId);
+        User loginUser = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         Optional.ofNullable(multipartFile).ifPresent(file -> {
             String url = null;
@@ -99,20 +99,21 @@ public class UserServiceImpl implements UserService {
             } catch (NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
             }
-            verifiedUser.setProfileImageUrl(url);
+            loginUser.setProfileImageUrl(url);
         });
-        Optional.ofNullable(user.getDescription()).ifPresent(verifiedUser::setDescription);
-        return userMapper.userToUserResponse(verifiedUser, loginUserId, checkAdmin);
+        Optional.ofNullable(user.getDescription()).ifPresent(loginUser::setDescription);
+        return userMapper.userToUserResponse(loginUser, loginUser);
     }
 
     @Override
     public UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto) {
         if (updateUserPasswordDto.getCheckPassword().equals(updateUserPasswordDto.getPassword())) {
-            Long loginUserId = authUserService.getLoginUserId();
-            User verifiedUser = findVerifiedUser(loginUserId);
-            verifiedUser.setPassword(passwordEncoder.encode(updateUserPasswordDto.getPassword()));
-            boolean checkAdmin = checkAdmin(loginUserId);
-            return userMapper.userToUserResponse(verifiedUser, loginUserId, checkAdmin);
+//            Long loginUserId = authUserService.getLoginUserId();
+//            User loginUser = findVerifiedUser(loginUserId);
+//            boolean checkAdmin = checkAdmin(verifiedUser.get);
+            User loginUser = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+            loginUser.setPassword(passwordEncoder.encode(updateUserPasswordDto.getPassword()));
+            return userMapper.userToUserResponse(loginUser, loginUser);
         } else {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
@@ -123,7 +124,7 @@ public class UserServiceImpl implements UserService {
         Long loginUserId = authUserService.getLoginUserId();
 
         List<String> roles = findVerifiedUser(loginUserId).getRoles();
-        if(roles.contains("ADMIN") || userId.equals(loginUserId)) {
+        if (roles.contains("ADMIN") || userId.equals(loginUserId)) {
             userRepository.deleteById(userId);
         } else {
             throw new CustomException(ExceptionCode.USER_INFO_NOT_MATCH);
@@ -132,12 +133,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto.Response deleteProfileImage() {
-        Long loginUserId = authUserService.getLoginUserId();
-        User verifiedUser = findVerifiedUser(loginUserId);
-        boolean checkAdmin = checkAdmin(loginUserId);
-        verifiedUser.setProfileImageUrl("https://ifh.cc/g/zPrPfv.png");
+//        Long loginUserId = authUserService.getLoginUserId();
+//        User loginUser = findVerifiedUser(loginUserId);
+//        boolean checkAdmin = checkAdmin(loginUserId);
+        User loginUser = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        loginUser.setProfileImageUrl("https://ifh.cc/g/zPrPfv.png");
 
-        return userMapper.userToUserResponse(verifiedUser, loginUserId, checkAdmin);
+        return userMapper.userToUserResponse(loginUser, loginUser);
     }
 
     @Override
@@ -147,8 +149,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void checkUserReportCount(Long userId) {
-        List<Report> reportByUser = reportRepository.findReportByUser_UserId(userId);
+    public void checkUserReportCount(User user) {
+        List<Report> reportByUser = user.getReports();
         if (reportByUser.size() >= 5) {
             throw new CustomException(REPORT_COUNT_EXCEEDS_LIMIT);
         }

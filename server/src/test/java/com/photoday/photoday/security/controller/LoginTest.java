@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.photoday.photoday.security.dto.LoginDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class LoginTest {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void clear() {
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("login: 정상 작동")
