@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_FormContainer = styled.form`
-  padding: 0 50px;
   height: 100vh;
 `;
 

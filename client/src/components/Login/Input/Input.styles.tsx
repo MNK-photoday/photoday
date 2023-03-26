@@ -43,6 +43,10 @@ export const S_CheckBox = styled.input<{ isChecked: boolean }>`
       : undefined};
   background-color: ${({ isChecked }) =>
     isChecked && 'var(--color-primary-green)'};
+
+  @media screen and (max-width: 1024px) {
+    background: #ffffffc7;
+  }
 `;
 
 export const S_Label = styled.label`
