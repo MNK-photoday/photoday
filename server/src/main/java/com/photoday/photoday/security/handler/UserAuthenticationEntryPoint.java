@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint { //TODO import 정리
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 

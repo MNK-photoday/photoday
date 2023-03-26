@@ -14,7 +14,7 @@ import static io.netty.util.ResourceLeakDetector.setLevel;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SimpleEmailSendable implements EmailSendable {
+public class SimpleEmailSendable implements EmailSendable { //TODO import 정리
     private final JavaMailSender javaMailSender;
 
     @Value("${mail.smtp.username}")

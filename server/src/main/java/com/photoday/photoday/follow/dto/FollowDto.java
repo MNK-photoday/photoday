@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.util.List;
 
-public class FollowDto {
+public class FollowDto { //TODO 밑에 3개 멤버 클래스 지우기
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter

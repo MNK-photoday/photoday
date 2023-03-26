@@ -96,7 +96,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto.Response getImage(long imageId) {
         Image image = findVerifiedImage(imageId);
-        image.setViewCount(image.getViewCount() + 1);
+        image.setViewCount(image.getViewCount() + 1); //TODO 숫자 더하는 쿼리 작성해서 한 줄로 합치기?
         Image save = imageRepository.save(image);
         return imageMapper.imageToResponse(save);
     }
@@ -112,7 +112,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto.Response updateBookmark(long imageId) {
         Image image = findVerifiedImage(imageId);
-        Long userId = authUserService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId(); //TODO getLoginUser 메서드 만들어서 한 줄로 합치기
         User user = userService.findVerifiedUser(userId);
 
         Optional<Bookmark> bookmark = image.getBookmarkList().stream()
@@ -148,7 +148,7 @@ public class ImageServiceImpl implements ImageService {
     public ImageDto.Response createReport(long imageId) {
         Image image = findVerifiedImage(imageId);
 
-        Long userId = authUserService.getLoginUserId();
+        Long userId = authUserService.getLoginUserId(); //TODO getLoginUser 메서드 만들어서 한 줄로 합치기
         if (Objects.equals(image.getUser().getUserId(), userId)) {
             throw new CustomException(ExceptionCode.CANNOT_REPORT_MYSELF);
         }
@@ -187,7 +187,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto.Response updateLike(long imageId) {
         Image image = findVerifiedImage(imageId);
-        Long userId = authUserService.getLoginUserId(); //TODO 리팩토링 필요
+        Long userId = authUserService.getLoginUserId(); //TODO getLoginUser 메서드 만들어서 한 줄로 합치기
         User user = userService.findVerifiedUser(userId);
 
         Optional<Like> like = image.getLikeList().stream()
@@ -219,7 +219,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<ImageDto.Response> getMainImages() {
+    public List<ImageDto.Response> getMainImages() { //TODO pageResponse로 변경
         Pageable pageRequest = PageRequest.of(0, 10);
         Page<Image> page = imageRepository.findMainImages(pageRequest);
         List<Image> mainImages = page.getContent();
@@ -247,7 +247,7 @@ public class ImageServiceImpl implements ImageService {
         return tagList.stream()
                 .map(tagService::verifyTag)
                 .map(this::tagToImageTag)
-                .peek(tag -> tag.setImage(image))
+                .peek(tag -> tag.setImage(image)) //TODO IMAGETAG로 바꾸기? 헷갈림.
                 .collect(Collectors.toList());
     }
 

@@ -41,7 +41,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         checkUserStatus(user);
 
-        redirect(request, response, user); //TODO 밴처리 후 에러 처리
+        redirect(request, response, user);
     }
 
     private User saveUser(String email) {

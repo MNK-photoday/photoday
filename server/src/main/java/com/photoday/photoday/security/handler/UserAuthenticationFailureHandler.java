@@ -31,7 +31,7 @@ public class UserAuthenticationFailureHandler implements AuthenticationFailureHa
         } else if (exception instanceof UsernameNotFoundException){
             errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
         } else {
-            errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED);
+            errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED); //TODO message까지 주는 건 어떠신지
         }
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

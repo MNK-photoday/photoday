@@ -45,7 +45,7 @@ public class User {
     @Column(nullable = false)
     @Default
     @Enumerated(EnumType.STRING)
-    private UserStatus status = UserStatus.USER_ACTIVE; // 보류 -> 백업데이터 고려, DB 2개
+    private UserStatus status = UserStatus.USER_ACTIVE;
 
     private LocalDateTime banTime;
 
@@ -75,7 +75,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Default
-    private List<Like> likes = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
+    private List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Default
@@ -130,7 +130,7 @@ public class User {
 
     public enum UserStatus {
         USER_ACTIVE("활동중"),
-        USER_BANED("정지회원");
+        USER_BANED("정지회원"); //TODO BANNED 로 수정
 
         @Getter
         private String status;

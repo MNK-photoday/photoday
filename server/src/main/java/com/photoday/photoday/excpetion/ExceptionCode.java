@@ -3,7 +3,7 @@ package com.photoday.photoday.excpetion;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-public enum ExceptionCode { //TODO 3 단어로 맞추기?
+public enum ExceptionCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원 정보가 없습니다."),
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
     REPORT_COUNT_EXCEEDS_LIMIT(HttpStatus.BAD_REQUEST, "신고 개수가 5개 이상입니다."),

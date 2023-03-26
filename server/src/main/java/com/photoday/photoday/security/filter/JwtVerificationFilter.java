@@ -49,7 +49,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                     String username = (String) claims.get("username");
                     User user = userService.findUserByEmail(username);
 
-                    checkUserStatus(user);
+                    checkUserStatus(user); //TODO 지금 이 부분 안 먹는 듯? 로그인 됨.
 
                     setAuthenticationToContext(claims);
                 }

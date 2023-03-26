@@ -29,10 +29,10 @@ public class Image {
     @Column(nullable = false)
     private int viewCount;
 
-    @CreatedDate
+    @CreatedDate  //TODO updatable false 추가?
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false) //TODO unique true 추가?
     private String imageHashValue;
 
     @ManyToOne

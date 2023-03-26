@@ -17,7 +17,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@Service(value = "s3Service")
+@Service(value = "s3Service") //TODO value 뭐에용?
 @RequiredArgsConstructor
 @Slf4j
 public class S3ServiceImpl implements S3Service {

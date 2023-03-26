@@ -30,7 +30,7 @@ public class UserMapper {
         return user;
     }
 
-    public UserDto.Response userToUserResponse(User targetUser, Long userId, boolean checkAdmin) { //TODO 팔로우 확인
+    public UserDto.Response userToUserResponse(User targetUser, Long userId, boolean checkAdmin) {
         boolean checkFollow = userId != null && targetUser.getFollower().stream().anyMatch(fw -> Objects.equals(fw.getFollowing().getUserId(), userId));
 
         UserDto.Response response = new UserDto.Response();
@@ -47,7 +47,7 @@ public class UserMapper {
         response.setMyPage(userId != null && userId.equals(targetUser.getUserId()));
         response.setCheckAdmin(checkAdmin);
 
-        response.setMyPage(userId != null && userId.equals(targetUser.getUserId()));
+        response.setMyPage(userId != null && userId.equals(targetUser.getUserId())); //TODO 중복됨
 
         return response;
     }
