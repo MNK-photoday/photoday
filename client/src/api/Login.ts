@@ -42,8 +42,9 @@ export const postLogin = async (
   const userProfileImage = response.data.userProfileImage;
 
   if (keepLoggedIn && accessToken) {
-    localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('id', userId);
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('userProfileImage', userProfileImage);
   }
 
   return { userId, userProfileImage };
@@ -52,11 +53,12 @@ export const postLogin = async (
 export const socialLogin = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const userId: any = urlParams.get('userId');
-  const userProfileImage: string | null = urlParams.get('userProfileImage');
+  const userProfileImage: any = urlParams.get('userProfileImage');
   const authorization: any = `Bearer ${urlParams.get('accessToken')}`;
 
-  localStorage.setItem('accessToken', authorization);
   localStorage.setItem('id', userId);
+  localStorage.setItem('accessToken', authorization);
+  localStorage.setItem('userProfileImage', userProfileImage);
 
   return { userId, userProfileImage };
 };

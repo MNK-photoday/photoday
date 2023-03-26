@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ColFlex } from '../../styles/GlobalStyles';
+import { ColFlex } from '../../../styles/GlobalStyles';
 
 export const S_TermsGuideModal = styled.div`
   position: fixed;
