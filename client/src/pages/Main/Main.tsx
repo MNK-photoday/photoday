@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
 import {
@@ -9,7 +9,6 @@ import {
   S_MainTitle,
 } from './Main.styles';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
-import { LoadingContext } from '../../context/LoadintContext';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/authSlice';
 import { socialLogin } from '../../api/Login';
