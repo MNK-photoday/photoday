@@ -8,6 +8,10 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        hibernate:
+          open-in-view: true
   output:
     ansi:
       enabled: always

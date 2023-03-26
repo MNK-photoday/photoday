@@ -9,6 +9,7 @@ import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
+import com.photoday.photoday.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
@@ -45,6 +47,8 @@ class ImageServiceImplTest {
     AuthUserService authUserService;
     @MockBean
     S3Service s3Service;
+    @MockBean
+    UserService userService;
 
     @BeforeEach
     void dropRepository() {
@@ -58,13 +62,15 @@ class ImageServiceImplTest {
     void createImageTest() throws IOException, NoSuchAlgorithmException {
         // given
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         TagDto tagDto = new TagDto(List.of("background", "blue"));
         MultipartFile multipartFile = getMultipartFile("image/jpeg");
 
         given(s3Service.getMd5Hash(any(MultipartFile.class))).willReturn("imageHashValue");
         given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://createdImageUrl.jpg");
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
+        given(userService.checkAdmin(anyLong())).willReturn(false);
 
         // when
         ImageDto.Response image = imageService.createImage(tagDto, multipartFile);
@@ -92,7 +98,7 @@ class ImageServiceImplTest {
     void updateImageTagsTest() throws IOException, NoSuchAlgorithmException {
         // given
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         TagDto post = new TagDto(List.of("background", "blue"));
         MultipartFile multipartFile = getMultipartFile("image/jpeg");
@@ -122,7 +128,7 @@ class ImageServiceImplTest {
     void getImageTest() throws IOException, NoSuchAlgorithmException {
         // given
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         TagDto postTagDto = new TagDto(List.of("background", "blue"));
         MultipartFile multipartFile = getMultipartFile("image/jpeg");
@@ -144,7 +150,7 @@ class ImageServiceImplTest {
     void deleteImageTest() {
         // given
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         User owner = getUser("owner@email.com", "owner");
         Image image = getImage(owner);
@@ -161,7 +167,7 @@ class ImageServiceImplTest {
     void updateBookmarkTest() throws IOException, NoSuchAlgorithmException {
         // given
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         TagDto postTagDto = new TagDto(List.of("background", "blue"));
         MultipartFile multipartFile = getMultipartFile("image/jpeg");
@@ -184,7 +190,7 @@ class ImageServiceImplTest {
     void updateBookmarkCancelTest() throws IOException, NoSuchAlgorithmException {
         // given
         User loginUser = getUser("loginUser@mail.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         TagDto postTagDto = new TagDto(List.of("background", "blue"));
         MultipartFile multipartFile = getMultipartFile("image/jpeg");
@@ -208,7 +214,7 @@ class ImageServiceImplTest {
     void createReportTest() {
         // given
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         User owner = getUser("owner@email.com", "owner");
         Image image = getImage(owner);
@@ -226,7 +232,7 @@ class ImageServiceImplTest {
     void createReportFailTest() {
         // given
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         User owner = getUser("owner@email.com", "owner");
         Image image = getImage(owner);
@@ -245,7 +251,7 @@ class ImageServiceImplTest {
     void createReportCannotReportMyselfTest() {
         // given
         User owner = getUser("owner@email.com", "owner");
-        given(authUserService.getLoginUserId()).willReturn(owner.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(owner));
 
         Image image = getImage(owner);
 
@@ -276,7 +282,7 @@ class ImageServiceImplTest {
         Image image = imageRepository.save(savedImage);
 
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         // when
         ImageDto.Response response = imageService.createReport(image.getImageId());
@@ -292,11 +298,11 @@ class ImageServiceImplTest {
         // given
         User owner = getUser("owner@email.com", "owner");
         owner.setReportedCount(9);
-        userRepository.save(owner);
-        Image image = getImage(owner);
+        User save = userRepository.save(owner);
+        Image image = getImage(save);
 
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         imageService.createReport(image.getImageId());
 
@@ -318,7 +324,7 @@ class ImageServiceImplTest {
         Image image = getImage(owner);
 
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         // when
         ImageDto.Response response = imageService.updateLike(image.getImageId());
@@ -336,7 +342,7 @@ class ImageServiceImplTest {
         Image image = getImage(owner);
 
         User loginUser = getUser("loginUser@email.com", "loginUser");
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
         imageService.updateLike(image.getImageId());
 
         // when
@@ -375,11 +381,10 @@ class ImageServiceImplTest {
         assertEquals("이미지가 없습니다.", exception.getExceptionCode().getMessage());
     }
 
-    private static Report getReport(Image savedImage, User user1) {
+    private static void getReport(Image savedImage, User user1) {
         Report report = new Report();
         report.setImage(savedImage);
         report.setUser(user1);
-        return report;
     }
 
     private Image getImage(User user) {

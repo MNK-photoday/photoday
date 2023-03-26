@@ -2,10 +2,9 @@ package com.photoday.photoday.image.mapper;
 
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.Image;
-import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.dto.UserDto;
+import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.mapper.UserMapper;
-import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImageMapper {
     private final UserMapper userMapper;
-    private final AuthUserService authUserService;
-    private final UserService userService;
 
     public ImageDto.PageResponse imageToPageResponse(Image image){
         return ImageDto.PageResponse.builder()
@@ -29,10 +26,10 @@ public class ImageMapper {
                 .build();
     }
 
-    public ImageDto.Response imageToResponse(Image image) {
+    public ImageDto.Response imageToResponse(Image image, User loginUser) {
         return ImageDto.Response.builder()
                 .imageId(image.getImageId())
-                .owner(getOwner(image))
+                .owner(getOwner(image, loginUser))
                 .imageUrl(image.getImageUrl())
                 .like(hasLiked(image))
                 .likeCount(image.getLikeList().size())
@@ -78,9 +75,11 @@ public class ImageMapper {
                 .anyMatch(like -> like.getUser().getEmail().equals(email));
     }
 
-    private UserDto.Response getOwner(Image image) {
-        Long loginUserId = authUserService.checkLogin();
-        boolean checkAdmin = userService.checkAdmin(loginUserId);
-        return userMapper.userToUserResponse(image.getUser(), loginUserId, checkAdmin);
+    private UserDto.Response getOwner(Image image, User loginUser) {
+//        Long loginUserId = authUserService.checkLogin();
+//        boolean checkAdmin = userService.checkAdmin(loginUserId);
+//        User loginUser = authUserService.getLoginUser().orElseGet(null);
+
+        return userMapper.userToUserResponse(image.getUser(), loginUser);
     }
 }

@@ -2,7 +2,6 @@ package com.photoday.photoday.image.service.impl;
 
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.entity.*;
 import com.photoday.photoday.image.mapper.ImageMapper;
@@ -22,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,8 +34,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.photoday.photoday.excpetion.ExceptionCode.ALREADY_REPORTED;
-import static com.photoday.photoday.excpetion.ExceptionCode.IMAGE_NOT_FOUND;
+import static com.photoday.photoday.excpetion.ExceptionCode.*;
 
 @Service(value = "imageService")
 @Transactional
@@ -57,18 +54,19 @@ public class ImageServiceImpl implements ImageService {
     public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
         if (!List.of("image/jpeg", "image/pjpeg", "image/tiff", "image/png", "image/bmp", "image/x-windows-bmp")
                 .contains(multipartFile.getContentType())) {
-            throw new CustomException(ExceptionCode.IMAGE_FILE_ONLY);
+            throw new CustomException(IMAGE_FILE_ONLY);
         }
 
         String imageHashValue = s3Service.getMd5Hash(multipartFile);
         if (imageRepository.existsByImageHashValue(imageHashValue)) {
-            throw new CustomException(ExceptionCode.DUPLICATE_IMAGE);
+            throw new CustomException(DUPLICATE_IMAGE);
         }
-
-        Long userId = authUserService.getLoginUserId();
+        User user = authUserService.getLoginUser()
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+//        Long userId = authUserService.getLoginUserId();
 
         String imageUrl = s3Service.saveImage(multipartFile);
-        Image image = makeImage(imageUrl, userId);
+        Image image = makeImage(imageUrl, user);
         image.setImageHashValue(imageHashValue);
 
         List<Tag> tagList = tagMapper.dtoToTag(post);
@@ -76,21 +74,22 @@ public class ImageServiceImpl implements ImageService {
         image.setImageTagList(imageTagList);
 
         Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        return imageMapper.imageToResponse(save, user);
     }
 
     @Override
     public ImageDto.Response updateImageTags(long imageId, TagDto patch) {
         Image image = findVerifiedImage(imageId); // 이미지 존재하는지 검증
-
-        Long userId = authUserService.getLoginUserId();
-        if (!Objects.equals(image.getUser().getUserId(), userId)) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
+        User user = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+//        Long userId = authUserService.getLoginUserId();
+        if (!Objects.equals(image.getUser().getUserId(), user.getUserId()))
+            throw new CustomException(NOT_IMAGE_OWNER);
 
         List<Tag> tagList = tagMapper.dtoToTag(patch);
         image.getImageTagList().clear();
         tagListToImageTagList(tagList, image);
 
-        return imageMapper.imageToResponse(image);
+        return imageMapper.imageToResponse(image, user);
     }
 
     @Override
@@ -98,25 +97,29 @@ public class ImageServiceImpl implements ImageService {
         Image image = findVerifiedImage(imageId);
         image.setViewCount(image.getViewCount() + 1); //TODO 숫자 더하는 쿼리 작성해서 한 줄로 합치기?
         Image save = imageRepository.save(image);
-        return imageMapper.imageToResponse(save);
+        User user = authUserService.getLoginUser().orElse(null);
+        return imageMapper.imageToResponse(save, user);
     }
 
     @Override
     public void deleteImage(long imageId) {
         Image image = findVerifiedImage(imageId);
-        Long userId = authUserService.getLoginUserId();
-        if (!Objects.equals(image.getUser().getUserId(), userId)) throw new CustomException(ExceptionCode.NOT_IMAGE_OWNER);
+//        Long userId = authUserService.getLoginUserId();
+        User user = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        if (!image.getUser().getUserId().equals(user.getUserId()))
+            throw new CustomException(NOT_IMAGE_OWNER);
         imageRepository.deleteById(imageId);
     }
 
     @Override
     public ImageDto.Response updateBookmark(long imageId) {
         Image image = findVerifiedImage(imageId);
-        Long userId = authUserService.getLoginUserId(); //TODO getLoginUser 메서드 만들어서 한 줄로 합치기
-        User user = userService.findVerifiedUser(userId);
+        User user = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+//        Long userId = authUserService.getLoginUserId();
+//        User user = userService.findVerifiedUser(userId);
 
         Optional<Bookmark> bookmark = image.getBookmarkList().stream()
-                .filter(b -> Objects.equals(b.getUser().getUserId(), userId))
+                .filter(b -> b.getUser().getUserId().equals(user.getUserId()))
                 .findFirst();
 
         if (bookmark.isPresent()) {
@@ -128,7 +131,7 @@ public class ImageServiceImpl implements ImageService {
             newBookmark.setImage(image);
         }
 
-        return imageMapper.imageToResponse(image);
+        return imageMapper.imageToResponse(image, user);
     }
 
     @Override
@@ -148,16 +151,18 @@ public class ImageServiceImpl implements ImageService {
     public ImageDto.Response createReport(long imageId) {
         Image image = findVerifiedImage(imageId);
 
-        Long userId = authUserService.getLoginUserId(); //TODO getLoginUser 메서드 만들어서 한 줄로 합치기
-        if (Objects.equals(image.getUser().getUserId(), userId)) {
-            throw new CustomException(ExceptionCode.CANNOT_REPORT_MYSELF);
+        User loginUser = authUserService.getLoginUser()
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+//        Long userId = authUserService.getLoginUserId();
+        if (image.getUser().getUserId().equals(loginUser.getUserId())) {
+            throw new CustomException(CANNOT_REPORT_MYSELF);
         }
 
-        User user = userService.findVerifiedUser(userId);
-        userService.checkUserReportCount(userId);
+//        User loginUser = userService.findVerifiedUser(userId);
+        userService.checkUserReportCount(loginUser);
 
         Optional<Report> optionalReport = image.getReportList().stream()
-                .filter(r -> Objects.equals(r.getUser().getUserId(), userId))
+                .filter(r -> r.getUser().getUserId().equals(loginUser.getUserId()))
                 .findFirst();
 
         if (image.getReportList().size() >= 4) {
@@ -170,7 +175,7 @@ public class ImageServiceImpl implements ImageService {
         } else {
             //아니면 신고 목록에 추가 및 저장
             Report report = new Report();
-            report.setUser(user);
+            report.setUser(loginUser);
             report.setImage(image);
 
             //회원 정지 기능 //TODO 회원 서비스로 빼기
@@ -181,17 +186,19 @@ public class ImageServiceImpl implements ImageService {
             }
         }
 
-        return imageMapper.imageToResponse(image);
+        return imageMapper.imageToResponse(image, loginUser);
     }
 
     @Override
     public ImageDto.Response updateLike(long imageId) {
         Image image = findVerifiedImage(imageId);
-        Long userId = authUserService.getLoginUserId(); //TODO getLoginUser 메서드 만들어서 한 줄로 합치기
-        User user = userService.findVerifiedUser(userId);
+//        Long userId = authUserService.getLoginUserId(); //TODO 리팩토링 필요
+//        User user = userService.findVerifiedUser(userId);
+        User loginUser = authUserService.getLoginUser()
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         Optional<Like> like = image.getLikeList().stream()
-                .filter(l -> Objects.equals(l.getUser().getUserId(), userId))
+                .filter(l -> Objects.equals(l.getUser().getUserId(), loginUser.getUserId()))
                 .findFirst();
 
         if (like.isPresent()) {
@@ -199,11 +206,11 @@ public class ImageServiceImpl implements ImageService {
             likeRepository.deleteAllByIdInBatch(Collections.singleton(like.get().getLikeId()));
         } else {
             Like newLike = new Like();
-            newLike.setUser(user);
+            newLike.setUser(loginUser);
             newLike.setImage(image);
         }
 
-        return imageMapper.imageToResponse(image);
+        return imageMapper.imageToResponse(image, loginUser);
     }
 
     @Override
@@ -223,7 +230,10 @@ public class ImageServiceImpl implements ImageService {
         Pageable pageRequest = PageRequest.of(0, 10);
         Page<Image> page = imageRepository.findMainImages(pageRequest);
         List<Image> mainImages = page.getContent();
-        List<ImageDto.Response> responses = mainImages.stream().map(imageMapper::imageToResponse).collect(Collectors.toList());
+        User user = authUserService.getLoginUser().orElse(null);
+        List<ImageDto.Response> responses = mainImages.stream()
+                .map(image -> imageMapper.imageToResponse(image, user))
+                .collect(Collectors.toList());
         return responses;
     }
 
@@ -233,8 +243,8 @@ public class ImageServiceImpl implements ImageService {
         return optionalImage.orElseThrow(() -> new CustomException(IMAGE_NOT_FOUND));
     }
 
-    private Image makeImage(String imageUrl, Long userId) {
-        User user = userService.findVerifiedUser(userId);
+    private Image makeImage(String imageUrl, User user) {
+//        User user = userService.findVerifiedUser(userId);
 
         Image image = new Image();
         image.setImageUrl(imageUrl);

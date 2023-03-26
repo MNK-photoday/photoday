@@ -26,7 +26,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -156,9 +155,7 @@ class UserControllerTest {
                 .andDo(document("update-user",
                         getRequestPreprocessor(),
                         getResponsePreprocessor(),
-                        requestHeaders(
-                                headerWithName("Authorization").description("액세스 토큰")
-                        ),
+                        getRequestHeadersAccessToken(),
                         getResponsePartUpdateUser(),
                         getRequestPartFieldUpdateUser(),
                         getResponseFieldsUserDtoResponse()));
@@ -235,6 +232,7 @@ class UserControllerTest {
                 .andDo(document("get-user",
                         getRequestPreprocessor(),
                         getResponsePreprocessor(),
+                        getRequestHeadersAccessToken(),
                         getPathParametersUserId(),
                         getResponseFieldsUserDtoResponse()));
 
@@ -244,18 +242,22 @@ class UserControllerTest {
     @DisplayName("deleteUser: 정상 입력")
     void deleteUser() throws Exception {
         // given
+        Long userId = 1L;
         String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
 
-        doNothing().when(userService).deleteUser();
+        doNothing().when(userService).deleteUser(anyLong());
 
         // when
         ResultActions actions = mvc.perform(
-                delete("/api/users")
+                delete("/api/users/{userId}", userId)
                         .header("Authorization", "Bearer " + accessToken));
 
         // then
         actions
                 .andExpect(status().isNoContent())
-                .andDo(document("delete-User"));
+                .andDo(document("delete-User",
+                        getRequestPreprocessor(),
+                        getResponsePreprocessor(),
+                        getRequestHeadersAccessToken()));
     }
 }
