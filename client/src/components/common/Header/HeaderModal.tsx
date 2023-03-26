@@ -1,5 +1,7 @@
 import { FaHouseUser } from 'react-icons/fa';
 import { IoLogOut } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../store/authSlice';
 
 import {
   S_HeaderModalWrap,
@@ -7,12 +9,13 @@ import {
   S_ModalNavLink,
 } from './HeaderModal.styles';
 
-const logoutHandler = () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('id');
-};
-
 function HeaderModal() {
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('id');
+    dispatch(logout());
+  };
   return (
     <S_HeaderModalWrap>
       <S_ModalNavBox>
