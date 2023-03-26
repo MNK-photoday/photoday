@@ -3,23 +3,25 @@ import { RowFlex } from '../../styles/GlobalStyles';
 
 export const S_MainContentBox = styled.div`
   ${RowFlex}
-  /*100vh- 헤더높이*/
-  height: calc(100vh - 70px);
+  height: 100%;
   padding: 40px 0;
   box-sizing: border-box;
   align-items: center;
   width: 100%;
   justify-content: space-around;
+  padding: 30px;
+  height: calc(100vh - 70px);
 
   @media screen and (max-width: 1024px) {
     flex-wrap: wrap;
     width: 100%;
     padding: 0 30px;
+    justify-content: center;
   }
 `;
 
 export const S_SearchContentBox = styled.section`
-  width: 48%;
+  width: 50%;
   height: 450px;
   position: relative;
   padding: 30px 0px;
