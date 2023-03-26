@@ -2,19 +2,15 @@ package com.photoday.photoday.mail.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-import static io.netty.util.ResourceLeakDetector.setLevel;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SimpleEmailSendable implements EmailSendable { //TODO import 정리
+public class SimpleEmailSendable implements EmailSendable {
     private final JavaMailSender javaMailSender;
 
     @Value("${mail.smtp.username}")

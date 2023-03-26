@@ -18,7 +18,7 @@ public class RedisService {
     @Value("${jwt.refresh-token-expiration-minutes}")
     private int redisMinutes;
 
-    public void setValues(String key, String value){
+    public void setValues(String key, String value) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
         values.set(key, value, Duration.ofMinutes(redisMinutes));
     }

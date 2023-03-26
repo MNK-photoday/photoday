@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User { //TODO 미사용 세터 정리
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;

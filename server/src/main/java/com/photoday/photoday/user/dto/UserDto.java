@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class UserDto {
-    //TODO: test할때 builder, setter, constructor 뭘로 생성할지 얘기해봐야함
+    //TODO: test할때 builder 적용으로 수정하기
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor

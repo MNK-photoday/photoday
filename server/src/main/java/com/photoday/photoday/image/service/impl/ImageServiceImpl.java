@@ -95,7 +95,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto.Response getImage(long imageId) {
         Image image = findVerifiedImage(imageId);
-        image.setViewCount(image.getViewCount() + 1); //TODO 숫자 더하는 쿼리 작성해서 한 줄로 합치기?
+        image.setViewCount(image.getViewCount() + 1); //TODO 숫자 더하는 쿼리 작성해서 한 줄로 합치기
         Image save = imageRepository.save(image);
         User user = authUserService.getLoginUser().orElse(null);
         return imageMapper.imageToResponse(save, user);
@@ -192,12 +192,12 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto.Response updateLike(long imageId) {
         Image image = findVerifiedImage(imageId);
-//        Long userId = authUserService.getLoginUserId(); //TODO 리팩토링 필요
+//        Long userId = authUserService.getLoginUserId();
 //        User user = userService.findVerifiedUser(userId);
         User loginUser = authUserService.getLoginUser()
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        Optional<Like> like = image.getLikeList().stream()
+        Optional<Like> like = image.getLikeList().stream() //TODO 변수명 정리하기
                 .filter(l -> Objects.equals(l.getUser().getUserId(), loginUser.getUserId()))
                 .findFirst();
 
@@ -257,7 +257,7 @@ public class ImageServiceImpl implements ImageService {
         return tagList.stream()
                 .map(tagService::verifyTag)
                 .map(this::tagToImageTag)
-                .peek(tag -> tag.setImage(image)) //TODO IMAGETAG로 바꾸기? 헷갈림.
+                .peek(tag -> tag.setImage(image)) //TODO IMAGETAG로 바꾸기
                 .collect(Collectors.toList());
     }
 

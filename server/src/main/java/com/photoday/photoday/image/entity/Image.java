@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class) //TODO setter, construct 접근제어자 고려 후 수정
+@EntityListeners(AuditingEntityListener.class) //TODO setter, construct 접근제어자 고려 후 수정, 연관관계 미사용 setter 메서드 삭제
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,10 @@ public class Image {
     @Column(nullable = false)
     private int viewCount;
 
-    @CreatedDate  //TODO updatable false 추가?
+    @CreatedDate  //TODO updatable false 추가
     private LocalDateTime createdAt;
 
-    @Column(nullable = false) //TODO unique true 추가?
+    @Column(nullable = false) //TODO unique true 추가
     private String imageHashValue;
 
     @ManyToOne

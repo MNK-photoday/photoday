@@ -42,7 +42,7 @@ public class UserMapper {
         response.setReportCount(targetUser.getReports() != null ? targetUser.getReports().size() : 0);
         response.setFollowerCount(targetUser.getFollower() != null ? targetUser.getFollower().size() : 0);
         response.setFollowingCount(targetUser.getFollowing() != null ? targetUser.getFollowing().size() : 0);
-        response.setMyPage(loginUser != null && loginUser.getUserId().equals(targetUser.getUserId())); //TODO 중복됨
+        response.setMyPage(loginUser != null && loginUser.getUserId().equals(targetUser.getUserId())); //TODO 중복됨. 삭제 요망
         response.setCheckAdmin(checkAdmin(loginUser));
         response.setMyPage(myPage(targetUser, loginUser));
 

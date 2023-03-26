@@ -28,7 +28,7 @@ public class UserAuthenticationFailureHandler implements AuthenticationFailureHa
         ErrorResponse errorResponse;
         if (exception instanceof DisabledException) {
             errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
-        } else if (exception instanceof UsernameNotFoundException){
+        } else if (exception instanceof UsernameNotFoundException) {
             errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
         } else {
             errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED); //TODO message까지 주는 건 어떠신지

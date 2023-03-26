@@ -31,14 +31,14 @@ public class AuthUserServiceImpl implements AuthUserService {
     @Override
     public Long checkLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(userRepository.findByEmail(authentication.getName()).isPresent()) {
+        if (userRepository.findByEmail(authentication.getName()).isPresent()) {
             return userRepository.findByEmail(authentication.getName()).get().getUserId();
         }
         return null;
     }
 
     @Override
-    public String getLoginUserEmail() {
+    public String getLoginUserEmail() { //TODO 미사용 메서드 지우기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
@@ -50,7 +50,7 @@ public class AuthUserServiceImpl implements AuthUserService {
     }
 
     @Override
-    public void setNewPassword(String email){
+    public void setNewPassword(String email) { //TODO 익셉션 코드 임포트 바꾸기
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         publisher.publishEvent(new UserApplicationEvent(this, user));
     }

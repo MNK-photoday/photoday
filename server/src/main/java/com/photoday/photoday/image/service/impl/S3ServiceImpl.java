@@ -17,7 +17,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@Service(value = "s3Service") //TODO value 뭐에용?
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class S3ServiceImpl implements S3Service {
@@ -26,7 +26,7 @@ public class S3ServiceImpl implements S3Service {
     private String s3Bucket;
 
     @Override
-    public String saveImage(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
+    public String saveImage(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException { //TODO 정리하기
         String originalFilename = multipartFile.getOriginalFilename();
         long size = multipartFile.getSize();
 

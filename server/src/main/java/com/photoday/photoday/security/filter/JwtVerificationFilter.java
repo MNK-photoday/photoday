@@ -82,7 +82,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String username = (String) claims.get("username");
-        List<GrantedAuthority> authorities = customAuthorityUtils.createAuthorities((List)claims.get("roles"));
+        List<GrantedAuthority> authorities = customAuthorityUtils.createAuthorities((List) claims.get("roles"));
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
@@ -96,8 +96,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void checkUserStatus(User user) {
-        if(user.getStatus().equals(User.UserStatus.USER_BANED)) {
-            throw new CustomException(ExceptionCode.ACCOUNT_SUSPENDED); //TODO exception 종류 변경 ~
+        if (user.getStatus().equals(User.UserStatus.USER_BANED)) {
+            throw new CustomException(ExceptionCode.ACCOUNT_SUSPENDED); //TODO exception 종류 변경
         }
     }
 }

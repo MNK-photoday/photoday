@@ -58,8 +58,8 @@ public class SecurityConfiguration {
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
-                .authorizeHttpRequests(authorize -> authorize //TODO permitall 다 정리해도 될 듯?
-                        .antMatchers(HttpMethod.POST, "/*/users").permitAll() //TODO 여기서 permitall 때리면, 다음 줄은 안 먹음. 순서 바꾸든지 이 줄 삭제.
+                .authorizeHttpRequests(authorize -> authorize //TODO 정리하기. 회의 후 수정.
+                        .antMatchers(HttpMethod.POST, "/*/users").permitAll()
                         .antMatchers(HttpMethod.POST, "/*/users/update").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/users/**").permitAll()
                         .antMatchers(HttpMethod.DELETE, "/*/users").hasAnyRole("USER", "ADMIN")

@@ -15,7 +15,7 @@ import javax.validation.constraints.Positive;
 @RequestMapping("/api/follows")
 @RequiredArgsConstructor
 @Validated
-public class FollowController { //TODO 메서드이름 서비스와 통일하기?
+public class FollowController { //TODO 메서드이름 서비스와 통일하기
     private final FollowService followService;
 
     @GetMapping("/{userId}")

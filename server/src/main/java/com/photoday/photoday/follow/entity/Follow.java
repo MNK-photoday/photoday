@@ -26,14 +26,14 @@ public class Follow {
 
     public void setFollowing(User following) {
         this.following = following;
-        if(!following.getFollowing().contains(this)) {
+        if (!following.getFollowing().contains(this)) {
             following.getFollowing().add(this);
         }
     }
 
     public void setFollower(User follower) {
         this.follower = follower;
-        if(!follower.getFollower().contains(this)) {
+        if (!follower.getFollower().contains(this)) {
             follower.getFollower().add(this);
         }
     }
