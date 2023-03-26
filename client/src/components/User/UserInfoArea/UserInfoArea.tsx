@@ -16,7 +16,7 @@ import {
 } from './UserInfoArea.styles';
 import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
 import { PasswordInput } from '../../Login/Input/Input';
-import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
+import { S_InvalidMessage } from '../../Login/LoginSection/LoginSection.styles';
 import { User } from '../UserThumnailArea/UserThumnailArea';
 import { updatePasswordUser, deleteUser, updateUser } from '../../../api/User';
 import { logout } from '../../../store/authSlice';
