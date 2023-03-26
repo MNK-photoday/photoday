@@ -226,14 +226,11 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<ImageDto.Response> getMainImages() { //TODO pageResponse로 변경
+    public List<ImageDto.PageResponse> getMainImages() {
         Pageable pageRequest = PageRequest.of(0, 10);
         Page<Image> page = imageRepository.findMainImages(pageRequest);
         List<Image> mainImages = page.getContent();
-        User user = authUserService.getLoginUser().orElse(null);
-        List<ImageDto.Response> responses = mainImages.stream()
-                .map(image -> imageMapper.imageToResponse(image, user))
-                .collect(Collectors.toList());
+        List<ImageDto.PageResponse> responses = mainImages.stream().map(imageMapper::imageToPageResponse).collect(Collectors.toList());
         return responses;
     }
 
