@@ -61,9 +61,9 @@ class ImageMapperTest {
 
         // then
         assertEquals(pageResponse.getImageId(), image.getImageId());
-        assertEquals(pageResponse.isLike(), false);
+        assertFalse(pageResponse.isLike());
         assertEquals(pageResponse.getImageUrl(), image.getImageUrl());
-        assertEquals(pageResponse.isBookmark(), false);
+        assertFalse(pageResponse.isBookmark());
     }
 
     @Test
