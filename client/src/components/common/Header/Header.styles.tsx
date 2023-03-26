@@ -93,3 +93,9 @@ export const S_NavLinkIconBox = styled.div<{ active: boolean }>`
     background: transparent;
   }
 `;
+
+export const S_UserProfile = styled.img`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+`;
