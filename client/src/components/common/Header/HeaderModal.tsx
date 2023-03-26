@@ -12,8 +12,9 @@ import {
 function HeaderModal() {
   const dispatch = useDispatch();
   const logoutHandler = () => {
-    localStorage.removeItem('accessToken');
     localStorage.removeItem('id');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userProfileImage');
     dispatch(logout());
   };
   return (

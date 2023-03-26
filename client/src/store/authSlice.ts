@@ -8,10 +8,11 @@ type AuthState = {
 };
 
 const userId = localStorage.getItem('id');
+const userProfileImage = localStorage.getItem('userProfileImage');
 const initialState: AuthState = {
   isLoggedIn: checkAuth(),
   id: userId ? userId : null,
-  userProfileImage: '',
+  userProfileImage: userProfileImage ? userProfileImage : '',
 };
 
 const authSlice = createSlice({
@@ -35,6 +36,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.isLoggedIn = false;
       state.id = null;
+      state.userProfileImage = '';
     },
     setLoggedIn: (state, action: PayloadAction<boolean>) => {
       state.isLoggedIn = action.payload;
