@@ -19,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class FollowServiceImpl implements FollowService {
+    //TODO impl 폴더 만들어서 따로 넣어주기,  메서드 병합 : authUserService.getLoginUser(), ExceptionCode static 임포트로 통일하기.
     private final UserService userService;
     private final FollowRepository followRepository;
     private final FollowMapper followMapper;

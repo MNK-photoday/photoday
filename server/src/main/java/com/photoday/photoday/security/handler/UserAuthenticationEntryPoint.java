@@ -7,9 +7,7 @@ import com.photoday.photoday.security.utils.ErrorResponder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +22,7 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 
         Exception exception = (Exception) request.getAttribute("exception");
-        if(exception instanceof CustomException) {
+        if (exception instanceof CustomException) {
             Gson gson = new Gson();
             ErrorResponse errorResponse;
             errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());

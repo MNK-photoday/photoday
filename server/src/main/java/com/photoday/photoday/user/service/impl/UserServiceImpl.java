@@ -32,9 +32,9 @@ import static com.photoday.photoday.excpetion.ExceptionCode.*;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService { //TODO exception code import static * 로 변경하기
     private final UserRepository userRepository;
-    private final ReportRepository reportRepository;
+    private final ReportRepository reportRepository; //TODO 미사용 삭제
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final S3Service s3Service;

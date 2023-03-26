@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Tag {
+public class Tag { //TODO 미사용 세터 정리
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long tagId;

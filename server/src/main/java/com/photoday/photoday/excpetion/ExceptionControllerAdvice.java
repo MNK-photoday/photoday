@@ -21,7 +21,7 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
-public class ExceptionControllerAdvice { //TODO 로그 정리
+public class ExceptionControllerAdvice {
     private final ApplicationEventPublisher publisher;
 
     @ExceptionHandler

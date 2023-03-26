@@ -58,7 +58,7 @@ public class SecurityConfiguration {
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
-                .authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests(authorize -> authorize //TODO 정리하기. 회의 후 수정.
                         .antMatchers(HttpMethod.POST, "/*/users").permitAll()
                         .antMatchers(HttpMethod.POST, "/*/users/update").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/users/**").permitAll()
@@ -88,7 +88,7 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:3000"); //TODO 이거 슬슬 바꿔야할 듯.
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("*");

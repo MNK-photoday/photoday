@@ -10,6 +10,7 @@ public interface UserService {
     User registerUserOAuth2(User user);
 
     UserDto.Response getUser(long userId);
+
     UserDto.Response updateUser(UserDto.Update userUpdateDto, MultipartFile multipartFile);
 
     UserDto.Response updateUserPassword(UserDto.UpdateUserPassword updateUserPasswordDto);

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class ImageMapper {
     private final UserMapper userMapper;
 
-    public ImageDto.PageResponse imageToPageResponse(Image image){
+    public ImageDto.PageResponse imageToPageResponse(Image image) {
         return ImageDto.PageResponse.builder()
                 .imageId(image.getImageId())
                 .imageUrl(image.getImageUrl())

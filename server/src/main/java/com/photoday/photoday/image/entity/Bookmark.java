@@ -26,14 +26,14 @@ public class Bookmark {
 
     public void setImage(Image image) {
         this.image = image;
-        if(!image.getBookmarkList().contains(this)){
+        if (!image.getBookmarkList().contains(this)) {
             image.getBookmarkList().add(this);
         }
     }
 
     public void setUser(User user) {
         this.user = user;
-        if(!user.getBookmarks().contains(this)){
+        if (!user.getBookmarks().contains(this)) {
             user.getBookmarks().add(this);
         }
     }

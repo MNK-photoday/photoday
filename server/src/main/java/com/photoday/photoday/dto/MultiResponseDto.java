@@ -12,11 +12,11 @@ public class MultiResponseDto<T> {
 
     public MultiResponseDto(List<T> data, Page page) {
         this.data = data;
-        this.pageInfo = new PageInfo(page.getNumber()+1, page.getSize(), page.getTotalPages(), page.getTotalElements());
+        this.pageInfo = new PageInfo(page.getNumber() + 1, page.getSize(), page.getTotalPages(), page.getTotalElements());
     }
 
     @Getter
-    private class PageInfo{
+    private class PageInfo {
         private int pageNumber;
         private int size;
         private int totalPages;

@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> postUser(@Valid @RequestBody UserDto.Post userPostDto) {
+    public ResponseEntity<?> postUser(@Valid @RequestBody UserDto.Post userPostDto) { //TODO 메서드명 서비스와 통일
         UserDto.Response createdUserDto = userService.createUser(userPostDto);
         return ResponseEntity.created(URI.create("/api/users/" + createdUserDto.getUserId())).build();
     }

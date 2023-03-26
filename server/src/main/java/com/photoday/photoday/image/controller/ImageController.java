@@ -28,7 +28,7 @@ public class ImageController {
 
     @PostMapping
     public ResponseEntity<?> createImage(@RequestPart @Valid TagDto post,
-                                      @RequestPart(value = "file") MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
+                                         @RequestPart(value = "file") MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
         ImageDto.Response response = imageService.createImage(post, multipartFile);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
