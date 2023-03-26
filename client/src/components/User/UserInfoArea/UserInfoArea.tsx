@@ -5,6 +5,7 @@ import {
   S_UserInfoArea,
   S_UserNameContainer,
   S_UserName,
+  S_IconContainer,
   S_UserLikeAndReport,
   S_UserDescription,
   S_TextButtonWrap,
@@ -145,24 +146,26 @@ function UserInfoArea({ userData, myPage }: User) {
     <S_UserInfoArea>
       <S_UserNameContainer>
         <S_UserName>{userData.name}</S_UserName>
-        {!myPage &&
-          (!userData.checkFollow ? (
-            <FiUserPlus
-              size={25}
-              className="followIcon"
-              onClick={() => followHandler('plus')}
-            />
-          ) : (
-            <FiUserMinus
-              size={25}
-              className="followIcon"
-              onClick={() => followHandler('minus')}
-            />
-          ))}
-        <FaRegHeart size={22} className="likeIcon" />
-        <S_UserLikeAndReport>{userData.likeCount}</S_UserLikeAndReport>
-        <IoWarningOutline size={25} className="reportIcon" />
-        <S_UserLikeAndReport>{userData.reportCount}</S_UserLikeAndReport>
+        <S_IconContainer>
+          {!myPage &&
+            (!userData.checkFollow ? (
+              <FiUserPlus
+                size={25}
+                className="followIcon"
+                onClick={() => followHandler('plus')}
+              />
+            ) : (
+              <FiUserMinus
+                size={25}
+                className="followIcon"
+                onClick={() => followHandler('minus')}
+              />
+            ))}
+          <FaRegHeart size={22} className="likeIcon" />
+          <S_UserLikeAndReport>{userData.likeCount}</S_UserLikeAndReport>
+          <IoWarningOutline size={25} className="reportIcon" />
+          <S_UserLikeAndReport>{userData.reportCount}</S_UserLikeAndReport>
+        </S_IconContainer>
       </S_UserNameContainer>
       <S_UserDescription isEdit={isEdit}>
         {isEdit ? (

@@ -1,13 +1,20 @@
 import styled, { css } from 'styled-components';
 import { Content } from '../../../styles/Layout';
+import { Flex } from '../../../styles/GlobalStyles';
 
 export const S_UserInfoArea = styled(Content)`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
+
+  @media screen and (max-width: 414px) {
+    width: auto;
+    margin-bottom: 100px;
+  }
 `;
 
 export const S_UserNameContainer = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
 
@@ -28,12 +35,33 @@ export const S_UserNameContainer = styled.div`
     &:hover {
       color: #41d862;
     }
+
+    @media screen and (max-width: 500px) {
+      margin: 0 30px 0 5px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    flex-direction: column;
+  }
+`;
+
+export const S_IconContainer = styled.div`
+  width: 100%;
+  @media screen and (max-width: 1000px) {
+    display: flex;
+    justify-content: center;
+    margin: 50px;
   }
 `;
 
 export const S_UserName = styled.span`
   font-size: var(--font-size-xxl);
   margin-right: 50px;
+
+  @media screen and (max-width: 500px) {
+    margin: 0 0 20px 0;
+  }
 `;
 
 export const S_UserLikeAndReport = styled.span`
@@ -42,10 +70,19 @@ export const S_UserLikeAndReport = styled.span`
 `;
 
 export const S_UserDescription = styled.p<{ isEdit: boolean }>`
-  /* 추후에 수정 */
   max-width: 80%;
   font-size: var(--font-size-m);
   margin: ${({ isEdit }) => (isEdit ? '3% 0 10px' : '3% 0 125px')};
+
+  @media screen and (max-width: 1000px) and (min-width: 700px) {
+    ${Flex}
+  }
+
+  @media screen and (max-width: 700px) {
+    ${Flex}
+    max-width: 100%;
+    margin-top: 50px;
+  }
 `;
 
 export const S_TextButtonWrap = styled.div`
@@ -126,6 +163,10 @@ export const S_Textarea = styled.textarea`
 
   &:focus {
     outline: 2px solid var(--color-primary-green);
+  }
+
+  @media screen and (max-width: 700px) {
+    width: 90%;
   }
 `;
 
