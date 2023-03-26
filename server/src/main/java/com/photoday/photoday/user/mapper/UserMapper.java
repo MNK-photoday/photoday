@@ -5,7 +5,7 @@ import com.photoday.photoday.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -30,25 +30,44 @@ public class UserMapper {
         return user;
     }
 
-    public UserDto.Response userToUserResponse(User targetUser, Long userId, boolean checkAdmin) { //TODO 팔로우 확인
-        boolean checkFollow = userId != null && targetUser.getFollower().stream().anyMatch(fw -> Objects.equals(fw.getFollowing().getUserId(), userId));
-
+    public UserDto.Response userToUserResponse(User targetUser, User user) { //TODO 팔로우 확인
         UserDto.Response response = new UserDto.Response();
 
         response.setUserId(targetUser.getUserId());
         response.setName(targetUser.getName());
         response.setProfileImageUrl(targetUser.getProfileImageUrl());
         response.setDescription(targetUser.getDescription());
-        response.setCheckFollow(checkFollow);
+        response.setCheckFollow(checkFollow(targetUser, user));
         response.setLikeCount(targetUser.getLikes() != null ? targetUser.getLikes().size() : 0);
         response.setReportCount(targetUser.getReports() != null ? targetUser.getReports().size() : 0);
         response.setFollowerCount(targetUser.getFollower() != null ? targetUser.getFollower().size() : 0);
         response.setFollowingCount(targetUser.getFollowing() != null ? targetUser.getFollowing().size() : 0);
-        response.setMyPage(userId != null && userId.equals(targetUser.getUserId()));
-        response.setCheckAdmin(checkAdmin);
-
-        response.setMyPage(userId != null && userId.equals(targetUser.getUserId()));
+        response.setMyPage(user != null && user.getUserId().equals(targetUser.getUserId()));
+        response.setCheckAdmin(checkAdmin(user));
+        response.setMyPage(myPage(targetUser, user));
 
         return response;
+    }
+
+    private boolean checkFollow(User targetUser, User user) {
+        if (user == null) return false;
+
+        Long userId = user.getUserId();
+        return userId != null && targetUser.getFollower().stream()
+                .anyMatch(fw -> fw.getFollowing().getUserId().equals(userId));
+    }
+
+    private boolean checkAdmin(User user) {
+        if (user == null) return false;
+
+        List<String> roles = user.getRoles();
+        return roles.contains("ADMIN");
+    }
+
+    private boolean myPage(User targetUser, User user) {
+        if (user == null) return false;
+
+        Long userId = user.getUserId();
+        return userId != null && userId.equals(targetUser.getUserId());
     }
 }
