@@ -175,11 +175,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkAdmin(Long loginUserId) {
-        boolean checkAdmin = false;
-        List<String> roles = findVerifiedUser(loginUserId).getRoles();
-        if(roles.contains("ADMIN")) {
-            checkAdmin = true;
-        }
+        boolean checkAdmin = loginUserId != null && findVerifiedUser(loginUserId).getRoles().contains("ADMIN");
 
         return checkAdmin;
     }
