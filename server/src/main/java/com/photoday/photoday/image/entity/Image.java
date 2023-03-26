@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class) //TODO setter, construct 접근제어자 고려 후 수정, 연관관계 미사용 setter 메서드 삭제
+@EntityListeners(AuditingEntityListener.class) //TODO setter, construct 접근제어자 고려 후 수정
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,11 @@ public class Image {
     @Column(nullable = false)
     private int viewCount;
 
-    @CreatedDate  //TODO updatable false 추가
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false) //TODO unique true 추가
+    @Column(nullable = false, unique = true)
     private String imageHashValue;
 
     @ManyToOne
@@ -59,27 +60,6 @@ public class Image {
         this.user = user;
         if (!user.getImages().contains(this)) {
             user.getImages().add(this);
-        }
-    }
-
-    public void setImageTag(ImageTag imageTag) {
-        this.getImageTagList().add(imageTag);
-        if (imageTag.getImage() != this) {
-            imageTag.setImage(this);
-        }
-    }
-
-    public void setBookmark(Bookmark bookmark) {
-        this.getBookmarkList().add(bookmark);
-        if (bookmark.getImage() != this) {
-            bookmark.setImage(this);
-        }
-    }
-
-    public void setLike(Like like) {
-        this.getLikeList().add(like);
-        if (like.getImage() != this) {
-            like.setImage(this);
         }
     }
 
