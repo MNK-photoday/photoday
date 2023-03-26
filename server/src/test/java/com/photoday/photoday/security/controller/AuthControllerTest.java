@@ -4,6 +4,7 @@ import com.photoday.photoday.helper.security.SecurityTestHelper;
 import com.photoday.photoday.security.redis.service.RedisService;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
+import com.photoday.photoday.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,8 @@ class AuthControllerTest {
     private RedisService redisService;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private UserService userService;
 
     @Test
     @DisplayName("reissue: 정상 입력")
