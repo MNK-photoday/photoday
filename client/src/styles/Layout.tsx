@@ -11,6 +11,7 @@ export const ContainerWrap = styled.main`
 export const Container = styled.div`
   max-width: 1830px;
   width: 100%;
+  height: 100%;
   ${RowFlex}
   padding: 0 50px;
 `;
