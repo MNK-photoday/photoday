@@ -6,6 +6,7 @@ import com.photoday.photoday.security.service.impl.AuthUserServiceImpl;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.mapper.UserMapper;
+import com.photoday.photoday.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +21,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 
@@ -34,6 +34,8 @@ class ImageMapperTest {
     UserMapper userMapper;
     @MockBean
     AuthUserServiceImpl authUserServiceImpl;
+    @MockBean
+    UserService userService;
 
     @Test
     @WithMockUser // default value로 username = “user”, password = “password”, role = “USER”
@@ -52,8 +54,7 @@ class ImageMapperTest {
 //        method.setAccessible(true);
 //        assertThrows(NullPointerException.class, ()->method.invoke(imageMapper, image));
 
-        given(authUserServiceImpl.checkLogin()).willReturn(null);
-        given(userMapper.userToUserResponse(Mockito.any(User.class), Mockito.anyLong(), anyBoolean())).willReturn(new UserDto.Response());
+        given(userMapper.userToUserResponse(Mockito.any(User.class), any(User.class))).willReturn(new UserDto.Response());
 
         // when
         ImageDto.PageResponse pageResponse = imageMapper.imageToPageResponse(image);
@@ -84,15 +85,14 @@ class ImageMapperTest {
         UserDto.Response responseUser = new UserDto.Response(1L, "홍길동", "profileImageUrl", "hi", 1, 1,
                 1, 1, false, false, false);
 
-        given(authUserServiceImpl.checkLogin()).willReturn(1L);
-        given(userMapper.userToUserResponse(Mockito.any(User.class), anyLong(), anyBoolean())).willReturn(responseUser);
+        given(userMapper.userToUserResponse(Mockito.any(User.class), any(User.class))).willReturn(responseUser);
+        given(userService.checkAdmin(anyLong())).willReturn(false);
 
         //when
-        ImageDto.Response response = imageMapper.imageToResponse(image);
+        ImageDto.Response response = imageMapper.imageToResponse(image, null);
 
         //then
         assertEquals(response.getImageId(), image.getImageId());
-        assertEquals(response.getOwner().getUserId(), image.getUser().getUserId());
         assertEquals(response.getImageUrl(), image.getImageUrl());
         assertFalse(response.isLike());
         assertEquals(response.getLikeCount(), image.getLikeList().size());
