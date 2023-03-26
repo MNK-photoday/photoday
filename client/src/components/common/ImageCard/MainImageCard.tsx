@@ -5,7 +5,8 @@ import {
 import { useEffect, useState } from 'react';
 import MainSkeleton from '../Skeleton/MainSkeleton';
 import ImageCard from './ImageCard';
-import { Mainimages } from './ImageData';
+import { getMainImage } from '../../../api/Image';
+import { FiFacebook } from 'react-icons/fi';
 
 export type ImageItemProps = {
   imageId: number;
@@ -15,15 +16,25 @@ export type ImageItemProps = {
 };
 
 function MainImageCard() {
-  /*데이터 호출 전에 테스트 코드입니다. */
   const [items, setItems] = useState<ImageItemProps[]>([]);
   const [isloading, setIsLoading] = useState(true);
+
+  const randomNumFun = () => {
+    return Math.floor(Math.random() * 10);
+  };
+
   useEffect(() => {
-    const randomNum1 = Math.floor(Math.random() * 3);
-    const randomNum2 = Math.floor(Math.random() * 3);
     setIsLoading(true);
-    /*API 호출 위치*/
-    setItems([Mainimages[randomNum1], Mainimages[randomNum2]]);
+    getMainImage().then((response) => {
+      let randomNum1 = randomNumFun();
+      let randomNum2 = randomNumFun();
+
+      while (randomNum2 === randomNum1) {
+        randomNum2 = randomNumFun();
+      }
+      setItems([response[randomNum1], response[randomNum2]]);
+    });
+
     setIsLoading(false);
   }, []);
 

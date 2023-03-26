@@ -18,7 +18,7 @@ export const patchLikeImage = async (imageId: number) => {
       if (error.response?.status === 401) {
         alert('로그인 후 이용 가능합니다. ');
       }
-      console.log('좋아요 요청 실패');
+      console.log(error.response);
     }
   }
 };
@@ -35,14 +35,10 @@ export const patchBookmarkImage = async (imageId: number) => {
         },
       },
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      if (error.response?.status === 401) {
-        alert('로그인 후 이용 가능합니다. ');
-      }
-      console.log('북마크 요청 실패');
+      console.log(error.response);
     }
   }
 };
@@ -58,14 +54,26 @@ export const getDetailImage = async (imageId: number) => {
         },
       },
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
       if (error.response?.status === 401) {
         alert('로그인 후 이용 가능합니다. ');
       }
-      console.log('상세페이지 요청 실패');
+      console.log(error.response);
+    }
+  }
+};
+
+export const getMainImage = async () => {
+  try {
+    const response: AxiosResponse = await axios.get(
+      `${import.meta.env.VITE_APP_API}/images/main`,
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response);
     }
   }
 };

@@ -30,20 +30,17 @@ type ImageDetail = {
 
 function ImageCard({ item }: ImageCardProps) {
   const { pathname } = useLocation();
-  const [detail, setDetail] = useState<ImageDetail>({
-    like: false,
-    bookmark: false,
-  });
-  const [likestate, setlikeState] = useState<boolean>(false);
-  const [bookstate, setBookmarkState] = useState<boolean>(false);
+  const [detail, setDetail] = useState<ImageDetail | null>(null);
+  const [likestate, setlikeState] = useState<boolean>();
+  const [bookstate, setBookmarkState] = useState<boolean>();
 
   const clickEventHanelr = async (type: string) => {
     if (type === 'like') {
       await patchLikeImage(item.imageId);
-      setlikeState(detail.like);
+      setlikeState(!detail?.like);
     } else if (type === 'bookmark') {
       await patchBookmarkImage(item.imageId);
-      setBookmarkState(detail.bookmark);
+      setBookmarkState(!detail?.bookmark);
     }
   };
 
