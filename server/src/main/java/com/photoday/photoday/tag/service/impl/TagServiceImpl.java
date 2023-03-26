@@ -36,7 +36,7 @@ public class TagServiceImpl implements TagService {
         List<String> tagList = Arrays.stream(tagArr).collect(Collectors.toList());
 
         Page<Image> page = imageRepository.findAllByTag(tagList, pageRequest);
-        List<ImageDto.PageResponse> responses = page.stream() //TODO List 로 변환 후 스트림 돌려보기. 속도 차이 나는지 확인하기. log around 이용
+        List<ImageDto.PageResponse> responses = page.stream()
                 .map(imageMapper::imageToPageResponse).collect(Collectors.toList());
 
         return new MultiResponseDto(responses, page);
