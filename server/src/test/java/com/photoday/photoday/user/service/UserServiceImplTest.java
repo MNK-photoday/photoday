@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static com.photoday.photoday.helper.snippets.RestDocsSnippets.getMockMultipartFile;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,7 +53,6 @@ class UserServiceImplTest {
         // given
         UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
         String defaultProfileImageUrl = "https://ifh.cc/g/zPrPfv.png";
-        given(authUserService.checkLogin()).willReturn(null);
 
         // when
         UserDto.Response userDtoResponse = userService.createUser(post);
@@ -125,7 +125,7 @@ class UserServiceImplTest {
 
         UserDto.Post post = new UserDto.Post("test@email.com", "123456a!");
         UserDto.Response ExpectedResponse = userService.createUser(post);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         // when
         UserDto.Response actualResponse = userService.getUser(ExpectedResponse.getUserId());
@@ -152,7 +152,7 @@ class UserServiceImplTest {
                 .password("123456a!")
                 .build();
         User loginUser = userRepository.save(user);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         UserDto.Update userUpdateDto = new UserDto.Update("edited!");
         MultipartFile multipartFile = getMockMultipartFile("multipartFile", "multipartFile");
@@ -176,7 +176,7 @@ class UserServiceImplTest {
                 .password("123456a!")
                 .build();
         User loginUser = userRepository.save(user);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         UserDto.Update userUpdateDto = new UserDto.Update("edited!");
 
@@ -198,7 +198,7 @@ class UserServiceImplTest {
                 .password("123456a!")
                 .build();
         User loginUser = userRepository.save(user);
-        given(authUserService.getLoginUserId()).willReturn(loginUser.getUserId());
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
         MultipartFile multipartFile = getMockMultipartFile("multipartFile", "multipartFile");
         given(s3Service.saveImage(any(MultipartFile.class))).willReturn("http://changedProfileImageUrl.jpg");
