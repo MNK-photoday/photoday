@@ -72,7 +72,7 @@ class UserMapperTest {
         follow.setFollowing(currentUser);
 
         // when
-        UserDto.Response response = userMapper.userToUserResponse(responseUser, currentUser.getUserId());
+        UserDto.Response response = userMapper.userToUserResponse(responseUser, currentUser);
 
         // then
         assertEquals(responseUser.getUserId(), response.getUserId());
