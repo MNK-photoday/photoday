@@ -6,7 +6,7 @@ export const BorderCSS = css`
   height: 40px;
 `;
 
-export const S_InputContainerWrap = styled.div`
+export const S_InputContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
