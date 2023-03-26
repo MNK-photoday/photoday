@@ -95,7 +95,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto.Response getImage(long imageId) {
         Image image = findVerifiedImage(imageId);
-        image.setViewCount(image.getViewCount() + 1); //TODO 숫자 더하는 쿼리 작성해서 한 줄로 합치기
+        image.setViewCount(image.getViewCount() + 1);
         Image save = imageRepository.save(image);
         User user = authUserService.getLoginUser().orElse(null);
         return imageMapper.imageToResponse(save, user);
