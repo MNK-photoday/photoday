@@ -118,12 +118,12 @@ public class ImageServiceImpl implements ImageService {
 //        Long userId = authUserService.getLoginUserId();
 //        User user = userService.findVerifiedUser(userId);
 
-        Optional<Bookmark> bookmark = image.getBookmarkList().stream()
-                .filter(b -> b.getUser().getUserId().equals(user.getUserId()))
+        Optional<Bookmark> optionalBookmark = image.getBookmarkList().stream()
+                .filter(bookmark -> bookmark.getUser().getUserId().equals(user.getUserId()))
                 .findFirst();
 
-        if (bookmark.isPresent()) {
-            image.getBookmarkList().remove(bookmark.get());
+        if (optionalBookmark.isPresent()) {
+            image.getBookmarkList().remove(optionalBookmark.get());
 
         } else {
             Bookmark newBookmark = new Bookmark();
@@ -162,7 +162,7 @@ public class ImageServiceImpl implements ImageService {
         userService.checkUserReportCount(loginUser);
 
         Optional<Report> optionalReport = image.getReportList().stream()
-                .filter(r -> r.getUser().getUserId().equals(loginUser.getUserId()))
+                .filter(report -> report.getUser().getUserId().equals(loginUser.getUserId()))
                 .findFirst();
 
         if (image.getReportList().size() >= 4) {
@@ -197,13 +197,13 @@ public class ImageServiceImpl implements ImageService {
         User loginUser = authUserService.getLoginUser()
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        Optional<Like> like = image.getLikeList().stream() //TODO 변수명 정리하기
-                .filter(l -> Objects.equals(l.getUser().getUserId(), loginUser.getUserId()))
+        Optional<Like> optionalLike = image.getLikeList().stream()
+                .filter(like -> Objects.equals(like.getUser().getUserId(), loginUser.getUserId()))
                 .findFirst();
 
-        if (like.isPresent()) {
-            image.getLikeList().remove(like.get());
-            likeRepository.deleteAllByIdInBatch(Collections.singleton(like.get().getLikeId()));
+        if (optionalLike.isPresent()) {
+            image.getLikeList().remove(optionalLike.get());
+            likeRepository.deleteAllByIdInBatch(Collections.singleton(optionalLike.get().getLikeId()));
         } else {
             Like newLike = new Like();
             newLike.setUser(loginUser);
@@ -257,7 +257,7 @@ public class ImageServiceImpl implements ImageService {
         return tagList.stream()
                 .map(tagService::verifyTag)
                 .map(this::tagToImageTag)
-                .peek(tag -> tag.setImage(image)) //TODO IMAGETAG로 바꾸기
+                .peek(imageTag -> imageTag.setImage(image))
                 .collect(Collectors.toList());
     }
 
