@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { BiImageAdd } from 'react-icons/bi';
-import { FaUserCircle } from 'react-icons/fa';
 import { RxTriangleDown } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
@@ -16,6 +15,7 @@ import {
   S_NavSpan,
   S_HeaderContainer,
   S_HeaderWrap,
+  S_UserProfile,
 } from './Header.styles';
 import HeaderModal from './HeaderModal';
 import { RootState } from '../../../store/store';
@@ -25,7 +25,10 @@ type HeaderProps = {
 };
 
 function Header({ activeSearchBar }: HeaderProps) {
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const { isLoggedIn, userProfileImage } = useSelector(
+    (state: RootState) => state.auth,
+  );
+
   const [isActiveMenu, setIsActiveMenu] = useState(false);
   return (
     <S_HeaderWrap>
@@ -48,7 +51,10 @@ function Header({ activeSearchBar }: HeaderProps) {
                 active={isActiveMenu}
                 onClick={() => setIsActiveMenu(!isActiveMenu)}
               >
-                <FaUserCircle className="user-icon" />
+                <S_UserProfile
+                  src={userProfileImage}
+                  alt="유저 프로필 사진"
+                ></S_UserProfile>
                 <RxTriangleDown className="triangleDown-icon" />
                 {isActiveMenu && <HeaderModal />}
               </S_NavLinkIconBox>
