@@ -11,18 +11,18 @@ export const S_MainImageContentBox = styled.section`
   @media screen and (max-width: 1024px) {
     width: 100%;
     padding-left: 0px;
-    height: 100%;
+    height: 1040px;
     padding: 30px 0;
   }
 `;
 
 export const S_MainImageCardBox = styled.div`
-  width: 700px;
-  height: 100%;
+  width: 750px;
   display: grid;
   row-gap: 30px;
+  grid-auto-rows: 380px;
   @media screen and (max-width: 1024px) {
-    height: 800px;
+    grid-auto-rows: 450px;
   }
 `;
 
