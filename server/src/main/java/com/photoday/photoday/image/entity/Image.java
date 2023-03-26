@@ -62,11 +62,4 @@ public class Image {
             user.getImages().add(this);
         }
     }
-
-    public void setReport(Report report) {
-        this.getReportList().add(report);
-        if (report.getImage() != this) {
-            report.setImage(this);
-        }
-    }
 }
