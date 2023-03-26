@@ -87,6 +87,8 @@ function UserThumnailArea({ userData, myPage }: User) {
     try {
       const response = await updateFile(file.file);
       dispatch(setData(response));
+      const { profileImageUrl } = response.data;
+      localStorage.setItem('userProfileImage', profileImageUrl);
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
