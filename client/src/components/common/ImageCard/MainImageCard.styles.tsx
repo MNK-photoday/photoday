@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 export const S_MainImageContentBox = styled.section`
-  height: 790px;
-  width: 50%;
+  width: 45%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
