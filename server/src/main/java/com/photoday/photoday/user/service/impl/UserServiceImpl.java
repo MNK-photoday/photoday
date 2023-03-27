@@ -119,11 +119,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
-        Long loginUserId = authUserService.getLoginUserId();
+        User targetUser = findVerifiedUser(userId);
+        User loginUser = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        List<String> roles = findVerifiedUser(loginUserId).getRoles();
-        if (roles.contains("ADMIN") || userId.equals(loginUserId)) {
+        if (userId.equals(loginUser.getUserId())) {
             userRepository.deleteById(userId);
+        } else if (loginUser.getRoles().contains("ADMIN")) {
+            targetUser.setStatus(User.UserStatus.USER_BANNED);
+            targetUser.setBanTime(LocalDateTime.now().plusWeeks(1));
         } else {
             throw new CustomException(USER_INFO_NOT_MATCH);
         }
