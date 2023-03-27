@@ -441,7 +441,15 @@ public class UserServiceImplTestV2 {
         assertTrue(LocalDateTime.now().plusWeeks(1).isAfter(user.getBanTime()));
     }
 
+    @Test
+    @DisplayName("checkBanTime: active 유저")
+    void checkBanTimeTest() {
+        // given
+        User user = getUser("test@email.com");
 
+        // when
+        userService.checkBanTime(user);
+    }
 
     private User getUser(String email) {
         return User.builder()
