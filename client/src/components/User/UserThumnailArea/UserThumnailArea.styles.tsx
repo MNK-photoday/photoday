@@ -1,13 +1,19 @@
-import { Flex, ColFlex } from '../../../styles/GlobalStyles';
+import { Flex, ColFlex, RowFlex } from '../../../styles/GlobalStyles';
 import styled from 'styled-components';
 
 export const S_UserThumnailArea = styled.div`
   ${ColFlex}
   align-items: center;
-  width: 25%;
   min-width: 300px;
   border-right: 1px solid rgba(194, 194, 194, 0.5);
-  margin-right: 5%;
+  margin: 0 3%;
+
+  @media screen and (max-width: 500px) {
+    border: none;
+    padding-bottom: 80px;
+    margin-bottom: 80px;
+    border-bottom: 1px solid rgba(194, 194, 194, 0.5);
+  }
 `;
 
 export const S_UserProfileIamge = styled.img`
@@ -18,9 +24,7 @@ export const S_UserProfileIamge = styled.img`
 `;
 
 export const S_UserFollowContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  ${RowFlex}
   margin-bottom: 15px;
 `;
 

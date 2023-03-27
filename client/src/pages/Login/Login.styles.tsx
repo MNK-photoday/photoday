@@ -26,8 +26,21 @@ export const S_ImgContainer = styled(Content)`
 `;
 
 export const S_ContentSection = styled.section`
+  display: flex;
+  justify-content: center;
   width: 450px;
   position: fixed;
   right: 0;
   background: var(--white);
+  transition: background-color 0.5s ease-in-out;
+
+  @media screen and (max-width: 1024px) and (min-width: 415px) {
+    background: #ffffffb0;
+    transition: background-color 0.5s ease-in-out;
+  }
+
+  @media screen and (max-width: 414px) {
+    width: 100%;
+    background: #ffffffb0;
+  }
 `;

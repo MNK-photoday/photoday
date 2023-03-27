@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  S_UserPageSubTitleWrap,
+  S_UserPageSubTitleContainer,
   S_UserPageSubTitlePoint,
   S_UserPhotoContentContainer,
   S_NoPostsGuideContainer,
@@ -66,7 +66,7 @@ function UserContentSection({ userName, myPage, id, userId }: User) {
 
   return (
     <>
-      <S_UserPageSubTitleWrap currentTap={currentTap}>
+      <S_UserPageSubTitleContainer currentTap={currentTap}>
         <S_Tab className="user" onClick={userTapHandler}>
           <S_UserPageSubTitlePoint>{userName}</S_UserPageSubTitlePoint>
           's pho
@@ -78,7 +78,7 @@ function UserContentSection({ userName, myPage, id, userId }: User) {
             Bookmark
           </S_Tab>
         )}
-      </S_UserPageSubTitleWrap>
+      </S_UserPageSubTitleContainer>
       {posts.length ? (
         <>
           <S_UserPhotoContentContainer>
