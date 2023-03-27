@@ -298,12 +298,35 @@ public class UserServiceImplTestV2 {
         userService.deleteUser(user.getUserId());
     }
 
+    @Test
+    @DisplayName("deleteUser: 정상 입력: 관리자 삭제")
+    void deleteUserAdminTest() {
+        // given
+        User admin = getAdmin();
+        User user = getUser("test@mail.com");
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(admin));
+        doNothing().when(userRepository).deleteById(anyLong());
+
+        // when
+        userService.deleteUser(user.getUserId());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
                 .email(email)
                 .name("test")
                 .roles(List.of("USER"))
+                .build();
+    }
+
+    private User getAdmin() {
+        return User.builder()
+                .userId(getId())
+                .email("admin@email.com")
+                .name("test")
+                .roles(List.of("USER", "ADMIN"))
                 .build();
     }
 
