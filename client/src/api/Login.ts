@@ -37,6 +37,7 @@ export const postLogin = async (
     },
   );
 
+  console.log('보냄.', `${import.meta.env.VITE_APP_API}/auth/login`);
   const accessToken = response.headers.authorization;
   const userId = response.data.userId;
   const userProfileImage = response.data.userProfileImage;
