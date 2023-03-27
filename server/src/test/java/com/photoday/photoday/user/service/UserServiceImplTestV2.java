@@ -364,6 +364,29 @@ public class UserServiceImplTestV2 {
         userService.checkUserReportCount(user);
     }
 
+    @Test
+    @DisplayName("checkUserReportCount: report 5 이상")
+    void checkUserReportCountReportCountExceedsLimitTest() {
+        // given
+        User user = getUser("test@mail.com");
+
+        Report report1 = new Report();
+        report1.setUser(user);
+        Report report2 = new Report();
+        report2.setUser(user);
+        Report report3 = new Report();
+        report3.setUser(user);
+        Report report4 = new Report();
+        report4.setUser(user);
+        Report report5 = new Report();
+        report5.setUser(user);
+
+        // when
+        CustomException exception = assertThrows(CustomException.class, () -> userService.checkUserReportCount(user));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getExceptionCode().getHttpStatus());
+        assertEquals("신고 개수가 5개 이상입니다.", exception.getExceptionCode().getMessage());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
