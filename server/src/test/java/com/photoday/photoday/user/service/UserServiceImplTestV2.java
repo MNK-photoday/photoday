@@ -255,6 +255,23 @@ public class UserServiceImplTestV2 {
         assertThrows(RuntimeException.class, () -> userService.updateUser(null, multipartFile));
     }
 
+    @Test
+    @DisplayName("updateUserPassword: 정상 입력")
+    void updateUserPassword() {
+        // given
+        String password = "123456a!";
+        UserDto.UpdateUserPassword update = new UserDto.UpdateUserPassword(password,password);
+        User user = getUser("test@test.com");
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(user));
+
+        // when
+        userService.updateUserPassword(update);
+
+        // then
+        assertNotEquals(password, user.getPassword());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
