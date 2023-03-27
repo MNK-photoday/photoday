@@ -9,9 +9,9 @@ jobs:
     steps:
       - name: Checkout source code.
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ./client
       - name: Generate Environment Variables File for Production
         run: |
           echo "VITE_APP_API=$VITE_APP_API" >> .env.
@@ -19,9 +19,6 @@ jobs:
         env:
           VITE_APP_API: ${{ secrets.VITE_APP_API }}
           VITE_GOOGLE_AUTH_URL: ${{ secrets.VITE_GOOGLE_AUTH_URL }}
-      - name: Install dependencies
-        run: yarn install
-        working-directory: ./client
       - name: Build
         run: yarn vite build
         working-directory: ./client
