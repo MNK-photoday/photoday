@@ -211,6 +211,22 @@ public class UserServiceImplTestV2 {
         assertEquals(imageUrl, response.getProfileImageUrl());
     }
 
+    @Test
+    @DisplayName("updateUser: description만 변경")
+    void updateUserMultipartFileNullTest() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = getUser("test@email.com");
+        UserDto.Update update = new UserDto.Update("유저 설명");
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(user));
+
+        // when
+        UserDto.Response response = userService.updateUser(update, null);
+
+        // then
+        assertEquals(user.getDescription(), response.getDescription());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
