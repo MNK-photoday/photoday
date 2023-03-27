@@ -1,7 +1,6 @@
 package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
@@ -257,10 +256,10 @@ public class UserServiceImplTestV2 {
 
     @Test
     @DisplayName("updateUserPassword: 정상 입력")
-    void updateUserPassword() {
+    void updateUserPasswordTest() {
         // given
         String password = "123456a!";
-        UserDto.UpdateUserPassword update = new UserDto.UpdateUserPassword(password,password);
+        UserDto.UpdateUserPassword update = new UserDto.UpdateUserPassword(password, password);
         User user = getUser("test@test.com");
 
         given(authUserService.getLoginUser()).willReturn(Optional.of(user));
@@ -270,6 +269,19 @@ public class UserServiceImplTestV2 {
 
         // then
         assertNotEquals(password, user.getPassword());
+    }
+
+    @Test
+    @DisplayName("updateUserPassword: 비밀번호 확인 불일치")
+    void updateUserPasswordPasswordNotMatchTest() {
+        // given
+        String password = "123456a!";
+        UserDto.UpdateUserPassword update = new UserDto.UpdateUserPassword(password, password + "a");
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.updateUserPassword(update));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
+        assertEquals("비밀번호가 일치하지 않습니다.", exception.getExceptionCode().getMessage());
     }
 
     private User getUser(String email) {
