@@ -22,10 +22,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
@@ -115,6 +113,24 @@ public class UserServiceImplTestV2 {
         User response = userService.registerUserOAuth2(user);
 
         // then
+        assertEquals(user.getUserId(), response.getUserId());
+    }
+
+    @Test
+    @DisplayName("getUser: 정상 입력")
+    void getUserTest() {
+        // given
+        User user = getUser("test@email.com");
+        User loginUser = getUser("loginUser");
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
+
+        // when
+        UserDto.Response response = userService.getUser(user.getUserId());
+
+        // then
+        assertNotEquals(loginUser.getUserId(), response.getUserId());
         assertEquals(user.getUserId(), response.getUserId());
     }
 
