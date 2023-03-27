@@ -45,18 +45,15 @@ public class UserServiceImplTestV2 {
     @Mock
     S3Service s3Service;
 
+    private Long userId = 0L;
+
     @Test
     @DisplayName("createUser: 정상 입력")
     void createUserTest() {
         // given
         String email = "test@test.com";
         String password = "123456a!";
-        User user = User.builder()
-                .userId(1L)
-                .email(email)
-                .name("test")
-                .roles(List.of("USER"))
-                .build();
+        User user = getUser(email);
 
         UserDto.Post post = new UserDto.Post(email, password);
 
@@ -78,12 +75,7 @@ public class UserServiceImplTestV2 {
         // given
         String email = "test@test.com";
         String password = "123456a!";
-        User user = User.builder()
-                .userId(1L)
-                .email(email)
-                .name("test")
-                .roles(List.of("USER"))
-                .build();
+        User user = getUser(email);
 
         UserDto.Post post = new UserDto.Post(email, password);
 
@@ -94,4 +86,37 @@ public class UserServiceImplTestV2 {
         assertEquals(HttpStatus.CONFLICT, exception.getExceptionCode().getHttpStatus());
         assertEquals("이미 존재하는 이메일입니다.", exception.getExceptionCode().getMessage());
     }
+
+    @Test
+    @DisplayName("registerUserOAuth2: 정상 입력")
+    void registerUserOAuth2Test() {
+        // given
+
+        User user = getUser("test@test.com");
+
+        given(userRepository.findByEmail(anyString())).willReturn(Optional.empty());
+        given(userRepository.save(any(User.class))).willReturn(user);
+
+        // when
+        User response = userService.registerUserOAuth2(user);
+
+        // then
+        assertEquals(user.getUserId(), response.getUserId());
+    }
+
+
+    private User getUser(String email) {
+        return User.builder()
+                .userId(getId())
+                .email(email)
+                .name("test")
+                .roles(List.of("USER"))
+                .build();
+    }
+
+    private Long getId() {
+        userId += 1;
+        return userId;
+    }
+
 }
