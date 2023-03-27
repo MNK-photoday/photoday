@@ -516,6 +516,21 @@ public class UserServiceImplTestV2 {
         assertFalse(response);
     }
 
+    @Test
+    @DisplayName("checkAdmin: 관리자")
+    void checkAdminAdminTest() {
+        // given
+        User admin = getAdmin();
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(admin));
+
+        // when
+        boolean response = userService.checkAdmin(admin.getUserId());
+
+        // then
+        assertTrue(response);
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
