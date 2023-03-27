@@ -1,5 +1,6 @@
 package com.photoday.photoday.user.service;
 
+import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -67,5 +70,28 @@ public class UserServiceImplTestV2 {
         assertEquals(user.getUserId(), response.getUserId());
         assertEquals(user.getName(), response.getName());
         assertEquals(user.getDescription(), response.getDescription());
+    }
+
+    @Test
+    @DisplayName("createUser: 이미 존재")
+    void createUserAlreadyExistsTest() {
+        // given
+        String email = "test@test.com";
+        String password = "123456a!";
+        User user = User.builder()
+                .userId(1L)
+                .email(email)
+                .name("test")
+                .roles(List.of("USER"))
+                .build();
+
+        UserDto.Post post = new UserDto.Post(email, password);
+
+        given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.createUser(post));
+        assertEquals(HttpStatus.CONFLICT, exception.getExceptionCode().getHttpStatus());
+        assertEquals("이미 존재하는 이메일입니다.", exception.getExceptionCode().getMessage());
     }
 }
