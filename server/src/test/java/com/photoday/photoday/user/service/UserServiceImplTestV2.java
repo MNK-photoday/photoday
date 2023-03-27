@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -422,6 +423,25 @@ public class UserServiceImplTestV2 {
         // when
         userService.banUser(image);
     }
+
+    @Test
+    @DisplayName("banUser: reportCount 10 이상")
+    void banUserBanTest() {
+        // given
+        User user = getUser("test@email.com");
+        user.setReportedCount(10);
+        Image image = Image.builder().user(user).build();
+
+        // when
+        userService.banUser(image);
+
+        // then
+        assertEquals(0, user.getReportedCount());
+        assertEquals(User.UserStatus.USER_BANNED, user.getStatus());
+        assertTrue(LocalDateTime.now().plusWeeks(1).isAfter(user.getBanTime()));
+    }
+
+
 
     private User getUser(String email) {
         return User.builder()
