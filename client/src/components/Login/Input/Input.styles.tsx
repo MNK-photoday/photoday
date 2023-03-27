@@ -26,6 +26,10 @@ export const S_Input = styled.input`
   &:focus {
     box-shadow: inset 0 0 0 1px var(--color-primary-green);
   }
+
+  @media screen and (max-width: 414px) {
+    width: 100%;
+  }
 `;
 
 export const S_CheckBox = styled.input<{ isChecked: boolean }>`
@@ -45,7 +49,7 @@ export const S_CheckBox = styled.input<{ isChecked: boolean }>`
     isChecked && 'var(--color-primary-green)'};
 
   @media screen and (max-width: 1024px) {
-    background: #ffffffc7;
+    border: 1px solid var(--color-primary-green);
   }
 `;
 
