@@ -341,6 +341,18 @@ public class UserServiceImplTestV2 {
         assertEquals(defaultProfileUrl, response.getProfileImageUrl());
     }
 
+    @Test
+    @DisplayName("deleteProfileImage: 잘못된 입력(Anonymous)")
+    void deleteProfileImageAnonymousTest() {
+        // given
+        given(authUserService.getLoginUser()).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.deleteProfileImage());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
+        assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
