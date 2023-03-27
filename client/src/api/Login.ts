@@ -35,6 +35,9 @@ export const postLogin = async (
       email: loginForm.email,
       password: loginForm.password,
     },
+    {
+      withCredentials: true,
+    },
   );
 
   const accessToken = response.headers.authorization;
