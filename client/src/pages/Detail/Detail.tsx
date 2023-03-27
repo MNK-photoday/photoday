@@ -42,9 +42,17 @@ function Detail() {
   const [detailInfo, setDetailInfo] = useState<DetailInfo>();
   const [tags, setTags] = useState<Tags[]>([]);
   const { id } = useParams();
+
+  const token = localStorage.getItem('accessToken');
+  const headers = {
+    headers: { Authorization: token },
+  };
+
+  const [isLike, setIsLike] = useState(false);
+  const [isBookmark, setIsBookmark] = useState(false);
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_APP_API}/images/${id}`)
+      .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
       .then((res) => {
         console.log(res.data);
         const response = res.data.data;
@@ -60,6 +68,8 @@ function Detail() {
           createdAt: response.createdAt,
           ownerId: response.owner.userId,
         });
+        setIsBookmark(response.bookmark);
+        setIsLike(response.like);
         if (response.tags.length > 0) {
           const objectArray: Tags[] = response.tags.map(
             (tag: string, index: number) => {
@@ -75,15 +85,7 @@ function Detail() {
       });
   }, []);
 
-  const token = localStorage.getItem('accessToken');
-  const headers = {
-    headers: { Authorization: token },
-  };
-
   const navigate = useNavigate();
-
-  const [isLike, setIsLike] = useState(false);
-  const [isBookmark, setIsBookmark] = useState(false);
 
   const dateTypeConverter = (date: string | undefined) => {
     return date?.split('T')[0] + ' ' + date?.split('T')[1].split('.')[0];
@@ -120,9 +122,13 @@ function Detail() {
       )
       .then((res) => {
         setIsLike(res.data.data.like);
+        console.log(isLike);
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status === 401) {
+          navigate('/login');
+        }
       });
   };
 
@@ -138,6 +144,9 @@ function Detail() {
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status === 401) {
+          navigate('/login');
+        }
       });
   };
 
@@ -170,26 +179,26 @@ function Detail() {
                 {isBookmark ? (
                   <FaBookmark
                     size={18}
-                    className="bookmark-icon"
+                    className="clicked-bookmark-icon"
                     onClick={bookmarkClickHandler}
                   />
                 ) : (
                   <FaBookmark
                     size={18}
-                    className="clicked-bookmark-icon"
+                    className="bookmark-icon"
                     onClick={bookmarkClickHandler}
                   />
                 )}
                 {isLike ? (
                   <FaHeart
                     size={20}
-                    className="like-icon"
+                    className="clicked-like-icon"
                     onClick={likeClickHandler}
                   />
                 ) : (
                   <FaHeart
                     size={20}
-                    className="clicked-like-icon"
+                    className="like-icon"
                     onClick={likeClickHandler}
                   />
                 )}
