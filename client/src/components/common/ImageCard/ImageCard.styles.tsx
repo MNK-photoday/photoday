@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_CardImagePicture = styled.div`
+  width: 100%;
   position: relative;
+  height: 100%;
 `;
 
 export const S_CardImageLink = styled(Link)`

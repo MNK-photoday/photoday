@@ -1,10 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import ImageCard from '../ImageCard/ImageCard';
-import {
-  S_ImageCardBox,
-  S_ImageCardWrap,
-  S_LoaderBar,
-} from './ImageCardList.styles';
+import { S_ImageCardWrap, S_LoaderBar } from './ImageCardList.styles';
 import { postSearchTags } from '../../../api/Search';
 import { ItemContext } from '../../../context/ItemContext';
 import { LoadingContext } from '../../../context/LoadintContext';
@@ -89,26 +85,22 @@ function ImageCardList({
 
   return (
     <>
-      <S_ImageCardWrap>
-        <S_ImageCardBox width={width} height={height} matrix={matrix}>
-          {ITEM_CONTEXT?.items.map((item: ImageItemProps) => (
-            <ImageCard key={item.imageId} item={item} />
-          ))}
-        </S_ImageCardBox>
-        {/* 로딩 중일 때 */}
-        {LOADING_CONTEXT?.isLoading && (
-          <S_LoaderBar>Loading more...</S_LoaderBar>
-        )}
-        {LOADING_CONTEXT?.isLoading && (
-          <ImageCardSkeleton count={6} width={width} height={height} />
-        )}
-        {/* 검색 결과가 없을 때  | 받아올 데이터가 없을 때 */}
-        {!LOADING_CONTEXT?.isLoading && !hasMore && (
-          <S_LoaderBar>No more photos to load.</S_LoaderBar>
-        )}
-        {/* 끝까지 스크롤 했을 때 */}
-        {hasMore && <S_LoaderBar ref={endRef}></S_LoaderBar>}
+      <S_ImageCardWrap height={height} matrix={matrix}>
+        {ITEM_CONTEXT?.items.map((item: ImageItemProps) => (
+          <ImageCard key={item.imageId} item={item} />
+        ))}
       </S_ImageCardWrap>
+      {/* 로딩 중일 때 */}
+      {LOADING_CONTEXT?.isLoading && (
+        <ImageCardSkeleton count={6} height={height} />
+      )}
+      {LOADING_CONTEXT?.isLoading && <S_LoaderBar>Loading more...</S_LoaderBar>}
+      {/* 검색 결과가 없을 때  | 받아올 데이터가 없을 때 */}
+      {!LOADING_CONTEXT?.isLoading && !hasMore && (
+        <S_LoaderBar>No more photos to load.</S_LoaderBar>
+      )}
+      {/* 끝까지 스크롤 했을 때 */}
+      {hasMore && <S_LoaderBar ref={endRef}></S_LoaderBar>}
     </>
   );
 }

@@ -1,18 +1,10 @@
 import styled from 'styled-components';
-import { RowFlex } from '../../styles/GlobalStyles';
 
 export const S_MainContentBox = styled.div`
-  ${RowFlex}
-  height: 100%;
-  padding: 40px 0;
-  box-sizing: border-box;
-  align-items: center;
+  display: flex;
   width: 100%;
-  justify-content: space-around;
-  padding: 30px;
-  /*100vh - 헤더높이 - 푸터높이 */
-  height: calc(100vh - 70px - 20px);
-
+  height: calc(100vh - 70px);
+  align-items: center;
   @media screen and (max-width: 1024px) {
     flex-wrap: wrap;
     width: 100%;
@@ -25,7 +17,7 @@ export const S_SearchContentBox = styled.section`
   width: 50%;
   height: 450px;
   position: relative;
-  padding: 30px 0px;
+  padding: 30px;
 
   @media screen and (max-width: 1024px) {
     width: 100%;

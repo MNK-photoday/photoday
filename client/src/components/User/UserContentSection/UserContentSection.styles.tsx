@@ -43,16 +43,19 @@ export const S_Tab = styled.div`
 export const S_UserPhotoContentContainer = styled.article`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: 280px;
   padding: 30px 8%;
   place-items: center;
   gap: 20px;
 
   @media screen and (max-width: 1024px) and (min-width: 500px) {
     grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 220px;
   }
 
   @media screen and (max-width: 500px) {
     grid-template-columns: none;
+    grid-auto-rows: 220px;
   }
 `;
 
