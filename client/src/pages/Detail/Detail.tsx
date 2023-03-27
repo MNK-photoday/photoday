@@ -157,7 +157,7 @@ function Detail() {
           </S_PicBox>
           <TagList tags={tags} isModificationMode={false} />
           <S_SeachList>
-            <ImageCardList width={400} />
+            <ImageCardList width={400} height={350} />
           </S_SeachList>
         </S_DetailBox>
       </Container>
