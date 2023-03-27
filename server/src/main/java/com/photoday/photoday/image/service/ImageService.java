@@ -30,7 +30,7 @@ public interface ImageService {
 
     MultiResponseDto getUserImages(long userId, Pageable pageable);
 
-    List<ImageDto.Response> getMainImages();
+    List<ImageDto.PageResponse> getMainImages();
 
     Image findVerifiedImage(long imageId);
 }

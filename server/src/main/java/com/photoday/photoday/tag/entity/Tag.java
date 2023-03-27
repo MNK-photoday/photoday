@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Tag { //TODO 미사용 세터 정리
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long tagId;
@@ -23,11 +23,4 @@ public class Tag { //TODO 미사용 세터 정리
 
     @OneToMany(mappedBy = "tag")
     private List<ImageTag> imageTagList = new ArrayList<>();
-
-    public void setImageTag(ImageTag imageTag) {
-        this.getImageTagList().add(imageTag);
-        if (imageTag.getTag() != this) {
-            imageTag.setTag(this);
-        }
-    }
 }

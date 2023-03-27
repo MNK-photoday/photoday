@@ -86,7 +86,7 @@ public class ImageController {
 
     @GetMapping("/main")
     public ResponseEntity<?> getMainImages() {
-        List<ImageDto.Response> mainImages = imageService.getMainImages();
+        List<ImageDto.PageResponse> mainImages = imageService.getMainImages();
         return new ResponseEntity<>(mainImages, HttpStatus.OK);
     }
 }

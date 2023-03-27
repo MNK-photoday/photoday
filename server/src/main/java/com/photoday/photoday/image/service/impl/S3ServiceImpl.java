@@ -26,7 +26,7 @@ public class S3ServiceImpl implements S3Service {
     private String s3Bucket;
 
     @Override
-    public String saveImage(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException { //TODO 정리하기
+    public String saveImage(MultipartFile multipartFile) throws IOException {
         String originalFilename = multipartFile.getOriginalFilename();
         long size = multipartFile.getSize();
 

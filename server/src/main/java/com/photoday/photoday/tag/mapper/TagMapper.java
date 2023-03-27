@@ -16,7 +16,7 @@ public class TagMapper {
     }
 
     public Tag getTag(String name) {
-        Tag tag = new Tag(); //TODO 빌더로 통일
+        Tag tag = new Tag();
         tag.setName(name);
         return tag;
     }

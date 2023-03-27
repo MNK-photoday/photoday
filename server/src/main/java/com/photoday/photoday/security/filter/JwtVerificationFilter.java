@@ -8,7 +8,6 @@ import com.photoday.photoday.user.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-@Slf4j
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final CustomAuthorityUtils customAuthorityUtils;

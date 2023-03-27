@@ -95,7 +95,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto.Response getImage(long imageId) {
         Image image = findVerifiedImage(imageId);
-        image.setViewCount(image.getViewCount() + 1); //TODO 숫자 더하는 쿼리 작성해서 한 줄로 합치기
+        image.setViewCount(image.getViewCount() + 1);
         Image save = imageRepository.save(image);
         User user = authUserService.getLoginUser().orElse(null);
         return imageMapper.imageToResponse(save, user);
@@ -118,12 +118,12 @@ public class ImageServiceImpl implements ImageService {
 //        Long userId = authUserService.getLoginUserId();
 //        User user = userService.findVerifiedUser(userId);
 
-        Optional<Bookmark> bookmark = image.getBookmarkList().stream()
-                .filter(b -> b.getUser().getUserId().equals(user.getUserId()))
+        Optional<Bookmark> optionalBookmark = image.getBookmarkList().stream()
+                .filter(bookmark -> bookmark.getUser().getUserId().equals(user.getUserId()))
                 .findFirst();
 
-        if (bookmark.isPresent()) {
-            image.getBookmarkList().remove(bookmark.get());
+        if (optionalBookmark.isPresent()) {
+            image.getBookmarkList().remove(optionalBookmark.get());
 
         } else {
             Bookmark newBookmark = new Bookmark();
@@ -162,7 +162,7 @@ public class ImageServiceImpl implements ImageService {
         userService.checkUserReportCount(loginUser);
 
         Optional<Report> optionalReport = image.getReportList().stream()
-                .filter(r -> r.getUser().getUserId().equals(loginUser.getUserId()))
+                .filter(report -> report.getUser().getUserId().equals(loginUser.getUserId()))
                 .findFirst();
 
         if (image.getReportList().size() >= 4) {
@@ -195,13 +195,13 @@ public class ImageServiceImpl implements ImageService {
         User loginUser = authUserService.getLoginUser()
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        Optional<Like> like = image.getLikeList().stream() //TODO 변수명 정리하기
-                .filter(l -> Objects.equals(l.getUser().getUserId(), loginUser.getUserId()))
+        Optional<Like> optionalLike = image.getLikeList().stream()
+                .filter(like -> Objects.equals(like.getUser().getUserId(), loginUser.getUserId()))
                 .findFirst();
 
-        if (like.isPresent()) {
-            image.getLikeList().remove(like.get());
-            likeRepository.deleteAllByIdInBatch(Collections.singleton(like.get().getLikeId()));
+        if (optionalLike.isPresent()) {
+            image.getLikeList().remove(optionalLike.get());
+            likeRepository.deleteAllByIdInBatch(Collections.singleton(optionalLike.get().getLikeId()));
         } else {
             Like newLike = new Like();
             newLike.setUser(loginUser);
@@ -224,14 +224,11 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<ImageDto.Response> getMainImages() { //TODO pageResponse로 변경
+    public List<ImageDto.PageResponse> getMainImages() {
         Pageable pageRequest = PageRequest.of(0, 10);
         Page<Image> page = imageRepository.findMainImages(pageRequest);
         List<Image> mainImages = page.getContent();
-        User user = authUserService.getLoginUser().orElse(null);
-        List<ImageDto.Response> responses = mainImages.stream()
-                .map(image -> imageMapper.imageToResponse(image, user))
-                .collect(Collectors.toList());
+        List<ImageDto.PageResponse> responses = mainImages.stream().map(imageMapper::imageToPageResponse).collect(Collectors.toList());
         return responses;
     }
 
@@ -255,7 +252,7 @@ public class ImageServiceImpl implements ImageService {
         return tagList.stream()
                 .map(tagService::verifyTag)
                 .map(this::tagToImageTag)
-                .peek(tag -> tag.setImage(image)) //TODO IMAGETAG로 바꾸기
+                .peek(imageTag -> imageTag.setImage(image))
                 .collect(Collectors.toList());
     }
 
