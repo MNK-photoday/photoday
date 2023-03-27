@@ -91,11 +91,25 @@ public class UserServiceImplTestV2 {
     @DisplayName("registerUserOAuth2: 정상 입력")
     void registerUserOAuth2Test() {
         // given
-
         User user = getUser("test@test.com");
 
         given(userRepository.findByEmail(anyString())).willReturn(Optional.empty());
         given(userRepository.save(any(User.class))).willReturn(user);
+
+        // when
+        User response = userService.registerUserOAuth2(user);
+
+        // then
+        assertEquals(user.getUserId(), response.getUserId());
+    }
+
+    @Test
+    @DisplayName("registerUserOAuth2: 중복 입력")
+    void registerUserOAuth2LoginTest() {
+        // given
+        User user = getUser("test@test.com");
+
+        given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
 
         // when
         User response = userService.registerUserOAuth2(user);
