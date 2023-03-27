@@ -451,6 +451,25 @@ public class UserServiceImplTestV2 {
         userService.checkBanTime(user);
     }
 
+    @Test
+    @DisplayName("checkBanTime: banned 유저 -> 밴 해제")
+    void checkBanTimeBannedUserTest() {
+        // given
+        User user = getUser("test@email.com");
+        user.setStatus(User.UserStatus.USER_BANNED);
+        user.setBanTime(LocalDateTime.now());
+
+
+        given(userRepository.save(any(User.class))).willReturn(user);
+
+        // when
+        userService.checkBanTime(user);
+
+        // then
+        assertNull(user.getBanTime());
+        assertEquals(User.UserStatus.USER_ACTIVE, user.getStatus());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
