@@ -78,7 +78,6 @@ function Detail() {
   const headers = {
     headers: { Authorization: token },
   };
-  const data = {};
 
   const [isLike, setIsLike] = useState(false);
   const [isBookmark, setIsBookmark] = useState(false);
@@ -113,7 +112,7 @@ function Detail() {
     axios
       .patch(
         `${import.meta.env.VITE_APP_API}/images/${id}/likes`,
-        data,
+        null,
         headers,
       )
       .then((res) => {
@@ -128,7 +127,7 @@ function Detail() {
     axios
       .patch(
         `${import.meta.env.VITE_APP_API}/images/${id}/bookmarks`,
-        data,
+        null,
         headers,
       )
       .then((res) => {
