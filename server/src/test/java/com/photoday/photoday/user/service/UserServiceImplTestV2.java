@@ -387,6 +387,18 @@ public class UserServiceImplTestV2 {
         assertEquals("신고 개수가 5개 이상입니다.", exception.getExceptionCode().getMessage());
     }
 
+    @Test
+    @DisplayName("findUserByEmail: 정상 입력")
+    void findUserByEmailTest() {
+        // given
+        User user = getUser("test@email.com");
+
+        given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
+
+        // when
+        userService.findUserByEmail(user.getEmail());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
