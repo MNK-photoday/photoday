@@ -75,7 +75,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost") //TODO 프론트 배포 후에 바꾸기
+                .host("photodayproject.s3-website.ap-northeast-2.amazonaws.com")
                 .port(3000)
                 .queryParams(queryParams)
                 .build()

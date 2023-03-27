@@ -75,7 +75,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.PATCH, "/*/images/*/bookmarks").authenticated()
                         .antMatchers(HttpMethod.PATCH, "/*/images/*/likes").authenticated()
                         .antMatchers(HttpMethod.POST, "/*/images/*/reports").authenticated()
-                        .antMatchers(HttpMethod.GET, "/*/tags/search/**").authenticated()
+                        .antMatchers(HttpMethod.GET, "/*/tags/search/**").permitAll()
                         .antMatchers(HttpMethod.PATCH, "/*/follows/*").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/follows/*").permitAll()
                         .antMatchers(HttpMethod.GET, "/*/auth/logout").authenticated()
@@ -94,6 +94,7 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000"); //TODO 이거 슬슬 바꿔야할 듯.
+        configuration.addAllowedOrigin("http://photodayproject.s3-website.ap-northeast-2.amazonaws.com/");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("*");
