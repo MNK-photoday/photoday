@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BiImageAdd } from 'react-icons/bi';
 import { RxTriangleDown } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
