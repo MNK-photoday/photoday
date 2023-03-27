@@ -126,6 +126,7 @@ public class UserServiceImpl implements UserService {
             userRepository.deleteById(userId);
         } else if (loginUser.getRoles().contains("ADMIN")) {
             targetUser.setStatus(User.UserStatus.USER_BANNED);
+            targetUser.setBanTime(LocalDateTime.now().plusWeeks(1));
         } else {
             throw new CustomException(USER_INFO_NOT_MATCH);
         }
