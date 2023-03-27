@@ -5,7 +5,6 @@ import { Tags } from '../../../pages/Upload/Upload';
 
 const TagListWrap = styled.div`
   ${RowFlex}
-  width: 500px;
   flex-wrap: wrap;
 `;
 type TagListProps = {
