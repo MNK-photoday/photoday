@@ -15,16 +15,16 @@ export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
 
   @media screen and (max-width: 1500px) {
     grid-template-columns: 1fr 1fr;
-    padding: 0 50px;
   }
   @media screen and (max-width: 1020px) {
     grid-template-columns: 1fr;
     grid-auto-rows: 350px;
-    padding: 0 50px;
+  }
+
+  @media screen and (max-width: 500px) {
+    grid-auto-rows: 200px;
   }
 `;
-
-export const S_ImageCardBox = styled.div``;
 
 export const S_LoaderBar = styled.div`
   height: 20px;
