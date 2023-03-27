@@ -239,7 +239,7 @@ function Detail() {
                   className="dots-icon"
                   onClick={handleOpenModal}
                 />
-                {isOpenModal && <DetailModal />}
+                {isOpenModal && <DetailModal isMyImage={isMyImage} />}
               </S_IconBox>
             </S_ContentsTop>
             <S_Contents>

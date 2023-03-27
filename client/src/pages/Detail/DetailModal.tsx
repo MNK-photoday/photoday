@@ -4,11 +4,15 @@ import {
   S_ModalReportButton,
 } from './DetailModal.styles';
 
-function DetailModal() {
+type ModalProps = {
+  isMyImage: boolean;
+};
+
+function DetailModal({ isMyImage }: ModalProps) {
   return (
     <S_DetailModalContainer>
       <S_ModalReportButton>Report</S_ModalReportButton>
-      <S_ModalDeleteButton>Delete</S_ModalDeleteButton>
+      {isMyImage && <S_ModalDeleteButton>Delete</S_ModalDeleteButton>}
     </S_DetailModalContainer>
   );
 }
