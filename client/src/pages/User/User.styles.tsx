@@ -1,13 +1,19 @@
 import styled from 'styled-components';
 import { Container } from '../../styles/Layout';
-import { Flex, RowFlex } from '../../styles/GlobalStyles';
+import { Flex, RowFlex, ColFlex } from '../../styles/GlobalStyles';
 
 export const S_UserPageContainer = styled(Container)`
-  flex-direction: column;
-  margin: 0 170px 50px 170px;
+  ${ColFlex}
+  margin: 55px 170px 60px 170px;
+  width: 100%;
 `;
 
 export const S_UserSection = styled.section`
   ${RowFlex}
-  margin-top: 55px;
+  width: 100%;
+
+  @media screen and (max-width: 500px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;

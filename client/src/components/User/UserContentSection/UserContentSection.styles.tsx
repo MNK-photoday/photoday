@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { Flex, ColFlex } from '../../../styles/GlobalStyles';
 
-export const S_UserPageSubTitleWrap = styled.div<{ currentTap: string }>`
+export const S_UserPageSubTitleContainer = styled.div<{ currentTap: string }>`
   display: flex;
   align-items: center;
-  margin: 15% 8% 2% 8%;
+  margin: 15% 0 2% 8%;
   height: 5%;
   color: var(--color-primary-black);
   border-bottom: 1px solid #d9d9d96a;
@@ -32,6 +32,12 @@ export const S_UserPageSubTitlePoint = styled.span`
 export const S_Tab = styled.div`
   height: 40px;
   margin-right: 50px;
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
+    ${Flex}
+    margin-right: 0;
+  }
 `;
 
 export const S_UserPhotoContentContainer = styled.article`
@@ -40,6 +46,14 @@ export const S_UserPhotoContentContainer = styled.article`
   padding: 30px 8%;
   place-items: center;
   gap: 20px;
+
+  @media screen and (max-width: 1024px) and (min-width: 500px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (max-width: 500px) {
+    grid-template-columns: none;
+  }
 `;
 
 export const S_NoPostsGuideContainer = styled.div`

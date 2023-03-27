@@ -1,20 +1,18 @@
 import styled from 'styled-components';
-import { ColFlex, RowFlex } from '../../../styles/GlobalStyles';
-import { Container } from '../../../styles/Layout';
+import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_FooterContainerWrap = styled.footer`
   ${RowFlex}
   justify-content: center;
-`;
-
-export const S_FooterContainer = styled(Container)`
   position: fixed;
-  bottom: 0;
   justify-content: flex-end;
-  padding: 15px 0;
+
+  bottom: 0;
+  right: 0;
 `;
 
 export const S_FooterSpan = styled.span`
+  padding: 10px 50px;
   color: var(--color-primary-black);
   font-size: var(--font-size-sm);
 `;

@@ -10,7 +10,8 @@ export const S_MainContentBox = styled.div`
   width: 100%;
   justify-content: space-around;
   padding: 30px;
-  height: calc(100vh - 70px);
+  /*100vh - 헤더높이 - 푸터높이 */
+  height: calc(100vh - 70px - 20px);
 
   @media screen and (max-width: 1024px) {
     flex-wrap: wrap;

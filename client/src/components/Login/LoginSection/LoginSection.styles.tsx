@@ -23,6 +23,7 @@ const InvalidMessageCSS = {
 
 export const S_InvalidMessage = styled.p<{ isShowMessage: ShowMessageType }>`
   ${({ isShowMessage }) => InvalidMessageCSS[isShowMessage]}
+  max-width: 375px;
 `;
 
 type LinkProps = {

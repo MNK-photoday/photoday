@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import {
   S_UserThumnailArea,
   S_UserProfileIamge,
@@ -15,6 +15,7 @@ import { UserData } from '../../../store/userSlice';
 import { updateFile, deleteProfile } from '../../../api/User';
 import { setData } from '../../../store/userSlice';
 import { UploadImage } from '../../../pages/Upload/Upload';
+import { setUserProfile } from '../../../store/authSlice';
 
 export type User = {
   userData: UserData;
@@ -27,7 +28,6 @@ function UserThumnailArea({ userData, myPage }: User) {
   const [currentTap, setCurrentTap] = useState('follower');
   const [file, setFile] = useState<UploadImage | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     uploadHandler();
   }, [file]);
@@ -88,6 +88,7 @@ function UserThumnailArea({ userData, myPage }: User) {
       const response = await updateFile(file.file);
       dispatch(setData(response));
       const { profileImageUrl } = response.data;
+      dispatch(setUserProfile(profileImageUrl));
       localStorage.setItem('userProfileImage', profileImageUrl);
     } catch (error) {
       if (error instanceof AxiosError) {
