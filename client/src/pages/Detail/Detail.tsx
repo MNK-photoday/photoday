@@ -37,6 +37,7 @@ type DetailInfo = {
   userBookmark: boolean;
   createdAt: string;
   ownerId: number;
+  followCheck: boolean;
 };
 function Detail() {
   const [detailInfo, setDetailInfo] = useState<DetailInfo>();
@@ -48,6 +49,7 @@ function Detail() {
     headers: { Authorization: token },
   };
 
+  const [isFollowing, setIsFollowing] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [isBookmark, setIsBookmark] = useState(false);
   useEffect(() => {
@@ -67,9 +69,11 @@ function Detail() {
           userBookmark: response.bookmark,
           createdAt: response.createdAt,
           ownerId: response.owner.userId,
+          followCheck: response.owner.checkFollow,
         });
         setIsBookmark(response.bookmark);
         setIsLike(response.like);
+        setIsFollowing(response.owner.checkFollow);
         if (response.tags.length > 0) {
           const objectArray: Tags[] = response.tags.map(
             (tag: string, index: number) => {
@@ -83,7 +87,7 @@ function Detail() {
       .catch((err) => {
         console.log(err);
       });
-  }, [isLike]);
+  }, [isLike, isFollowing]);
 
   const navigate = useNavigate();
 
@@ -154,6 +158,25 @@ function Detail() {
       navigate(`/users/${detailInfo?.ownerId}`);
     }
   };
+  const userFollowClickHandler = () => {
+    if (detailInfo !== null) {
+      axios
+        .patch(
+          `${import.meta.env.VITE_APP_API}/follows/${detailInfo?.ownerId}`,
+          null,
+          headers,
+        )
+        .then(() => {
+          setIsFollowing(!isFollowing);
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status === 401) {
+            navigate('/login');
+          }
+        });
+    }
+  };
   return (
     <ContainerWrap>
       <Container>
@@ -170,8 +193,12 @@ function Detail() {
                 <div className="user-name" onClick={userClickHandler}>
                   {detailInfo?.userName}
                 </div>
-                <div className="user-follow">
-                  <FiUserPlus size={20} />
+                <div className="user-follow" onClick={userFollowClickHandler}>
+                  {isFollowing ? (
+                    <FiUserMinus size={20} />
+                  ) : (
+                    <FiUserPlus size={20} />
+                  )}
                 </div>
               </S_UserBox>
               <S_IconBox isModal={isOpenModal}>
