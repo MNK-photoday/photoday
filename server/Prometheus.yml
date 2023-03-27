@@ -9,4 +9,4 @@ scrape_configs:
   - job_name: 'photoday' # 잡 이름
     metrics_path: '/management/prometheus' # 메트릭을 수집할 path 설정
     static_configs:
-      - targets: ['host.docker.internal:8080'] # 도커 호스트 를 나타냄 즉 localhost:8080으로 된다.
+      - targets: ['10.0.1.167:8080'] # 도커 호스트 를 나타냄 즉 localhost:8080으로 된다.
