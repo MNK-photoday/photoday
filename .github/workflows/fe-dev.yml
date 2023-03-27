@@ -6,15 +6,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./client
     steps:
-      - name: Checkout source code.
+      - name: Checkout source code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
       - name: Install dependencies
         run: yarn install
-        working-directory: ./client
       - name: Build
         run: yarn vite build
-        working-directory: ./client
       - name: Generate Environment Variables File for Production
         run: |
           echo "VITE_APP_API=$VITE_APP_API" >> .env.
@@ -32,4 +41,3 @@ jobs:
             --region ap-northeast-2 \
             build s3://photodayproject \
             --delete
-        working-directory: ./client
