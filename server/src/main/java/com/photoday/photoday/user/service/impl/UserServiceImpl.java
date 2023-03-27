@@ -1,9 +1,8 @@
 package com.photoday.photoday.user.service.impl;
 
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.excpetion.ExceptionCode;
+import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.image.entity.Report;
-import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
@@ -32,9 +31,8 @@ import static com.photoday.photoday.excpetion.ExceptionCode.*;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserServiceImpl implements UserService { //TODO exception code import static * 로 변경하기
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final ReportRepository reportRepository; //TODO 미사용 삭제
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final S3Service s3Service;
@@ -127,7 +125,7 @@ public class UserServiceImpl implements UserService { //TODO exception code impo
         if (roles.contains("ADMIN") || userId.equals(loginUserId)) {
             userRepository.deleteById(userId);
         } else {
-            throw new CustomException(ExceptionCode.USER_INFO_NOT_MATCH);
+            throw new CustomException(USER_INFO_NOT_MATCH);
         }
     }
 
@@ -145,7 +143,7 @@ public class UserServiceImpl implements UserService { //TODO exception code impo
     @Override
     public User findVerifiedUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return user.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+        return user.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
     @Override
@@ -162,7 +160,15 @@ public class UserServiceImpl implements UserService { //TODO exception code impo
         if (user.isPresent()) {
             return user.get();
         } else {
-            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
+            throw new CustomException(USER_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void banUser(Image image) {
+        if (image.getUser().getReportedCount() == 10) {
+            image.getUser().setStatus(User.UserStatus.USER_BANNED);
+            image.getUser().setBanTime(LocalDateTime.now().plusWeeks(1));
         }
     }
 
@@ -192,7 +198,7 @@ public class UserServiceImpl implements UserService { //TODO exception code impo
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
-            throw new CustomException(ExceptionCode.USER_ALREADY_EXISTS);
+            throw new CustomException(USER_ALREADY_EXISTS);
         }
     }
 

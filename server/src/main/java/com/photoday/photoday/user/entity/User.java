@@ -86,27 +86,6 @@ public class User { //TODO 미사용 세터 정리
         this.name = name;
     }
 
-    public void setImages(Image image) {
-        this.getImages().add(image);
-        if (image.getUser() != this) {
-            image.setUser(this);
-        }
-    }
-
-    public void setFollowing(Follow following) {
-        this.getFollowing().add(following);
-        if (following.getFollowing() != this) {
-            following.setFollowing(this);
-        }
-    }
-
-    public void setFollower(Follow follower) {
-        this.getFollower().add(follower);
-        if (follower.getFollower() != this) {
-            follower.setFollower(this);
-        }
-    }
-
     public void setReport(Report report) {
         this.getReports().add(report);
         if (report.getUser() != this) {
@@ -114,23 +93,9 @@ public class User { //TODO 미사용 세터 정리
         }
     }
 
-    public void setLike(Like like) {
-        this.getLikes().add(like);
-        if (like.getUser() != this) {
-            like.setUser(this);
-        }
-    }
-
-    public void setBookmark(Bookmark bookmark) {
-        this.getBookmarks().add(bookmark);
-        if (bookmark.getUser() != this) {
-            bookmark.setUser(this);
-        }
-    }
-
     public enum UserStatus {
         USER_ACTIVE("활동중"),
-        USER_BANED("정지회원"); //TODO BANNED 로 수정
+        USER_BANNED("정지회원");
 
         @Getter
         private String status;

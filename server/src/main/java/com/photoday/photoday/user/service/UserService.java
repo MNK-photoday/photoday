@@ -1,5 +1,6 @@
 package com.photoday.photoday.user.service;
 
+import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.user.dto.UserDto;
 import com.photoday.photoday.user.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,8 @@ public interface UserService {
     void checkUserReportCount(User user);
 
     User findUserByEmail(String email);
+
+    void banUser(Image image);
 
     UserDto.Response deleteProfileImage();
 
