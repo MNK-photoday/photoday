@@ -5,10 +5,10 @@ export const S_MainContentBox = styled.div`
   width: 100%;
   height: calc(100vh - 70px);
   align-items: center;
+
   @media screen and (max-width: 1024px) {
     flex-wrap: wrap;
     width: 100%;
-    padding: 0 30px;
     justify-content: center;
   }
 `;
@@ -50,7 +50,11 @@ export const S_MainTitle = styled.h1`
   line-height: 1.2;
 
   @media screen and (max-width: 1450px) {
-    font-size: 47px;
+    font-size: 40px;
+  }
+
+  @media screen and (max-width: 500px) {
+    font-size: 35px;
   }
 `;
 
