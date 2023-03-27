@@ -16,7 +16,6 @@ jobs:
         run: |
           echo "VITE_APP_API=$VITE_APP_API" >> .env.
           echo "VITE_GOOGLE_AUTH_URL=$VITE_GOOGLE_AUTH_URL" >> .env.
-          cat .env
         env:
           VITE_APP_API: ${{ secrets.VITE_APP_API }}
           VITE_GOOGLE_AUTH_URL: ${{ secrets.VITE_GOOGLE_AUTH_URL }}
