@@ -96,7 +96,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void checkUserStatus(User user) {
-        if (user.getStatus().equals(User.UserStatus.USER_BANED)) {
+        if (user.getStatus().equals(User.UserStatus.USER_BANNED)) {
             throw new CustomException(ExceptionCode.ACCOUNT_SUSPENDED); //TODO exception 종류 변경
         }
     }
