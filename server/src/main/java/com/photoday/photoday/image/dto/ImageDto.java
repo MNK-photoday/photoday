@@ -33,6 +33,8 @@ public class ImageDto {
         private int viewCount;
         private List<String> tags;
         private LocalDateTime createdAt;
+        private boolean myImage;
+        private boolean checkAdmin;
     }
 
     @Builder
