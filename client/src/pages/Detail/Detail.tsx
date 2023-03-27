@@ -83,7 +83,7 @@ function Detail() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [isLike]);
 
   const navigate = useNavigate();
 
@@ -122,7 +122,6 @@ function Detail() {
       )
       .then((res) => {
         setIsLike(res.data.data.like);
-        console.log(isLike);
       })
       .catch((err) => {
         console.log(err);
