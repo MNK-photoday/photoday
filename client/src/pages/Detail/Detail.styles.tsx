@@ -130,6 +130,7 @@ export const S_Contents = styled.div`
   > img {
     width: 100%;
     height: auto;
+    max-height: 700px;
   }
 `;
 
