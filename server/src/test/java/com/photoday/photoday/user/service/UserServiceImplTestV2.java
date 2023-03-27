@@ -1,6 +1,7 @@
 package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
@@ -351,6 +352,16 @@ public class UserServiceImplTestV2 {
         CustomException exception = assertThrows(CustomException.class, () -> userService.deleteProfileImage());
         assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
         assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
+    @DisplayName("checkUserReportCount: report 5 미만")
+    void checkUserReportCountTest() {
+        // given
+        User user = getUser("test@mail.com");
+
+        // when
+        userService.checkUserReportCount(user);
     }
 
     private User getUser(String email) {
