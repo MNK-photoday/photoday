@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CookieUtil {
     static public Cookie createCookie(String cookieName, String value) {
         Cookie cookie = new Cookie(cookieName, value);
-        cookie.setDomain("localhost"); //TODO 프론트 기준으로 추후 변경
+        cookie.setDomain("friendly-raindrop-9b9849.netlify.app");
         cookie.setHttpOnly(true);
         cookie.setMaxAge((int) (1000L * 3600 * 24 * 30));
         cookie.setPath("/");
