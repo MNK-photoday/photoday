@@ -73,6 +73,7 @@ function ImageCardList({
       PAGE_NUM_CONTEXT?.pageNumber ?? 1,
       filter,
     ).then((response) => {
+      console.log(response.data);
       ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
         ...prev,
         ...response?.data,

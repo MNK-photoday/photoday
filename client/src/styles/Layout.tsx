@@ -5,12 +5,14 @@ import { RowFlex } from './GlobalStyles';
 export const ContainerWrap = styled.main`
   ${RowFlex}
   justify-content: center;
+  background-color: yellow;
 `;
 
 /* 컨텐츠 컨테이너 */
 export const Container = styled.div`
   max-width: 1830px;
   width: 100%;
+  height: 100%;
   ${RowFlex}
   padding: 0 50px;
 `;

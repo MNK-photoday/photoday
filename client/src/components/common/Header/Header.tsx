@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiImageAdd } from 'react-icons/bi';
 import { RxTriangleDown } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
@@ -28,8 +28,8 @@ function Header({ activeSearchBar }: HeaderProps) {
   const { isLoggedIn, userProfileImage } = useSelector(
     (state: RootState) => state.auth,
   );
-
   const [isActiveMenu, setIsActiveMenu] = useState(false);
+
   return (
     <S_HeaderWrap>
       <S_HeaderContainer>
@@ -51,10 +51,7 @@ function Header({ activeSearchBar }: HeaderProps) {
                 active={isActiveMenu}
                 onClick={() => setIsActiveMenu(!isActiveMenu)}
               >
-                <S_UserProfile
-                  src={userProfileImage}
-                  alt="유저 프로필 사진"
-                ></S_UserProfile>
+                <S_UserProfile alt="유저 프로필 사진" src={userProfileImage} />
                 <RxTriangleDown className="triangleDown-icon" />
                 {isActiveMenu && <HeaderModal />}
               </S_NavLinkIconBox>
