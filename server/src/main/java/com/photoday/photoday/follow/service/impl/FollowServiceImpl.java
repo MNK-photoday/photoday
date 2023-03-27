@@ -42,20 +42,19 @@ public class FollowServiceImpl implements FollowService {
         if (followingId.equals(loginUser.getUserId())) {
             throw new CustomException(CANNOT_FOLLOW_MYSELF);
         }
-        User user = userService.findVerifiedUser(loginUser.getUserId());
         User targetUser = userService.findVerifiedUser(followingId);
 
-        Optional<Follow> check = followRepository.findByFollowerAndFollowing(targetUser, user);
+        Optional<Follow> check = followRepository.findByFollowerAndFollowing(targetUser, loginUser);
 
         if (check.isPresent()) {
-            user.getFollowing().remove(check.get());
+            loginUser.getFollowing().remove(check.get());
             targetUser.getFollower().remove(check.get());
 
             followRepository.delete(check.get());
         } else {
             Follow follow = new Follow();
             follow.setFollower(targetUser);
-            follow.setFollowing(user);
+            follow.setFollowing(loginUser);
 
             followRepository.save(follow);
         }
