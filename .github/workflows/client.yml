@@ -13,9 +13,11 @@ jobs:
 
       - name: Install dependencies
         run: yarn
+        working-directory: ./client   
 
       - name: Build
         run: yarn vite build
+        working-directory: ./client   
 
       - name: SHOW AWS CLI VERSION
         env:
