@@ -30,6 +30,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
+          VITE_APP_API: ${{ secrets.VITE_APP_API }}
+          VITE_GOOGLE_AUTH_URL: ${{ secrets.VITE_GOOGLE_AUTH_URL }}
         run: |
           aws s3 sync \
             --region ap-northeast-2 \
