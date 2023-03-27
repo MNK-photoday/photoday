@@ -227,6 +227,20 @@ public class UserServiceImplTestV2 {
         assertEquals(user.getDescription(), response.getDescription());
     }
 
+    @Test
+    @DisplayName("updateUser: IOException")
+    void updateUserIOExceptionTest() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = getUser("test@email.com");
+        MultipartFile multipartFile = new MockMultipartFile("image.jpg", "".getBytes());
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(user));
+        given(s3Service.saveImage(any(MultipartFile.class))).willThrow(IOException.class);
+
+        // when & then
+        assertThrows(RuntimeException.class, () -> userService.updateUser(null, multipartFile));
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
