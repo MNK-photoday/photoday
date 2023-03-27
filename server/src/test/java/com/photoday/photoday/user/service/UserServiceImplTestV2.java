@@ -1,6 +1,7 @@
 package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.image.entity.Report;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
@@ -409,6 +410,17 @@ public class UserServiceImplTestV2 {
 
         // when
         assertThrows(CustomException.class, () -> userService.findUserByEmail(email));
+    }
+
+    @Test
+    @DisplayName("banUser: reportCount 10 미만")
+    void banUserTest() {
+        // given
+        User user = getUser("test@email.com");
+        Image image = Image.builder().user(user).build();
+
+        // when
+        userService.banUser(image);
     }
 
     private User getUser(String email) {
