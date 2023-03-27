@@ -5,6 +5,7 @@ import { RowFlex } from './GlobalStyles';
 export const ContainerWrap = styled.main`
   ${RowFlex}
   justify-content: center;
+  background-color: red;
 `;
 
 /* 컨텐츠 컨테이너 */
