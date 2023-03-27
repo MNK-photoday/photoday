@@ -1,24 +1,31 @@
-import { useContext, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
-import MainImage from '../../assets/imgs/image1.jpg';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
 import {
   S_MainContentBox,
-  S_MainImg,
-  S_MainImgBox,
   S_MainTextBox,
   S_SearchContentBox,
   S_SearchImgBox,
   S_MainTitle,
-  S_MainImageContentBox,
 } from './Main.styles';
-import MainSkeleton from '../../components/common/Skeleton/MainSkeleton';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
-import { LoadingContext } from '../../context/LoadintContext';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/authSlice';
+import { socialLogin } from '../../api/Login';
+import MainImageCard from '../../components/common/ImageCard/MainImageCard';
 
 function Main() {
+  const dispatch = useDispatch();
   const [activeTextBox, setActiveTextBox] = useState(true);
-  const LOADING_CONTENT = useContext(LoadingContext);
+
+  useEffect(() => {
+    if (window.location.href.includes('userId')) {
+      const { userId, userProfileImage } = socialLogin();
+      dispatch(login({ userId, userProfileImage }));
+      const url = window.location.href.split('?')[0];
+      window.history.replaceState({}, document.title, url);
+    }
+  }, []);
 
   return (
     <ContainerWrap>
@@ -36,20 +43,7 @@ function Main() {
               </S_MainTitle>
             </S_MainTextBox>
           </S_SearchContentBox>
-          <S_MainImageContentBox>
-            {LOADING_CONTENT?.isLoading ? (
-              <MainSkeleton count={2} />
-            ) : (
-              <>
-                <S_MainImgBox>
-                  <S_MainImg src={MainImage} alt="인기있는 이미지"></S_MainImg>
-                </S_MainImgBox>
-                <S_MainImgBox>
-                  <S_MainImg src={MainImage} alt="인기있는 이미지"></S_MainImg>
-                </S_MainImgBox>
-              </>
-            )}
-          </S_MainImageContentBox>
+          <MainImageCard />
         </S_MainContentBox>
       </Container>
     </ContainerWrap>

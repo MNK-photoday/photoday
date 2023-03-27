@@ -12,20 +12,21 @@ import {
   S_DeleteAccountText,
   S_InputWrap,
   S_Textarea,
+  S_TextButtonContainer,
 } from './UserInfoArea.styles';
 import { validateValue } from '../../Login/LoginValidationLogic/LoginValidationLogic';
 import { PasswordInput } from '../../Login/Input/Input';
-import { S_InvalidMessage } from '../../../pages/Login/Login.styles';
+import { S_InvalidMessage } from '../../Login/LoginSection/LoginSection.styles';
 import { User } from '../UserThumnailArea/UserThumnailArea';
 import { updatePasswordUser, deleteUser, updateUser } from '../../../api/User';
 import { logout } from '../../../store/authSlice';
-import { setData } from '../../../store/userSlice';
+import { setData, setFollow, setFollower } from '../../../store/userSlice';
 import { FaRegHeart } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
 import { FiUserPlus, FiUserMinus } from 'react-icons/fi';
 import { patchFollow } from '../../../api/User';
 
-function UserInfoArea({ userData, isMyPage }: User) {
+function UserInfoArea({ userData, myPage }: User) {
   const dispatch = useDispatch();
   const [textareaValue, setTextareaValue] = useState(userData.description);
   const [inputValue, setInputValue] = useState('');
@@ -121,10 +122,16 @@ function UserInfoArea({ userData, isMyPage }: User) {
     }
   };
 
-  const followHandler = async () => {
+  const followHandler = async (type: string) => {
     try {
-      const response = await patchFollow(userData.userId);
-      dispatch(setData(response));
+      await patchFollow(userData.userId);
+      dispatch(setFollow());
+
+      if (type === 'minus') {
+        dispatch(setFollower(-1));
+      } else if (type === 'plus') {
+        dispatch(setFollower(1));
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
@@ -138,18 +145,18 @@ function UserInfoArea({ userData, isMyPage }: User) {
     <S_UserInfoArea>
       <S_UserNameContainer>
         <S_UserName>{userData.name}</S_UserName>
-        {!isMyPage &&
+        {!myPage &&
           (!userData.checkFollow ? (
             <FiUserPlus
               size={25}
               className="followIcon"
-              onClick={followHandler}
+              onClick={() => followHandler('plus')}
             />
           ) : (
             <FiUserMinus
               size={25}
               className="followIcon"
-              onClick={followHandler}
+              onClick={() => followHandler('minus')}
             />
           ))}
         <FaRegHeart size={22} className="likeIcon" />
@@ -168,15 +175,23 @@ function UserInfoArea({ userData, isMyPage }: User) {
           userData.description
         )}
       </S_UserDescription>
-      {isMyPage && (
+      {myPage && (
         <S_TextButtonWrap>
           {isEdit ? (
-            <S_TextButton
-              isTextButtonType="edit"
-              onClick={clickUpdatedescriptionHandler}
-            >
-              Save edits
-            </S_TextButton>
+            <S_TextButtonContainer>
+              <S_TextButton
+                isTextButtonType="edit"
+                onClick={clickUpdatedescriptionHandler}
+              >
+                Save edits
+              </S_TextButton>
+              <S_TextButton
+                isTextButtonType="cancel"
+                onClick={clickEditHandler}
+              >
+                Cancel
+              </S_TextButton>
+            </S_TextButtonContainer>
           ) : (
             <S_TextButton isTextButtonType="edit" onClick={clickEditHandler}>
               Edit
@@ -207,21 +222,23 @@ function UserInfoArea({ userData, isMyPage }: User) {
                   Passwords do not match.
                 </S_InvalidMessage>
               )}
+            </S_InputWrap>
+          )}
+          {isChangePassWord ? (
+            <S_TextButtonContainer>
+              <S_TextButton
+                isTextButtonType="changePassword"
+                onClick={updatePassWordHandler}
+              >
+                Save Password
+              </S_TextButton>
               <S_TextButton
                 isTextButtonType="cancel"
                 onClick={clickChangePassWordHandler}
               >
                 Cancel
               </S_TextButton>
-            </S_InputWrap>
-          )}
-          {isChangePassWord ? (
-            <S_TextButton
-              isTextButtonType="changePassword"
-              onClick={updatePassWordHandler}
-            >
-              Save Password
-            </S_TextButton>
+            </S_TextButtonContainer>
           ) : (
             <S_TextButton
               isTextButtonType="changePassword"
@@ -230,6 +247,24 @@ function UserInfoArea({ userData, isMyPage }: User) {
               Change Password
             </S_TextButton>
           )}
+          {!userData.checkAdmin && (
+            <>
+              <S_TextButton
+                isTextButtonType="deleteAccount"
+                onClick={deleteUserHandler}
+              >
+                Delete account
+              </S_TextButton>
+              <S_DeleteAccountText>
+                Once you delete your account, there is no going back. Please be
+                certain.
+              </S_DeleteAccountText>
+            </>
+          )}
+        </S_TextButtonWrap>
+      )}
+      {userData.checkAdmin && (
+        <>
           <S_TextButton
             isTextButtonType="deleteAccount"
             onClick={deleteUserHandler}
@@ -240,7 +275,7 @@ function UserInfoArea({ userData, isMyPage }: User) {
             Once you delete your account, there is no going back. Please be
             certain.
           </S_DeleteAccountText>
-        </S_TextButtonWrap>
+        </>
       )}
     </S_UserInfoArea>
   );

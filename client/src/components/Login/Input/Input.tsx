@@ -1,5 +1,5 @@
 import {
-  S_InputContainerWrap,
+  S_InputContainer,
   S_InputLabel,
   S_Input,
   S_CheckBox,
@@ -52,25 +52,29 @@ export function PasswordInput({
 
 export function AccountRecovery() {
   return (
-    <S_InputContainerWrap>
+    <S_InputContainer>
       <S_InputLabel htmlFor="email">email</S_InputLabel>
       <S_Input type="text" id="email" />
-    </S_InputContainerWrap>
+    </S_InputContainer>
   );
 }
 
 interface CheckBoxProps {
   isChecked: boolean;
   children: React.ReactNode;
-  onClickEvent: () => void;
+  onClickEventHandler: () => void;
 }
 
-export function CheckBox({ isChecked, children, onClickEvent }: CheckBoxProps) {
+export function CheckBox({
+  isChecked,
+  children,
+  onClickEventHandler,
+}: CheckBoxProps) {
   return (
     <>
       <S_CheckBox
         type="checkbox"
-        onClick={onClickEvent}
+        onClick={onClickEventHandler}
         isChecked={isChecked}
       ></S_CheckBox>
       <S_Label htmlFor="checkbox">{children}</S_Label>

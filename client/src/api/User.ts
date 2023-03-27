@@ -47,7 +47,7 @@ export const deleteUser = async () => {
   });
 
   localStorage.removeItem('accessToken');
-  localStorage.removeItem('userId');
+  localStorage.removeItem('id');
 };
 
 export const updateUser = async (textareaValue: string) => {
@@ -93,10 +93,10 @@ export const updateFile = async (file: File) => {
   return response.data;
 };
 
-export const getFollows = async () => {
+export const getFollows = async (userId: string | null | undefined) => {
   const token = localStorage.getItem('accessToken');
   const response = await axios.get<AxiosResponse>(
-    `${import.meta.env.VITE_APP_API}/follows`,
+    `${import.meta.env.VITE_APP_API}/follows/${userId}`,
     {
       headers: {
         Authorization: token,
@@ -143,10 +143,13 @@ type ImageListResponse = {
 export const getUserPosts = async (
   userId: string | null | undefined,
   paginate: number,
+  currentTap: string,
 ) => {
   const token = localStorage.getItem('accessToken');
   const response = await axios.get<ImageListResponse>(
-    `${import.meta.env.VITE_APP_API}/images/user/${userId}`,
+    currentTap === 'user'
+      ? `${import.meta.env.VITE_APP_API}/images/user/${userId}`
+      : `${import.meta.env.VITE_APP_API}/images/bookmarks`,
     {
       headers: {
         Authorization: token,
@@ -155,6 +158,20 @@ export const getUserPosts = async (
         size: 6,
         page: paginate,
         sort: 'imageId,desc',
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const deleteProfile = async () => {
+  const token = localStorage.getItem('accessToken');
+  const response = await axios.delete<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/users/delete/profile-image`,
+    {
+      headers: {
+        Authorization: token,
       },
     },
   );

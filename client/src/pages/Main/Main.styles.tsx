@@ -9,46 +9,22 @@ export const S_MainContentBox = styled.div`
   align-items: center;
   width: 100%;
   justify-content: space-around;
+  padding: 30px;
+  height: calc(100vh - 70px);
+
   @media screen and (max-width: 1024px) {
     flex-wrap: wrap;
     width: 100%;
+    padding: 0 30px;
+    justify-content: center;
   }
-`;
-
-export const S_MainImageContentBox = styled.section`
-  width: 700px;
-  @media screen and (max-width: 1500px) {
-    padding-left: 30px;
-  }
-  @media screen and (max-width: 1024px) {
-    width: 100%;
-    padding-left: 0px;
-  }
-`;
-
-export const S_MainImgBox = styled.article`
-  width: 100%;
-  &:first-child {
-    margin-bottom: 10px;
-
-    @media screen and (max-width: 1024px) {
-      margin-bottom: 30px;
-    }
-  }
-`;
-
-export const S_MainImg = styled.img`
-  max-width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
 `;
 
 export const S_SearchContentBox = styled.section`
-  width: 48%;
+  width: 50%;
   height: 450px;
   position: relative;
-  margin: 31px 0;
+  padding: 30px 0px;
 
   @media screen and (max-width: 1024px) {
     width: 100%;

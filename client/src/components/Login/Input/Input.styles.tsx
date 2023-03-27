@@ -6,7 +6,7 @@ export const BorderCSS = css`
   height: 40px;
 `;
 
-export const S_InputContainerWrap = styled.div`
+export const S_InputContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -43,6 +43,10 @@ export const S_CheckBox = styled.input<{ isChecked: boolean }>`
       : undefined};
   background-color: ${({ isChecked }) =>
     isChecked && 'var(--color-primary-green)'};
+
+  @media screen and (max-width: 1024px) {
+    background: #ffffffc7;
+  }
 `;
 
 export const S_Label = styled.label`

@@ -15,7 +15,7 @@ export const postSearchTags = async (
   } catch (error) {
     if (error instanceof AxiosError) {
       console.log(error);
-      console.log('테스트 검색 이미지 받아오기 실패');
+      console.log('검색 이미지 받아오기 실패');
     }
   }
 };

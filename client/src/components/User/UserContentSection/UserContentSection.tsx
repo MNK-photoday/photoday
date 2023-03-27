@@ -3,21 +3,27 @@ import {
   S_UserPageSubTitleWrap,
   S_UserPageSubTitlePoint,
   S_UserPhotoContentContainer,
+  S_NoPostsGuideContainer,
+  S_NoPostsGuideIcon,
+  S_NoPostsGuide,
   S_Tab,
 } from './UserContentSection.styles';
 import { S_ImageCardBox } from '../../common/ImageCardList/ImageCardList.styles';
 import { getUserPosts, PageInfo, Image } from '../../../api/User';
 import Pagination from '../../common/Pagination/Pagination';
 import ImageCard from '../../common/ImageCard/ImageCard';
+import { CiImageOff, CiCamera } from 'react-icons/ci';
+import { MdOutlinePhotoCamera } from 'react-icons/md';
+import { BsCamera } from 'react-icons/bs';
 
 type User = {
   userName: string;
-  isMyPage: boolean;
+  myPage: boolean;
   id: string | null;
   userId: string | undefined;
 };
 
-function UserContentSection({ userName, isMyPage, id, userId }: User) {
+function UserContentSection({ userName, myPage, id, userId }: User) {
   const [posts, setPosts] = useState<Image[]>([]);
   const [pagination, setPagination] = useState<PageInfo>({
     pageNumber: 1,
@@ -27,11 +33,16 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
   });
   const [currentTap, setCurrentTap] = useState('user');
   const [paginate, setPaginate] = useState(1);
+  const isMyPage = userId === id || userId === undefined;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getUserPosts(isMyPage ? id : userId, paginate);
+        const response = await getUserPosts(
+          isMyPage ? id : userId,
+          paginate,
+          currentTap,
+        );
         const postData = response.data;
         const paginationData: PageInfo = response.pageInfo;
         setPosts(postData);
@@ -41,14 +52,16 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
       }
     };
     fetchData();
-  }, [paginate]);
+  }, [paginate, currentTap, userId]);
 
   const userTapHandler = () => {
     setCurrentTap('user');
+    setPaginate(1);
   };
 
   const bookmarkTapHandler = () => {
     setCurrentTap('bookmark');
+    setPaginate(1);
   };
 
   return (
@@ -60,20 +73,36 @@ function UserContentSection({ userName, isMyPage, id, userId }: User) {
           <S_UserPageSubTitlePoint>to</S_UserPageSubTitlePoint>
           day
         </S_Tab>
-        {isMyPage && (
+        {myPage && (
           <S_Tab className="bookmark" onClick={bookmarkTapHandler}>
             Bookmark
           </S_Tab>
         )}
       </S_UserPageSubTitleWrap>
-      <S_UserPhotoContentContainer>
-        {posts.map((post: Image) => (
-          <S_ImageCardBox key={post.imageId} width={240} height={220}>
-            <ImageCard item={post} />
-          </S_ImageCardBox>
-        ))}
-      </S_UserPhotoContentContainer>
-      <Pagination pagination={pagination} setPaginate={setPaginate} />
+      {posts.length ? (
+        <>
+          <S_UserPhotoContentContainer>
+            {posts.map((post: Image) => (
+              <S_ImageCardBox
+                key={post.imageId}
+                width={240}
+                height={220}
+                matrix="columns"
+              >
+                <ImageCard item={post} />
+              </S_ImageCardBox>
+            ))}
+          </S_UserPhotoContentContainer>
+          <Pagination pagination={pagination} setPaginate={setPaginate} />
+        </>
+      ) : (
+        <S_NoPostsGuideContainer>
+          <S_NoPostsGuideIcon>
+            <CiImageOff size={130} />
+          </S_NoPostsGuideIcon>
+          <S_NoPostsGuide>Have no posts</S_NoPostsGuide>
+        </S_NoPostsGuideContainer>
+      )}
     </>
   );
 }

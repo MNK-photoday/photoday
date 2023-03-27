@@ -14,7 +14,7 @@ const images: string[] = [img5, img6, img7, img8, img9, img10, img11];
 const randomImage = Math.floor(Math.random() * images.length);
 const backgroundImage = images[randomImage];
 
-export const S_LoginContainerWrap = styled.div`
+export const S_LoginContainer = styled.main`
   display: flex;
 `;
 
@@ -26,83 +26,21 @@ export const S_ImgContainer = styled(Content)`
 `;
 
 export const S_ContentSection = styled.section`
+  display: flex;
+  justify-content: center;
   width: 450px;
   position: fixed;
   right: 0;
   background: var(--white);
-`;
+  transition: background-color 0.5s ease-in-out;
 
-export const S_LoginContainer = styled.form`
-  padding: 0 50px;
-  height: 100vh;
-`;
-
-export const S_PasswordGuide = styled.p`
-  font-size: 12px;
-  margin-bottom: 20px;
-  color: var(--color-primary-black);
-`;
-
-export const S_CheckBoxContainer = styled.div`
-  display: flex;
-  margin: 10px 0 20px;
-`;
-
-export const S_ButtounContainer = styled.div`
-  margin-bottom: 20px;
-`;
-
-export const S_LinkToTextContainer = styled.div`
-  ${RowFlex}
-  font-size: var(--font-size-sm);
-`;
-
-type LinkProps = {
-  isaccount: string;
-};
-
-export const S_LinkToWrap = styled.div`
-  display: flex;
-  justify-content: end;
-`;
-
-export const S_LinkTo = styled(Link)<LinkProps>`
-  color: var(--color-primary-green);
-  margin-left: 10px;
-  font-weight: bold;
-
-  ${({ isaccount }) =>
-    isaccount === 'true' &&
-    `
-    font-size: var(--font-size-sm);
-    font-weight: normal;
-    display: flex;
-    position: relative;
-    bottom: 10px;
-    width: 120px;
-    
-    `};
-  /* display: inline-flex */
-  &:hover {
-    color: hsl(140, 40%, 44%);
+  @media screen and (max-width: 1024px) and (min-width: 415px) {
+    background: #ffffffb0;
+    transition: background-color 0.5s ease-in-out;
   }
-`;
 
-export type ShowMessageType = 'show' | 'hide';
-
-const InvalidMessageCSS = {
-  show: css`
-    position: relative;
-    bottom: 10px;
-    left: 2px;
-    color: var(--color-primary-red);
-    font-size: var(--font-size-sm);
-  `,
-  hide: css`
-    display: none;
-  `,
-};
-
-export const S_InvalidMessage = styled.p<{ isShowMessage: ShowMessageType }>`
-  ${({ isShowMessage }) => InvalidMessageCSS[isShowMessage]}
+  @media screen and (max-width: 414px) {
+    width: 100%;
+    background: #ffffffb0;
+  }
 `;

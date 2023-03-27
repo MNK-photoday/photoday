@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { BiImageAdd } from 'react-icons/bi';
-import { FaUserCircle } from 'react-icons/fa';
 import { RxTriangleDown } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
+import { useSelector } from 'react-redux';
+
 import {
   S_NavLink,
   S_NavBox,
@@ -14,19 +15,21 @@ import {
   S_NavSpan,
   S_HeaderContainer,
   S_HeaderWrap,
+  S_UserProfile,
 } from './Header.styles';
 import HeaderModal from './HeaderModal';
+import { RootState } from '../../../store/store';
 
 type HeaderProps = {
   activeSearchBar: boolean;
 };
 
 function Header({ activeSearchBar }: HeaderProps) {
-  /*로그인 여부에 따라 상태 변경 (임시)*/
-  const [isLogin, setIsLogin] = useState(true);
-  /*유저아이콘 클릭 여부에 따라 모달 상태 변경*/
-  const [isActiveMenu, setIsActiveMenu] = useState(false);
+  const { isLoggedIn, userProfileImage } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
+  const [isActiveMenu, setIsActiveMenu] = useState(false);
   return (
     <S_HeaderWrap>
       <S_HeaderContainer>
@@ -38,7 +41,7 @@ function Header({ activeSearchBar }: HeaderProps) {
           </S_LogoH1>
         </S_LogoBox>
         {activeSearchBar && <SearchBar activeSearchBar={activeSearchBar} />}
-        {isLogin ? (
+        {isLoggedIn ? (
           <S_NavBox>
             <S_NavLink to="/upload">
               <BiImageAdd className="addImage-icon" />
@@ -48,7 +51,10 @@ function Header({ activeSearchBar }: HeaderProps) {
                 active={isActiveMenu}
                 onClick={() => setIsActiveMenu(!isActiveMenu)}
               >
-                <FaUserCircle className="user-icon" />
+                <S_UserProfile
+                  src={userProfileImage}
+                  alt="유저 프로필 사진"
+                ></S_UserProfile>
                 <RxTriangleDown className="triangleDown-icon" />
                 {isActiveMenu && <HeaderModal />}
               </S_NavLinkIconBox>

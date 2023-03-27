@@ -1,27 +1,15 @@
 import styled from 'styled-components';
+import { ColFlex } from '../../../styles/GlobalStyles';
 
 export const S_UserFollwModalContainer = styled.div`
   position: absolute;
-  width: 200px;
+  width: 210px;
   height: 280px;
   border: var(--color-input-box-line);
   border-radius: var(--box-radius-3);
   background-color: var(--white);
-
-  /* 
-  위치 고민 중입니다...
-  1번 위치
-  */
-  top: 125px;
-  /* left: 50px; */
-
-  /* 2번 위치 */
-  /* top: 340px;
-  left: 300px; */
-
-  /* 3번 위치 */
-  /* top: 340px;
-  display: flex; */
+  top: 270px;
+  z-index: 1;
 `;
 
 export const S_UserFollwListContainer = styled.div`
@@ -35,5 +23,19 @@ export const S_UserFollwListContainer = styled.div`
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
     background: var(--color-primary-gray20);
+  }
+`;
+
+export const S_NoFollowGuide = styled.div`
+  ${ColFlex}
+  height: 100%;
+  align-items: center;
+  color: var(--color-primary-green);
+  .peopleIcon {
+    margin-bottom: 5px;
+  }
+
+  span {
+    color: var(--color-primary-black);
   }
 `;

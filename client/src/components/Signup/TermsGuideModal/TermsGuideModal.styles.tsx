@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { ColFlex } from '../../styles/GlobalStyles';
+import { ColFlex } from '../../../styles/GlobalStyles';
 
 export const S_TermsGuideModal = styled.div`
   position: fixed;
   top: 22%;
-  right: 50px;
   width: 310px;
   height: 445px;
   border-radius: 0.3rem;

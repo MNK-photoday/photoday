@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import { Flex, ColFlex } from '../../../styles/GlobalStyles';
 
 export const S_UserPageSubTitleWrap = styled.div<{ currentTap: string }>`
   display: flex;
   align-items: center;
-  margin: 10% 8% 2% 8%;
+  margin: 15% 8% 2% 8%;
   height: 5%;
   color: var(--color-primary-black);
   border-bottom: 1px solid #d9d9d96a;
@@ -34,11 +35,25 @@ export const S_Tab = styled.div`
 `;
 
 export const S_UserPhotoContentContainer = styled.article`
-  display: flex;
-  justify-content: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 30px 8%;
   place-items: center;
   gap: 20px;
+`;
+
+export const S_NoPostsGuideContainer = styled.div`
+  ${ColFlex}
+  align-items: center;
+  margin: 10% 0;
+`;
+
+export const S_NoPostsGuideIcon = styled.i`
+  color: var(--color-primary-green);
+`;
+
+export const S_NoPostsGuide = styled.span`
+  color: var(--color-primary-black);
+  font-size: var(--font-size-l);
+  margin: 15px 0;
 `;

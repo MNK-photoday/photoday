@@ -1,5 +1,7 @@
 import { FaHouseUser } from 'react-icons/fa';
 import { IoLogOut } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../store/authSlice';
 
 import {
   S_HeaderModalWrap,
@@ -8,6 +10,13 @@ import {
 } from './HeaderModal.styles';
 
 function HeaderModal() {
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    localStorage.removeItem('id');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userProfileImage');
+    dispatch(logout());
+  };
   return (
     <S_HeaderModalWrap>
       <S_ModalNavBox>
@@ -16,7 +25,9 @@ function HeaderModal() {
       </S_ModalNavBox>
       <S_ModalNavBox>
         <IoLogOut className="logout-icon" />
-        <S_ModalNavLink to="/logout">Logout</S_ModalNavLink>
+        <S_ModalNavLink to="/" onClick={logoutHandler}>
+          Logout
+        </S_ModalNavLink>
       </S_ModalNavBox>
     </S_HeaderModalWrap>
   );

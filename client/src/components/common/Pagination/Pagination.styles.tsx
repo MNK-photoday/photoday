@@ -15,7 +15,7 @@ export const S_PageButton = styled.button`
 
   &:hover {
     color: var(--white);
-    background-color: #3cb46e75;
+    background-color: #67cd92;
   }
 `;
 

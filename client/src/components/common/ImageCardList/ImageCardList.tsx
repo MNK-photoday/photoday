@@ -22,9 +22,9 @@ export type ImageCardListProps = {
 
 export type ImageItemProps = {
   imageId: number;
-  mageUrl: string;
+  imageUrl: string;
   like: boolean;
-  bookmark: false;
+  bookmark: boolean;
 };
 
 function ImageCardList({
