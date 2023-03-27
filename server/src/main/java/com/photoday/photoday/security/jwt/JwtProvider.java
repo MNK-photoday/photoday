@@ -141,7 +141,6 @@ public class JwtProvider {
     }
 
     public String getRefreshTokenFromRequest(HttpServletRequest request) {
-        log.info("refresh");
         String refresh = CookieUtil.getTokenCookie(request, "Refresh").getValue();
         return refresh;
     }
