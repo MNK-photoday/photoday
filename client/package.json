@@ -52,11 +52,19 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+<<<<<<< HEAD
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^3.1.0",
     "eslint": "^8.35.0",
     "prettier": "^2.8.4",
     "vite-plugin-svgr": "^2.4.0"
+=======
+
+  },
+  "devDependencies": {
+    "eslint": "^8.35.0",
+    "prettier": "^2.8.4"
+>>>>>>> 6026834033fb17baee9a6a5cca79ea778457de6c
   }
 }
