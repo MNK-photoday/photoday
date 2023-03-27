@@ -489,6 +489,21 @@ public class UserServiceImplTestV2 {
         assertEquals(User.UserStatus.USER_BANNED, user.getStatus());
     }
 
+    @Test
+    @DisplayName("checkAdmin: 일반 유저 접속")
+    void checkAdminTest() {
+        // given
+        User user = getUser("test@email.com");
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+
+        // when
+        boolean response = userService.checkAdmin(user.getUserId());
+
+        // then
+        assertFalse(response);
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
