@@ -8,10 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface FollowRepository extends JpaRepository<Follow, Long> { //TODO 미사용 메서드 정리
-    List<Follow> findFollowByFollowing_UserId(Long userId);
-
-    List<Follow> findFollowByFollower_UserId(Long userId);
-
+public interface FollowRepository extends JpaRepository<Follow, Long> {
     Optional<Follow> findByFollowerAndFollowing(User follower, User following);
 }

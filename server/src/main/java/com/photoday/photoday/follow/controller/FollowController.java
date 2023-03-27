@@ -15,17 +15,17 @@ import javax.validation.constraints.Positive;
 @RequestMapping("/api/follows")
 @RequiredArgsConstructor
 @Validated
-public class FollowController { //TODO 메서드이름 서비스와 통일하기
+public class FollowController {
     private final FollowService followService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getFollowUsers(@PathVariable @Positive Long userId) {
+    public ResponseEntity<?> findFollowUsers(@PathVariable @Positive Long userId) {
         FollowDto.ResponseFollowUsers response = followService.findFollowUser(userId);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{followingId}")
-    public ResponseEntity<?> followingUser(@PathVariable @Positive long followingId) {
+    public ResponseEntity<?> registerFollowUser(@PathVariable @Positive long followingId) {
         FollowDto.ResponseFollowUsers response = followService.registerFollowUser(followingId);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }

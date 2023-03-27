@@ -10,7 +10,7 @@ public class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setMaxAge((int) (1000L * 3600 * 24 * 30));
         cookie.setPath("/");
-//        cookie.setSecure(true); TODO 프론트 HTTPS 적용시 해제
+        cookie.setSecure(true);
 
         return cookie;
     }

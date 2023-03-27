@@ -60,6 +60,7 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize //TODO 정리하기. 회의 후 수정.
                         .antMatchers(HttpMethod.POST, "/*/users").permitAll()
+                        .antMatchers(HttpMethod.POST, "/*/users/update/password").authenticated()
                         .antMatchers(HttpMethod.POST, "/*/users/update").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/users/**").permitAll()
                         .antMatchers(HttpMethod.DELETE, "/*/users").hasAnyRole("USER", "ADMIN")

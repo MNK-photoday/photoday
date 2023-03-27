@@ -7,6 +7,7 @@ import com.photoday.photoday.security.utils.ErrorResponder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -20,15 +21,14 @@ import java.io.IOException;
 public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-
         Exception exception = (Exception) request.getAttribute("exception");
-        if (exception instanceof CustomException) {
+        if (exception instanceof DisabledException) {
             Gson gson = new Gson();
             ErrorResponse errorResponse;
-            errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
+            errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, exception.getMessage());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setStatus(HttpStatus.FORBIDDEN.value());
             response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
         } else {
             ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);

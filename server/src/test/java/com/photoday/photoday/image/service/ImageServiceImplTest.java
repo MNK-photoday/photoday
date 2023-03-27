@@ -311,7 +311,7 @@ class ImageServiceImplTest {
         User user = optionalUser.get();
 
         // then
-        assertEquals(User.UserStatus.USER_BANED, user.getStatus());
+        assertEquals(User.UserStatus.USER_BANNED, user.getStatus());
         assertTrue(LocalDateTime.now().plusWeeks(1).minusMinutes(1).isBefore(user.getBanTime()));
     }
 
