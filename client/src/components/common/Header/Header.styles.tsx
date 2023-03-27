@@ -6,6 +6,9 @@ export const S_HeaderWrap = styled.header`
   ${RowFlex}
   align-items: center;
   height: 70px;
+  position: relative;
+  z-index: 10;
+  background: var(--white);
 `;
 export const S_HeaderContainer = styled.div`
   max-width: 1830px;

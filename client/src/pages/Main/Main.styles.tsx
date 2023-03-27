@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const S_MainContentBox = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 70px);
   align-items: center;
 
   @media screen and (max-width: 1024px) {
