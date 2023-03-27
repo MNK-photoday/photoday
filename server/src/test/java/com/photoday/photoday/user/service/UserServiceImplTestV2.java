@@ -399,6 +399,18 @@ public class UserServiceImplTestV2 {
         userService.findUserByEmail(user.getEmail());
     }
 
+    @Test
+    @DisplayName("findUserByEmail: 존재하지 않는 유저")
+    void findUserByEmailUserNotFoundTest() {
+        // given
+        String email = "test@email.com";
+
+        given(userRepository.findByEmail(anyString())).willReturn(Optional.empty());
+
+        // when
+        assertThrows(CustomException.class, () -> userService.findUserByEmail(email));
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
