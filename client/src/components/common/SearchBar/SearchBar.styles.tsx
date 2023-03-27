@@ -13,6 +13,10 @@ export const S_SearchBarWrap = styled.div<{ active?: boolean }>`
     left: 15px;
     z-index: 10;
   }
+
+  @media screen and (max-width: 650px) {
+    display: ${({ active }) => (active ? 'none' : 'flex')};
+  }
 `;
 
 const vibrationKeyframe = keyframes`

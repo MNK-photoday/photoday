@@ -3,7 +3,14 @@ import styled from 'styled-components';
 import { ColFlex, RowFlex } from '../../styles/GlobalStyles';
 import { Container } from '../../styles/Layout';
 export const S_SearchContainer = styled(Container)`
-  padding: 0px 220px;
+  width: 1300px;
+
+  @media screen and (max-width: 1400px) {
+    padding: 0px 50px;
+  }
+  @media screen and (max-width: 650px) {
+    padding: 0px;
+  }
 `;
 
 export const S_SearchBox = styled.section`
@@ -19,13 +26,21 @@ export const S_SearchMenuBox = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-bottom: 40px;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 `;
 export const S_TagContentBox = styled.div`
-  display: inline-block;
-  margin: 0 10px;
+  display: flex;
 `;
 
-export const S_SelectContentBox = styled.div``;
+export const S_SelectContentBox = styled.div`
+  display: flex;
+  @media screen and (max-width: 500px) {
+    display: flex;
+  }
+`;
 
 export const S_Tag = styled.span`
   background-color: #fff;

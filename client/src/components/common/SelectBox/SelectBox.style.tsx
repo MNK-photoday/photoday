@@ -11,7 +11,7 @@ export const S_SelectBoxWrap = styled.button`
   transition: 0.5s;
   ${RowFlex}
   align-items: center;
-
+  height: 35px;
   &:hover {
     border: 1px solid var(--color-primary-black);
   }
