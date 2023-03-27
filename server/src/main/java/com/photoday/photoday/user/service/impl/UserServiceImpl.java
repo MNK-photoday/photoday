@@ -3,7 +3,6 @@ package com.photoday.photoday.user.service.impl;
 import com.photoday.photoday.excpetion.CustomException;
 import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.image.entity.Report;
-import com.photoday.photoday.image.repository.ReportRepository;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
@@ -34,7 +33,6 @@ import static com.photoday.photoday.excpetion.ExceptionCode.*;
 @Slf4j
 public class UserServiceImpl implements UserService { //TODO exception code import static * 로 변경하기
     private final UserRepository userRepository;
-    private final ReportRepository reportRepository; //TODO 미사용 삭제
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final S3Service s3Service;
