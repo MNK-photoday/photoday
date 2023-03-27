@@ -25,10 +25,10 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
         if (exception instanceof DisabledException) {
             Gson gson = new Gson();
             ErrorResponse errorResponse;
-            errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
+            errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, exception.getMessage());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setStatus(HttpStatus.FORBIDDEN.value());
             response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
         } else {
             ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);
