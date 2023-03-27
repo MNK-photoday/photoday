@@ -29,6 +29,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(SpringExtension.class)
 public class UserServiceImplTestV2 {
@@ -282,6 +283,19 @@ public class UserServiceImplTestV2 {
         CustomException exception = assertThrows(CustomException.class, () -> userService.updateUserPassword(update));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getExceptionCode().getHttpStatus());
         assertEquals("비밀번호가 일치하지 않습니다.", exception.getExceptionCode().getMessage());
+    }
+
+    @Test
+    @DisplayName("deleteUser: 정상 입력: 유저 본인")
+    void deleteUserTest() {
+        // given
+        User user = getUser("test@email.com");
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(user));
+        doNothing().when(userRepository).deleteById(anyLong());
+
+        // when
+        userService.deleteUser(user.getUserId());
     }
 
     private User getUser(String email) {
