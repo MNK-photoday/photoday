@@ -51,6 +51,7 @@ function LoginSection() {
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
+          console.log('왜 안 돼', error);
           alert(error.response.data.message);
         }
       }
