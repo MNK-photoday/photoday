@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import Button from '../../components/common/Button/Button';
 import { FaHeart, FaBookmark } from 'react-icons/fa';
-import { RiAlarmWarningFill } from 'react-icons/ri';
 import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
 import { GrView } from 'react-icons/gr';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
@@ -24,7 +23,7 @@ import TagList from '../../components/Upload/Tag/TagList';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
 import DetailModal from './DetailModal';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Tags } from '../Upload/Upload';
 
 type DetailInfo = {
@@ -37,6 +36,7 @@ type DetailInfo = {
   userLike: boolean;
   userBookmark: boolean;
   createdAt: string;
+  ownerId: number;
 };
 function Detail() {
   const [detailInfo, setDetailInfo] = useState<DetailInfo>();
@@ -58,6 +58,7 @@ function Detail() {
           userLike: response.like,
           userBookmark: response.bookmark,
           createdAt: response.createdAt,
+          ownerId: response.owner.userId,
         });
         if (response.tags.length > 0) {
           const objectArray: Tags[] = response.tags.map(
@@ -78,6 +79,8 @@ function Detail() {
   const headers = {
     headers: { Authorization: token },
   };
+
+  const navigate = useNavigate();
 
   const [isLike, setIsLike] = useState(false);
   const [isBookmark, setIsBookmark] = useState(false);
@@ -137,6 +140,12 @@ function Detail() {
         console.log(err);
       });
   };
+
+  const userClickHandler = () => {
+    if (detailInfo !== null) {
+      navigate(`/users/${detailInfo?.ownerId}`);
+    }
+  };
   return (
     <ContainerWrap>
       <Container>
@@ -150,7 +159,9 @@ function Detail() {
                     alt="user_profile_image"
                   />
                 </div>
-                <div className="user-name">{detailInfo?.userName}</div>
+                <div className="user-name" onClick={userClickHandler}>
+                  {detailInfo?.userName}
+                </div>
                 <div className="user-follow">
                   <FiUserPlus size={20} />
                 </div>
