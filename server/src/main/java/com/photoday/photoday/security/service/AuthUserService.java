@@ -9,8 +9,6 @@ public interface AuthUserService {
 
     Long checkLogin();
 
-    String getLoginUserEmail();
-
     Optional<User> getLoginUser();
 
     void setNewPassword(String email);

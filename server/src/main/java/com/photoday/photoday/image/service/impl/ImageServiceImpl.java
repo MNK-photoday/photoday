@@ -178,12 +178,10 @@ public class ImageServiceImpl implements ImageService {
             report.setUser(loginUser);
             report.setImage(image);
 
-            //회원 정지 기능 //TODO 회원 서비스로 빼기
+            //회원 정지 기능
             image.getUser().setReportedCount(image.getUser().getReportedCount() + 1);
-            if (image.getUser().getReportedCount() == 10) {
-                image.getUser().setStatus(User.UserStatus.USER_BANED);
-                image.getUser().setBanTime(LocalDateTime.now().plusWeeks(1));
-            }
+
+            userService.banUser(image);
         }
 
         return imageMapper.imageToResponse(image, loginUser);
