@@ -312,6 +312,19 @@ public class UserServiceImplTestV2 {
         userService.deleteUser(user.getUserId());
     }
 
+    @Test
+    @DisplayName("deleteUser: 정상 입력: 다른 유저")
+    void deleteUserUserInfoNotMatchTest() {
+        // given
+        User user = getUser("test@mail.com");
+        User anotherUser = getUser("wrongUser@mail.com");
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(anotherUser));
+
+        // when
+        assertThrows(CustomException.class, () -> userService.deleteUser(user.getUserId()));
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
