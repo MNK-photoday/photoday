@@ -39,6 +39,8 @@ public class ImageMapper {
                 .viewCount(image.getViewCount())
                 .tags(getTags(image))
                 .createdAt(image.getCreatedAt())
+                .myImage(myImage(image.getUser(), loginUser))
+                .checkAdmin(checkAdmin(loginUser))
                 .build();
     }
 
@@ -81,5 +83,19 @@ public class ImageMapper {
 //        User loginUser = authUserService.getLoginUser().orElseGet(null);
 
         return userMapper.userToUserResponse(image.getUser(), loginUser);
+    }
+
+    private boolean checkAdmin(User loginUser) {
+        if (loginUser == null) return false;
+
+        List<String> roles = loginUser.getRoles();
+        return roles.contains("ADMIN");
+    }
+
+    private boolean myImage(User targetUser, User loginUser) {
+        if (loginUser == null) return false;
+
+        Long userId = loginUser.getUserId();
+        return userId != null && userId.equals(targetUser.getUserId());
     }
 }
