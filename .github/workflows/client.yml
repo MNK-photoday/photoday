@@ -33,4 +33,4 @@ jobs:
         run: |
           aws s3 sync \
             --region ap-northeast-2 \
-            build s3://damda-s3 \
+            build s3://photodayproject\
