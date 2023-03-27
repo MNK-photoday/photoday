@@ -325,6 +325,22 @@ public class UserServiceImplTestV2 {
         assertThrows(CustomException.class, () -> userService.deleteUser(user.getUserId()));
     }
 
+    @Test
+    @DisplayName("deleteProfileImage: 정상 입력(액세스 토큰)")
+    void deleteProfileImageTest() {
+        // given
+        String defaultProfileUrl = "https://ifh.cc/g/zPrPfv.png";
+        User user = getUser("test@mail.com");
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(user));
+
+        // when
+        UserDto.Response response = userService.deleteProfileImage();
+
+        // then
+        assertEquals(defaultProfileUrl, response.getProfileImageUrl());
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
