@@ -20,10 +20,6 @@ export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
     grid-template-columns: 1fr;
     grid-auto-rows: 350px;
   }
-
-  @media screen and (max-width: 500px) {
-    grid-auto-rows: 200px;
-  }
 `;
 
 export const S_LoaderBar = styled.div`
