@@ -38,6 +38,7 @@ type DetailInfo = {
   createdAt: string;
   ownerId: number;
   followCheck: boolean;
+  myImageCheck: boolean;
 };
 function Detail() {
   const [detailInfo, setDetailInfo] = useState<DetailInfo>();
@@ -52,6 +53,7 @@ function Detail() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [isBookmark, setIsBookmark] = useState(false);
+  const [isMyImage, setIsMyImage] = useState(false);
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
@@ -70,10 +72,12 @@ function Detail() {
           createdAt: response.createdAt,
           ownerId: response.owner.userId,
           followCheck: response.owner.checkFollow,
+          myImageCheck: response.myImage,
         });
         setIsBookmark(response.bookmark);
         setIsLike(response.like);
         setIsFollowing(response.owner.checkFollow);
+        setIsMyImage(response.myImage);
         if (response.tags.length > 0) {
           const objectArray: Tags[] = response.tags.map(
             (tag: string, index: number) => {
@@ -193,13 +197,15 @@ function Detail() {
                 <div className="user-name" onClick={userClickHandler}>
                   {detailInfo?.userName}
                 </div>
-                <div className="user-follow" onClick={userFollowClickHandler}>
-                  {isFollowing ? (
-                    <FiUserMinus size={20} />
-                  ) : (
-                    <FiUserPlus size={20} />
-                  )}
-                </div>
+                {isMyImage ? null : (
+                  <div className="user-follow" onClick={userFollowClickHandler}>
+                    {isFollowing ? (
+                      <FiUserMinus size={20} />
+                    ) : (
+                      <FiUserPlus size={20} />
+                    )}
+                  </div>
+                )}
               </S_UserBox>
               <S_IconBox isModal={isOpenModal}>
                 {isBookmark ? (
