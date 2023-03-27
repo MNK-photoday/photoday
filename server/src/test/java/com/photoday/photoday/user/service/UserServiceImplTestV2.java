@@ -148,6 +148,25 @@ public class UserServiceImplTestV2 {
         assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
     }
 
+    @Test
+    @DisplayName("getUser: AnonymousUser로 조회")
+    void getUserAnonymousTest() {
+        // given
+        User user = getUser("test@email.com");
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(authUserService.getLoginUser()).willReturn(Optional.empty());
+
+        // when
+        UserDto.Response response = userService.getUser(user.getUserId());
+
+        // then
+        assertEquals(user.getUserId(), response.getUserId());
+        assertFalse(response.isCheckAdmin());
+        assertFalse(response.isMyPage());
+        assertFalse(response.isCheckFollow());
+    }
+
 
     private User getUser(String email) {
         return User.builder()
