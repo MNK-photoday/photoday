@@ -58,18 +58,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie refreshTokenCookie = CookieUtil.createCookie("Refresh", refreshToken);
         response.addCookie(refreshTokenCookie);
-        response.addHeader("Authorization", accessToken); //TODO 파라미터 전달로 바꾸기
+//        response.addHeader("Authorization", accessToken); //TODO 파라미터 전달로 바꾸기
 
-        String uri = createURI(user).toString();
+        String uri = createURI(user, accessToken).toString();
         log.info("OAuth 인증 성공");
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private URI createURI(User user) {
+    private URI createURI(User user, String accessToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("userId", user.getUserId().toString());
         queryParams.add("userEmail", user.getEmail());
         queryParams.add("userProfileImage", user.getProfileImageUrl());
+        queryParams.add("accessToken", accessToken);
 
         return UriComponentsBuilder
                 .newInstance()
@@ -84,7 +85,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private void checkUserStatus(User user) {
         try {
             userService.checkBanTime(user);
-            if (user.getStatus().equals(User.UserStatus.USER_BANED)) {
+            if (user.getStatus().equals(User.UserStatus.USER_BANNED)) {
                 throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
             }
         } catch (CustomException e) {

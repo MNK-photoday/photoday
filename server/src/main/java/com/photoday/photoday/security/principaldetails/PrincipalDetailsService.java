@@ -1,7 +1,6 @@
 package com.photoday.photoday.security.principaldetails;
 
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.repository.UserRepository;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.Optional;
 
+import static com.photoday.photoday.excpetion.ExceptionCode.USER_NOT_FOUND;
+
 @Component
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {
@@ -24,7 +25,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByEmail(username);
-        User findUser = optionalUser.orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND)); //TODO 익셉션 안 먹음. 수정하기
+        User findUser = optionalUser.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         return new PrincipalDetails(findUser);
     }

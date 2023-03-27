@@ -1,7 +1,5 @@
 package com.photoday.photoday.security.filter;
 
-import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.security.jwt.JwtProvider;
 import com.photoday.photoday.security.principaldetails.PrincipalDetailsService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
@@ -10,6 +8,8 @@ import com.photoday.photoday.user.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final CustomAuthorityUtils customAuthorityUtils;
@@ -47,13 +48,12 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                 } else {
                     Map<String, Object> claims = verifyJws(request);
                     String username = (String) claims.get("username");
-                    User user = userService.findUserByEmail(username);
-
-                    checkUserStatus(user); //TODO 지금 이 부분 안 먹는 듯? 로그인 됨.
-
+                    checkUserStatus(username);
                     setAuthenticationToContext(claims);
                 }
             }
+        } catch (DisabledException ce) {
+            request.setAttribute("exception", ce);
         } catch (SignatureException se) {
             request.setAttribute("exception", se);
         } catch (ExpiredJwtException ee) {
@@ -95,9 +95,11 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private void checkUserStatus(User user) {
-        if (user.getStatus().equals(User.UserStatus.USER_BANED)) {
-            throw new CustomException(ExceptionCode.ACCOUNT_SUSPENDED); //TODO exception 종류 변경
+    private void checkUserStatus(String email) {
+        User user = userService.findUserByEmail(email);
+        userService.checkBanTime(user);
+        if (user.getStatus().equals(User.UserStatus.USER_BANNED)) {
+            throw new DisabledException("유저가 밴 상태입니다." + user.getBanTime() + " 이후에 서비스 이용이 가능합니다.");
         }
     }
 }
