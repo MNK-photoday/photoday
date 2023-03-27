@@ -174,7 +174,7 @@ public class UserServiceImplTestV2 {
 
     @Test
     @DisplayName("updateUser: 이미지, description 변경")
-    void updateUser() throws IOException, NoSuchAlgorithmException {
+    void updateUserTest() throws IOException, NoSuchAlgorithmException {
         // given
         User user = getUser("test@email.com");
         UserDto.Update update = new UserDto.Update("유저 설명");
@@ -192,6 +192,24 @@ public class UserServiceImplTestV2 {
         assertEquals(imageUrl, response.getProfileImageUrl());
     }
 
+    @Test
+    @DisplayName("updateUser: 이미지만 변경")
+    void updateUserUpdateDtoNullTest() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = getUser("test@email.com");
+        MultipartFile multipartFile = new MockMultipartFile("image.jpg", "".getBytes());
+        String imageUrl = "imageUrl";
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(user));
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(imageUrl);
+
+        // when
+        UserDto.Response response = userService.updateUser(null, multipartFile);
+
+        // then
+        assertEquals(user.getDescription(), response.getDescription());
+        assertEquals(imageUrl, response.getProfileImageUrl());
+    }
 
     private User getUser(String email) {
         return User.builder()
