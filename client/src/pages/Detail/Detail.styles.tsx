@@ -91,11 +91,25 @@ export const S_IconBox = styled.div<{ isModal: boolean }>`
       color: var(--color-primary-red);
     }
   }
+  .clicked-like-icon {
+    color: var(--color-primary-red);
+    &:hover {
+      cursor: pointer;
+      color: var(--color-primary-gray30);
+    }
+  }
   .bookmark-icon {
     color: var(--color-primary-gray30);
     &:hover {
       cursor: pointer;
       color: var(--color-primary-green);
+    }
+  }
+  .clicked-bookmark-icon {
+    color: var(--color-primary-green);
+    &:hover {
+      cursor: pointer;
+      color: var(--color-primary-gray30);
     }
   }
   .dots-icon {

@@ -74,6 +74,15 @@ function Detail() {
       });
   }, []);
 
+  const token = localStorage.getItem('accessToken');
+  const headers = {
+    headers: { Authorization: token },
+  };
+  const data = {};
+
+  const [isLike, setIsLike] = useState(false);
+  const [isBookmark, setIsBookmark] = useState(false);
+
   const dateTypeConverter = (date: string | undefined) => {
     return date?.split('T')[0] + ' ' + date?.split('T')[1].split('.')[0];
   };
@@ -99,6 +108,36 @@ function Detail() {
       link.click();
     }
   };
+
+  const likeClickHandler = () => {
+    axios
+      .patch(
+        `${import.meta.env.VITE_APP_API}/images/${id}/likes`,
+        data,
+        headers,
+      )
+      .then((res) => {
+        setIsLike(res.data.data.like);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const bookmarkClickHandler = () => {
+    axios
+      .patch(
+        `${import.meta.env.VITE_APP_API}/images/${id}/bookmarks`,
+        data,
+        headers,
+      )
+      .then((res) => {
+        setIsBookmark(res.data.data.bookmark);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <ContainerWrap>
       <Container>
@@ -118,8 +157,32 @@ function Detail() {
                 </div>
               </S_UserBox>
               <S_IconBox isModal={isOpenModal}>
-                <FaBookmark size={18} className="bookmark-icon" />
-                <FaHeart size={20} className="like-icon" />
+                {isBookmark ? (
+                  <FaBookmark
+                    size={18}
+                    className="bookmark-icon"
+                    onClick={bookmarkClickHandler}
+                  />
+                ) : (
+                  <FaBookmark
+                    size={18}
+                    className="clicked-bookmark-icon"
+                    onClick={bookmarkClickHandler}
+                  />
+                )}
+                {isLike ? (
+                  <FaHeart
+                    size={20}
+                    className="like-icon"
+                    onClick={likeClickHandler}
+                  />
+                ) : (
+                  <FaHeart
+                    size={20}
+                    className="clicked-like-icon"
+                    onClick={likeClickHandler}
+                  />
+                )}
                 <BiDotsVerticalRounded
                   size={20}
                   className="dots-icon"
