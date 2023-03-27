@@ -504,6 +504,18 @@ public class UserServiceImplTestV2 {
         assertFalse(response);
     }
 
+    @Test
+    @DisplayName("checkAdmin: Anonymous")
+    void checkAdminAnonymousTest() {
+        // given
+
+        // when
+        boolean response = userService.checkAdmin(null);
+
+        // then
+        assertFalse(response);
+    }
+
     private User getUser(String email) {
         return User.builder()
                 .userId(getId())
