@@ -49,7 +49,6 @@ export const postLogin = async (
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('userProfileImage', userProfileImage);
   }
-
   return { userId, userProfileImage };
 };
 
