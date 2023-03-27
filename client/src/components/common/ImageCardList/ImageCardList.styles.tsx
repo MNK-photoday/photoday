@@ -1,25 +1,25 @@
 import styled from 'styled-components';
 
 type ImageCardBoxProps = {
-  width: number;
   height?: number;
   matrix: 'columns' | 'rows';
 };
 
-export const S_ImageCardWrap = styled.article`
-  width: 100%;
-`;
-
-export const S_ImageCardBox = styled.div<ImageCardBoxProps>`
+export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
   width: 100%;
   display: grid;
-  ${({ width, matrix }) =>
-    width &&
-    matrix &&
-    `grid-template-${matrix}: repeat(auto-fill, minmax(${width}px, 1fr))`};
+  grid-template-columns: 1fr 1fr 1fr;
   row-gap: 10px;
   column-gap: 10px;
   ${({ height }) => height && `grid-auto-rows: ${height}px`};
+
+  @media screen and (max-width: 1500px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (max-width: 1020px) {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 350px;
+  }
 `;
 
 export const S_LoaderBar = styled.div`

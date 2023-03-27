@@ -35,6 +35,7 @@
     "eject": "react-scripts eject",
     "serve": "vite preview"
   },
+  "homepage": "https://friendly-raindrop-9b9849.netlify.app/",
   "eslintConfig": {
     "extends": [
       "react-app",

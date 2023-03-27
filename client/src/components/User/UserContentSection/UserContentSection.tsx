@@ -8,14 +8,10 @@ import {
   S_NoPostsGuide,
   S_Tab,
 } from './UserContentSection.styles';
-import { S_ImageCardBox } from '../../common/ImageCardList/ImageCardList.styles';
 import { getUserPosts, PageInfo, Image } from '../../../api/User';
 import Pagination from '../../common/Pagination/Pagination';
 import ImageCard from '../../common/ImageCard/ImageCard';
-import { CiImageOff, CiCamera } from 'react-icons/ci';
-import { MdOutlinePhotoCamera } from 'react-icons/md';
-import { BsCamera } from 'react-icons/bs';
-
+import { CiImageOff } from 'react-icons/ci';
 type User = {
   userName: string;
   myPage: boolean;
@@ -83,14 +79,7 @@ function UserContentSection({ userName, myPage, id, userId }: User) {
         <>
           <S_UserPhotoContentContainer>
             {posts.map((post: Image) => (
-              <S_ImageCardBox
-                key={post.imageId}
-                width={240}
-                height={220}
-                matrix="columns"
-              >
-                <ImageCard item={post} />
-              </S_ImageCardBox>
+              <ImageCard item={post} />
             ))}
           </S_UserPhotoContentContainer>
           <Pagination pagination={pagination} setPaginate={setPaginate} />

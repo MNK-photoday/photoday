@@ -33,8 +33,8 @@ function Search() {
             </S_SelectContentBox>
           </S_SearchMenuBox>
           <ImageCardList
-            width={370}
-            height={350}
+            width={477}
+            height={320}
             matrix="columns"
             filter={isSelect}
           />

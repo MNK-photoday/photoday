@@ -6,12 +6,17 @@ export const S_SearchBarWrap = styled.div<{ active?: boolean }>`
   flex: 1;
   position: relative;
   height: ${({ active }) => (active ? '30px' : '35px')};
+  margin-bottom: 20px;
 
   .search-icon {
     font-size: 15px;
     position: absolute;
     left: 15px;
     z-index: 10;
+  }
+
+  @media screen and (max-width: 650px) {
+    display: ${({ active }) => (active ? 'none' : 'flex')};
   }
 `;
 

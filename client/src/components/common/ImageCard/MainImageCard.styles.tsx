@@ -1,29 +1,29 @@
 import styled from 'styled-components';
 
 export const S_MainImageContentBox = styled.section`
-  height: 100%;
-  width: 50%;
+  width: 45%;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
   @media screen and (max-width: 1500px) {
     padding-left: 30px;
   }
   @media screen and (max-width: 1024px) {
     width: 100%;
     padding-left: 0px;
-    height: 1040px;
-    padding: 30px 0;
-    justify-content: center;
+    height: 100%;
   }
 `;
 
 export const S_MainImageCardBox = styled.div`
-  width: 750px;
-  display: grid;
-  row-gap: 30px;
-  grid-auto-rows: 380px;
-  @media screen and (max-width: 1024px) {
-    grid-auto-rows: 450px;
+  box-sizing: border-box;
+  padding: 0 30px;
+  width: 100%;
+  height: 390px;
+
+  &:first-of-type {
+    margin-bottom: 30px;
   }
 `;
 
@@ -32,6 +32,7 @@ export const S_MainImageContentWrap = styled.div`
   height: 100%;
   display: flex;
   gap: 30px;
+  flex-direction: column;
 `;
 
 export const S_MainImg = styled.img<{ pathname: string }>`
@@ -39,5 +40,4 @@ export const S_MainImg = styled.img<{ pathname: string }>`
   max-height: 100%;
   width: 100%;
   object-fit: cover;
-  position: ${({ pathname }) => pathname === '/' && 'absolute'};
 `;

@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
 import { RowFlex } from '../../../styles/GlobalStyles';
 
 export const S_HeaderWrap = styled.header`
   ${RowFlex}
   align-items: center;
   height: 70px;
+  position: relative;
+  z-index: 10;
+  background: var(--white);
 `;
 export const S_HeaderContainer = styled.div`
   max-width: 1830px;
@@ -25,6 +27,10 @@ export const S_HeaderContent = styled.div`
 export const S_LogoBox = styled.div`
   margin-right: 100px;
   height: 43px;
+
+  @media screen and (max-width: 1500px) {
+    margin-right: 30px;
+  }
 `;
 export const S_LogoH1 = styled.h1`
   font-weight: normal;
@@ -46,12 +52,17 @@ export const S_NavBox = styled.nav`
     margin-top: 3px;
   }
 `;
+
 export const S_NavLink = styled(Link)`
   color: var(--color-primary-black);
   font-size: var(--font-size-sm);
   margin-left: 30px;
   &:first-child {
     margin-left: 100px;
+
+    @media screen and (max-width: 1500px) {
+      margin-left: 30px;
+    }
   }
 `;
 export const S_NavSpan = styled.div`

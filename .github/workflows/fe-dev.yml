@@ -1,0 +1,36 @@
+name: fe-dev
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source code.
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ./client
+      - name: Generate Environment Variables File for Production
+        run: |
+          echo "VITE_APP_API=$VITE_APP_API" >> .env.
+          echo "VITE_GOOGLE_AUTH_URL=$VITE_GOOGLE_AUTH_URL" >> .env.
+        working-directory: ./client
+
+      - name: Build
+        run: yarn vite build
+        working-directory: ./client
+      - name: Sync Bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
+          VITE_APP_API: ${{ secrets.VITE_APP_API }}
+          VITE_GOOGLE_AUTH_URL: ${{ secrets.VITE_GOOGLE_AUTH_URL }}
+        run: |
+          aws s3 sync \
+            --region ap-northeast-2 \
+            build s3://photodayproject \
+            --delete
+        working-directory: ./client

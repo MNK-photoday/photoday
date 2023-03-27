@@ -5,6 +5,10 @@ import { RowFlex } from './GlobalStyles';
 export const ContainerWrap = styled.main`
   ${RowFlex}
   justify-content: center;
+
+  @media screen and (max-width: 650px) {
+    margin: 0 30px;
+  }
 `;
 
 /* 컨텐츠 컨테이너 */
@@ -13,7 +17,6 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   ${RowFlex}
-  padding: 0 50px;
 `;
 
 /* 컨텐츠 컨테이너 + flex */
