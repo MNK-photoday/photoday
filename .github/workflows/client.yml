@@ -26,6 +26,7 @@ jobs:
           AWS_EC2_METADATA_DISABLED: true
         run: |
           aws --version
+        working-directory: ./client 
 
       - name: Sync Bucket
         env:
