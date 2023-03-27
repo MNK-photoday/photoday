@@ -134,6 +134,20 @@ public class UserServiceImplTestV2 {
         assertEquals(user.getUserId(), response.getUserId());
     }
 
+    @Test
+    @DisplayName("getUser: 존재하지 않는 유저 조회")
+    void getUserUserNotFoundTest() {
+        // given
+        User user = getUser("test@email.com");
+
+        given(userRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> userService.getUser(user.getUserId()));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getExceptionCode().getHttpStatus());
+        assertEquals("회원 정보가 없습니다.", exception.getExceptionCode().getMessage());
+    }
+
 
     private User getUser(String email) {
         return User.builder()
