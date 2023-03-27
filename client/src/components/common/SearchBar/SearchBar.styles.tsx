@@ -6,6 +6,7 @@ export const S_SearchBarWrap = styled.div<{ active?: boolean }>`
   flex: 1;
   position: relative;
   height: ${({ active }) => (active ? '30px' : '35px')};
+  margin-bottom: 20px;
 
   .search-icon {
     font-size: 15px;
