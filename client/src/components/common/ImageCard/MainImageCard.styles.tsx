@@ -13,6 +13,7 @@ export const S_MainImageContentBox = styled.section`
     padding-left: 0px;
     height: 1040px;
     padding: 30px 0;
+    justify-content: center;
   }
 `;
 
