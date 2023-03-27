@@ -22,17 +22,14 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         Exception exception = (Exception) request.getAttribute("exception");
-        if (exception instanceof DisabledException) {
-            Gson gson = new Gson();
-            ErrorResponse errorResponse;
-            errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, exception.getMessage());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding("UTF-8");
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
-        } else {
-            ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);
-        }
+
+        Gson gson = new Gson();
+        ErrorResponse errorResponse;
+        errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, exception.getMessage());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
 
         logExceptionMessage(authException, exception);
     }
