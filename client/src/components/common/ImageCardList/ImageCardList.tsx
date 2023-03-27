@@ -46,17 +46,8 @@ function ImageCardList({
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname !== '/') {
-      fetchData();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (search?.length !== 0) {
-      fetchData();
-    }
+    fetchData();
   }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
-
   useEffect(() => {
     if (LOADING_CONTEXT?.isLoading) {
       observer.current?.disconnect();
@@ -86,6 +77,7 @@ function ImageCardList({
       PAGE_NUM_CONTEXT?.pageNumber ?? 1,
       filter,
     ).then((response) => {
+      console.log(response.data);
       ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
         ...prev,
         ...response?.data,
