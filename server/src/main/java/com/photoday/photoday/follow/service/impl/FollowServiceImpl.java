@@ -1,11 +1,11 @@
-package com.photoday.photoday.follow.service;
+package com.photoday.photoday.follow.service.impl;
 
 import com.photoday.photoday.excpetion.CustomException;
-import com.photoday.photoday.excpetion.ExceptionCode;
 import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.follow.entity.Follow;
 import com.photoday.photoday.follow.mapper.FollowMapper;
 import com.photoday.photoday.follow.repository.FollowRepository;
+import com.photoday.photoday.follow.service.FollowService;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
@@ -15,11 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.photoday.photoday.excpetion.ExceptionCode.CANNOT_FOLLOW_MYSELF;
+import static com.photoday.photoday.excpetion.ExceptionCode.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class FollowServiceImpl implements FollowService {
-    //TODO impl 폴더 만들어서 따로 넣어주기,  메서드 병합 : authUserService.getLoginUser(), ExceptionCode static 임포트로 통일하기.
     private final UserService userService;
     private final FollowRepository followRepository;
     private final FollowMapper followMapper;
@@ -35,11 +37,12 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public FollowDto.ResponseFollowUsers registerFollowUser(Long followingId) {
-        Long loginUserId = authUserService.getLoginUserId();
-        if (followingId.equals(loginUserId)) {
-            throw new CustomException(ExceptionCode.CANNOT_FOLLOW_MYSELF);
+        User loginUser = authUserService.getLoginUser()
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        if (followingId.equals(loginUser.getUserId())) {
+            throw new CustomException(CANNOT_FOLLOW_MYSELF);
         }
-        User user = userService.findVerifiedUser(loginUserId);
+        User user = userService.findVerifiedUser(loginUser.getUserId());
         User targetUser = userService.findVerifiedUser(followingId);
 
         Optional<Follow> check = followRepository.findByFollowerAndFollowing(targetUser, user);
@@ -57,6 +60,6 @@ public class FollowServiceImpl implements FollowService {
             followRepository.save(follow);
         }
 
-        return followMapper.followUserListToResponseFollowUsers(targetUser, loginUserId);
+        return followMapper.followUserListToResponseFollowUsers(targetUser, loginUser.getUserId());
     }
 }
