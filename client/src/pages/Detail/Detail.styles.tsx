@@ -23,8 +23,6 @@ export const S_PicBox = styled.div`
   padding: 20px 40px;
   border-radius: 10px;
 
-  z-index: 1;
-
   &:hover {
     > :first-child {
       transition: all 0.3s ease-in-out;
@@ -79,7 +77,7 @@ export const S_UserBox = styled.div`
   }
 `;
 
-export const S_IconBox = styled.div`
+export const S_IconBox = styled.div<{ isModal: boolean }>`
   width: 80px;
 
   display: flex;
@@ -93,6 +91,13 @@ export const S_IconBox = styled.div`
       color: var(--color-primary-red);
     }
   }
+  .clicked-like-icon {
+    color: var(--color-primary-red);
+    &:hover {
+      cursor: pointer;
+      color: var(--color-primary-gray30);
+    }
+  }
   .bookmark-icon {
     color: var(--color-primary-gray30);
     &:hover {
@@ -100,8 +105,16 @@ export const S_IconBox = styled.div`
       color: var(--color-primary-green);
     }
   }
+  .clicked-bookmark-icon {
+    color: var(--color-primary-green);
+    &:hover {
+      cursor: pointer;
+      color: var(--color-primary-gray30);
+    }
+  }
   .dots-icon {
-    color: var(--color-primary-gray30);
+    color: ${({ isModal }) =>
+      isModal ? 'var(--color-primary-black)' : 'var(--color-primary-gray30)'};
     &:hover {
       cursor: pointer;
     }
@@ -117,6 +130,7 @@ export const S_Contents = styled.div`
   > img {
     width: 100%;
     height: auto;
+    max-height: 700px;
   }
 `;
 
