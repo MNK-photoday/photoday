@@ -35,9 +35,6 @@ export const postLogin = async (
       email: loginForm.email,
       password: loginForm.password,
     },
-    {
-      withCredentials: true,
-    },
   );
 
   const accessToken = response.headers.authorization;
@@ -49,6 +46,7 @@ export const postLogin = async (
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('userProfileImage', userProfileImage);
   }
+
   return { userId, userProfileImage };
 };
 
