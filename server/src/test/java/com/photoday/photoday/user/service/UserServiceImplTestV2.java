@@ -1,6 +1,7 @@
 package com.photoday.photoday.user.service;
 
 import com.photoday.photoday.excpetion.CustomException;
+import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.security.utils.CustomAuthorityUtils;
@@ -16,9 +17,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -165,6 +170,26 @@ public class UserServiceImplTestV2 {
         assertFalse(response.isCheckAdmin());
         assertFalse(response.isMyPage());
         assertFalse(response.isCheckFollow());
+    }
+
+    @Test
+    @DisplayName("updateUser: 이미지, description 변경")
+    void updateUser() throws IOException, NoSuchAlgorithmException {
+        // given
+        User user = getUser("test@email.com");
+        UserDto.Update update = new UserDto.Update("유저 설명");
+        MultipartFile multipartFile = new MockMultipartFile("image.jpg", "".getBytes());
+        String imageUrl = "imageUrl";
+
+        given(authUserService.getLoginUser()).willReturn(Optional.of(user));
+        given(s3Service.saveImage(any(MultipartFile.class))).willReturn(imageUrl);
+
+        // when
+        UserDto.Response response = userService.updateUser(update, multipartFile);
+
+        // then
+        assertEquals(update.getDescription(), response.getDescription());
+        assertEquals(imageUrl, response.getProfileImageUrl());
     }
 
 
