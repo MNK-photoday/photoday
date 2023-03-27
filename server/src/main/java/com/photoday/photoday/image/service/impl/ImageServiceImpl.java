@@ -9,6 +9,7 @@ import com.photoday.photoday.image.repository.ImageRepository;
 import com.photoday.photoday.image.repository.LikeRepository;
 import com.photoday.photoday.image.service.ImageService;
 import com.photoday.photoday.image.service.S3Service;
+import com.photoday.photoday.mail.image.ImageDeleteEvent;
 import com.photoday.photoday.security.service.AuthUserService;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.tag.entity.Tag;
@@ -18,6 +19,7 @@ import com.photoday.photoday.user.entity.User;
 import com.photoday.photoday.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +50,7 @@ public class ImageServiceImpl implements ImageService {
     private final TagMapper tagMapper;
     private final AuthUserService authUserService;
     private final LikeRepository likeRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Override
     public ImageDto.Response createImage(TagDto post, MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
@@ -106,8 +108,9 @@ public class ImageServiceImpl implements ImageService {
         Image image = findVerifiedImage(imageId);
 //        Long userId = authUserService.getLoginUserId();
         User user = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        if (!image.getUser().getUserId().equals(user.getUserId()))
+        if (!user.getRoles().contains("ADMIN") && !image.getUser().getUserId().equals(user.getUserId()))
             throw new CustomException(NOT_IMAGE_OWNER);
+        if(user.getRoles().contains("ADMIN")) publisher.publishEvent(new ImageDeleteEvent(this, image));
         imageRepository.deleteById(imageId);
     }
 
@@ -167,6 +170,7 @@ public class ImageServiceImpl implements ImageService {
 
         if (image.getReportList().size() >= 4) {
             imageRepository.delete(image);
+            publisher.publishEvent(new ImageDeleteEvent(this, image));
             return null;
         }
 
