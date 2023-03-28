@@ -177,3 +177,37 @@ export const S_SeachList = styled.div`
   width: 85%;
   height: 1000px;
 `;
+export const S_TagWrap = styled.div`
+  ${Flex}
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+export const S_TagBox = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
+export const S_TagEditInput = styled.input`
+  width: 300px;
+
+  border: 1px solid #ccc;
+  border-radius: var(--box-radius-10);
+
+  font-size: 1rem;
+
+  margin-bottom: 7px;
+  margin-right: 10px;
+  padding: 8px;
+
+  &:focus {
+    border: 1px solid var(--color-primary-green);
+    ::placeholder {
+      color: #fff;
+    }
+  }
+
+  ::placeholder {
+    color: var(--color-primary-gray20);
+  }
+`;

@@ -181,7 +181,11 @@ function Upload() {
                 onChange={inputTagHandler}
                 onKeyPress={createTagHandler}
               ></S_TagInput>
-              <TagList tags={tags} onRemove={removeTagHandler} />
+              <TagList
+                tags={tags}
+                onRemove={removeTagHandler}
+                isModificationMode={true}
+              />
             </S_TagContainer>
             <S_ButtonContainer>
               <Button

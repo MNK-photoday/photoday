@@ -17,12 +17,14 @@ const TagItemWrap = styled.button<{ isModificationMode?: boolean }>`
   color: #fff;
   border-radius: 40px;
   font-size: var(--font-size-sm);
+  transition: all 0.3s ease-in-out;
 
   &:hover {
     background-color: var(--color-primary-green);
     color: #fff;
     border: 1px solid var(--color-primary-green);
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
     > .close-icon {
       display: ${({ isModificationMode }) =>
         isModificationMode ? 'block' : 'none'};
