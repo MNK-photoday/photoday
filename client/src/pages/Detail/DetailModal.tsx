@@ -6,13 +6,25 @@ import {
 
 type ModalProps = {
   isMyImage: boolean;
+  adminCheck: boolean | undefined;
+  deleteHandler: () => void;
+  reportHandler: () => void;
 };
 
-function DetailModal({ isMyImage }: ModalProps) {
+function DetailModal({
+  isMyImage,
+  deleteHandler,
+  reportHandler,
+  adminCheck,
+}: ModalProps) {
   return (
     <S_DetailModalContainer>
-      <S_ModalReportButton>Report</S_ModalReportButton>
-      {isMyImage && <S_ModalDeleteButton>Delete</S_ModalDeleteButton>}
+      <S_ModalReportButton onClick={reportHandler}>Report</S_ModalReportButton>
+      {isMyImage || adminCheck ? (
+        <S_ModalDeleteButton onClick={deleteHandler}>
+          Delete
+        </S_ModalDeleteButton>
+      ) : null}
     </S_DetailModalContainer>
   );
 }

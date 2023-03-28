@@ -43,6 +43,7 @@ type DetailInfo = {
   ownerId: number;
   followCheck: boolean;
   myImageCheck: boolean;
+  adminCheck: boolean;
 };
 function Detail() {
   const { id } = useParams();
@@ -85,6 +86,7 @@ function Detail() {
           ownerId: response.owner.userId,
           followCheck: response.owner.checkFollow,
           myImageCheck: response.myImage,
+          adminCheck: response.checkAdmin,
         });
         setIsBookmark(response.bookmark);
         setIsLike(response.like);
@@ -254,6 +256,36 @@ function Detail() {
         }
       });
   };
+  const deleteClickHandler = () => {
+    axios
+      .delete(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
+      .then(() => {
+        navigate('/');
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const reportClickHandler = () => {
+    axios
+      .post(
+        `${import.meta.env.VITE_APP_API}/images/${id}/reports`,
+        null,
+        headers,
+      )
+      .then((res) => {
+        if (res.data.data.report) {
+          alert('Report completed');
+        } else if (!res.data.data.report) {
+          alert('Report canceled');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 401) {
+          navigate('/login');
+        }
+      });
+  };
   return (
     <ContainerWrap>
       <Container>
@@ -312,7 +344,14 @@ function Detail() {
                   className="dots-icon"
                   onClick={handleOpenModal}
                 />
-                {isOpenModal && <DetailModal isMyImage={isMyImage} />}
+                {isOpenModal && (
+                  <DetailModal
+                    isMyImage={isMyImage}
+                    adminCheck={detailInfo?.adminCheck}
+                    deleteHandler={deleteClickHandler}
+                    reportHandler={reportClickHandler}
+                  />
+                )}
               </S_IconBox>
             </S_ContentsTop>
             <S_Contents>
