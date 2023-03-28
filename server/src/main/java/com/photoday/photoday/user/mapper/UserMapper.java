@@ -38,7 +38,7 @@ public class UserMapper {
         response.setProfileImageUrl(targetUser.getProfileImageUrl());
         response.setDescription(targetUser.getDescription());
         response.setCheckFollow(checkFollow(targetUser, loginUser));
-        response.setLikeCount(targetUser.getLikes() != null ? targetUser.getLikes().size() : 0);
+        response.setLikeCount(getLikeCount(targetUser)); //좋아요 받은 숫자
         response.setReportCount(targetUser.getReportedCount()); //필드 이름을 reportedCount로 했어야 덜 헷갈렸을 듯.
         response.setFollowerCount(targetUser.getFollower() != null ? targetUser.getFollower().size() : 0);
         response.setFollowingCount(targetUser.getFollowing() != null ? targetUser.getFollowing().size() : 0);
@@ -68,5 +68,9 @@ public class UserMapper {
 
         Long userId = loginUser.getUserId();
         return userId != null && userId.equals(targetUser.getUserId());
+    }
+
+    private int getLikeCount(User targetUser) {
+        return targetUser.getImages().stream().mapToInt(image -> image.getLikeList().size()).sum();
     }
 }
