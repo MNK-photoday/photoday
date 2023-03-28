@@ -26,8 +26,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -53,11 +53,13 @@ class AuthControllerTest {
     @DisplayName("reissue: 정상 입력")
     void reissue() throws Exception {
         // given
-        String refreshToken = securityTestHelper.getRefreshToken("user@email.com");
+        String email = "user@email.com";
         User user = User.builder()
-                .email("user@email.com")
+                .email(email)
                 .roles(List.of("USER"))
                 .build();
+        String accessToken = helper.getAccessToken(email, List.of("USER"));
+        String refreshToken = securityTestHelper.getRefreshToken(email);
         Cookie cookie = new Cookie("Refresh", refreshToken);
 
         given(redisService.getValues(anyString())).willReturn(refreshToken);
@@ -67,6 +69,7 @@ class AuthControllerTest {
         // when
         ResultActions actions = mvc.perform(
                 get("/api/auth/reissue")
+                        .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .cookie(cookie));
@@ -116,7 +119,7 @@ class AuthControllerTest {
         given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
         // when
         ResultActions actions = mvc.perform(
-                post("/api/auth/password")
+                patch("/api/auth/password")
                         .param("email", email)
                         .contentType(MediaType.APPLICATION_JSON));
 
