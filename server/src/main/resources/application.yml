@@ -80,7 +80,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: info, health, prometheus
+        include: ["info", "health", "prometheus", "logfile"]
         exclude:
       base-path: /management
   endpoint:
@@ -88,7 +88,11 @@ management:
       show-details: always
     prometheus:
       enabled: true
+    logfile:
+      external-file: /logs/photoday.log
   metrics:
     tags:
       application: Photoday
-
+logging:
+  file:
+    name: "./logs/photoday.log"
