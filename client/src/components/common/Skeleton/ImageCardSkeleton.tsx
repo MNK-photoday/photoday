@@ -1,17 +1,18 @@
-import { S_ImageCardWrap } from '../ImageCardList/ImageCardList.styles';
+import { S_SkeletonImageCardWrap } from '../ImageCardList/ImageCardList.styles';
 import Skeleton from './Skeleton';
 type ImageCardSkeletonProps = {
+  width?: number;
   height?: number;
   count: number;
 };
 
-function ImageCardSkeleton({ count, height }: ImageCardSkeletonProps) {
+function ImageCardSkeleton({ count, height, width }: ImageCardSkeletonProps) {
   return (
-    <S_ImageCardWrap height={height} matrix="columns">
+    <S_SkeletonImageCardWrap height={height} matrix="columns">
       {Array.from({ length: count }).map((_, index) => (
-        <Skeleton key={index} height={height} animation={true} />
+        <Skeleton key={index} height={height} width={width} animation={true} />
       ))}
-    </S_ImageCardWrap>
+    </S_SkeletonImageCardWrap>
   );
 }
 
