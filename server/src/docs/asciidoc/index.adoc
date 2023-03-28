@@ -101,12 +101,31 @@ include::{snippets}/logout/http-request.adoc[]
 .http-response
 include::{snippets}/logout/http-response.adoc[]
 
+=== 비밀번호 변경
+.curl-request
+include::{snippets}/update-user-password/curl-request.adoc[]
+
+.http-request
+include::{snippets}/update-user-password/http-request.adoc[]
+
+.request-headers
+include::{snippets}/update-user-password/request-headers.adoc[]
+
+.http-response
+include::{snippets}/update-user-password/http-response.adoc[]
+
+.response-fields
+include::{snippets}/update-user-password/response-fields.adoc[]
+
 === 리프레시 토큰 재발급
 .curl-request
 include::{snippets}/reissue/curl-request.adoc[]
 
 .http-request
 include::{snippets}/reissue/http-request.adoc[]
+
+.request-headers
+include::{snippets}/reissue/request-headers.adoc[]
 
 .http-response
 include::{snippets}/reissue/http-response.adoc[]
@@ -126,6 +145,22 @@ include::{snippets}/password/request-parameters.adoc[]
 
 .http-response
 include::{snippets}/password/http-response.adoc[]
+
+=== 프로필 이미지 제거
+.curl-request
+include::{snippets}/delete-profile/curl-request.adoc[]
+
+.http-request
+include::{snippets}/delete-profile/http-request.adoc[]
+
+.request-headers
+include::{snippets}/delete-profile/request-headers.adoc[]
+
+.http-response
+include::{snippets}/delete-profile/http-response.adoc[]
+
+.response-fields
+include::{snippets}/delete-profile/response-fields.adoc[]
 
 == Follow
 === 팔로우 설정 / 취소
