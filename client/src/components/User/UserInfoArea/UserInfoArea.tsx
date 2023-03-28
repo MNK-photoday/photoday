@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AxiosError } from 'axios';
 import {
   S_UserInfoArea,
@@ -26,9 +26,11 @@ import { FaRegHeart } from 'react-icons/fa';
 import { IoWarningOutline } from 'react-icons/io5';
 import { FiUserPlus, FiUserMinus } from 'react-icons/fi';
 import { patchFollow } from '../../../api/User';
+import { RootState } from '../../../store/store';
 
 function UserInfoArea({ userData, myPage }: User) {
   const dispatch = useDispatch();
+  const id = useSelector((state: RootState) => state.auth.id);
   const [textareaValue, setTextareaValue] = useState(userData.description);
   const [inputValue, setInputValue] = useState('');
   const [confirminputValue, setconfirmInputValue] = useState('');
@@ -147,7 +149,8 @@ function UserInfoArea({ userData, myPage }: User) {
       <S_UserNameContainer>
         <S_UserName>{userData.name}</S_UserName>
         <S_IconContainer>
-          {!myPage &&
+          {Number(id) !== 0 &&
+            !myPage &&
             (!userData.checkFollow ? (
               <FiUserPlus
                 size={25}

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
+// 비회원일 때 확인하기
 export const getUser = async (userId: string | null) => {
   const token = localStorage.getItem('accessToken');
   const response = await axios.get<AxiosResponse>(
@@ -24,7 +25,7 @@ export const updatePasswordUser = async ({
   confirminputValue,
 }: newPassword) => {
   const token = localStorage.getItem('accessToken');
-  await axios.post(
+  await axios.patch(
     `${import.meta.env.VITE_APP_API}/users/update/password`,
     {
       password: inputValue,
@@ -118,6 +119,7 @@ export const patchFollow = async (followingId: number | null) => {
       },
     },
   );
+
   return response.data;
 };
 

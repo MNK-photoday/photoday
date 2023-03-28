@@ -79,7 +79,7 @@ function UserContentSection({ userName, myPage, id, userId }: User) {
         <>
           <S_UserPhotoContentContainer>
             {posts.map((post: Image) => (
-              <ImageCard item={post} />
+              <ImageCard key={post.imageId} item={post} />
             ))}
           </S_UserPhotoContentContainer>
           <Pagination pagination={pagination} setPaginate={setPaginate} />

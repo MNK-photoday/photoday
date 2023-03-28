@@ -41,7 +41,7 @@ function SignupSection() {
     if (isCheckedTerms) {
       try {
         await postSignup(loginForm);
-        alert('potoday 회원가입이 성공적으로 완료되었습니다.');
+        alert('photoday 회원가입이 성공적으로 완료되었습니다.');
         window.history.back();
       } catch (error) {
         if (error instanceof AxiosError) {

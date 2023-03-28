@@ -48,8 +48,10 @@ export const S_UserNameContainer = styled.div`
 
 export const S_IconContainer = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+
   @media screen and (max-width: 1000px) {
-    display: flex;
     justify-content: center;
     margin: 50px;
   }
