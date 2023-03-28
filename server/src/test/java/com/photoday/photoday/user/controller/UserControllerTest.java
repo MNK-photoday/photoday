@@ -239,6 +239,36 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("updateUserPassword: 정상 입력")
+    void updateUserPassword() throws Exception {
+        // given
+        String content = getUpdatePasswordJsonBody();
+        UserDto.Response response = getUserDtoResponse();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
+
+        given(userService.updateUserPassword(any(UserDto.UpdateUserPassword.class))).willReturn(response);
+
+        // when
+        ResultActions actions = mvc.perform(
+                post("/api/users/update/password")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content));
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("update-user-password",
+                        getRequestPreprocessor(),
+                        getResponsePreprocessor(),
+                        getRequestHeadersAccessToken(),
+                        getResponseFieldsUserDtoResponse()));
+    }
+
+
+
+    @Test
     @DisplayName("deleteUser: 정상 입력")
     void deleteUser() throws Exception {
         // given
@@ -259,5 +289,30 @@ class UserControllerTest {
                         getRequestPreprocessor(),
                         getResponsePreprocessor(),
                         getRequestHeadersAccessToken()));
+    }
+
+    @Test
+    @DisplayName("deleteProfileImage: 정상 입력")
+    void deleteProfileImageTest() throws Exception {
+        // given
+        UserDto.Response response = getUserDtoResponse();
+        String accessToken = helper.getAccessToken("test@email.com", List.of("USER"));
+
+        given(userService.deleteProfileImage()).willReturn(response);
+
+        // when
+        ResultActions actions = mvc.perform(
+                delete("/api/users/delete/profile-image")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("delete-profile",
+                        getRequestPreprocessor(),
+                        getResponsePreprocessor(),
+                        getRequestHeadersAccessToken(),
+                        getResponseFieldsUserDtoResponse()));
     }
 }
