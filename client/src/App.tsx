@@ -10,8 +10,7 @@ import TagSearch from './pages/Search/Search';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import Detail from './pages/Detail/Detail';
 import ItemStore from './context/ItemContext';
-import React, { ReactNode } from 'react';
-import LoadingStore from './context/LoadintContext';
+import React from 'react';
 import SearchStore from './context/SearchContext';
 import PageNumStore from './context/PageNumContext';
 
@@ -74,9 +73,7 @@ function App() {
   ]);
 
   return (
-    <AppProvider
-      contexts={[ItemStore, LoadingStore, SearchStore, PageNumStore]}
-    >
+    <AppProvider contexts={[ItemStore, SearchStore, PageNumStore]}>
       <RouterProvider router={router}></RouterProvider>
     </AppProvider>
   );
