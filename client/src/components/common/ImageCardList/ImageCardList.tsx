@@ -3,7 +3,6 @@ import ImageCard from '../ImageCard/ImageCard';
 import { S_ImageCardWrap, S_LoaderBar } from './ImageCardList.styles';
 import { postSearchTags } from '../../../api/Search';
 import { ItemContext } from '../../../context/ItemContext';
-import { LoadingContext } from '../../../context/LoadintContext';
 import { SearchContext } from '../../../context/SearchContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import ImageCardSkeleton from '../Skeleton/ImageCardSkeleton';
@@ -32,20 +31,20 @@ function ImageCardList({
   const [hasMore, setHasMore] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>();
   const endRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
 
   const ITEM_CONTEXT = useContext(ItemContext);
-  const LOADING_CONTEXT = useContext(LoadingContext);
   const SEARCH_CONTEXT = useContext(SearchContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
-  const { search } = useParams();
+  const { search, id } = useParams();
   const { pathname } = useLocation();
-
   useEffect(() => {
     fetchData();
   }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
+
   useEffect(() => {
-    if (LOADING_CONTEXT?.isLoading) {
+    if (loading) {
       observer.current?.disconnect();
       return;
     }
@@ -64,39 +63,51 @@ function ImageCardList({
     if (endRef.current !== null) {
       observer.current.observe(endRef.current);
     }
-  }, [LOADING_CONTEXT?.isLoading, hasMore]);
+  }, [loading, hasMore]);
 
   const fetchData = async () => {
-    LOADING_CONTEXT?.setIsLoading(true);
+    setLoading(true);
     postSearchTags(
-      pathname !== '/' ? search ?? '' : SEARCH_CONTEXT?.searchWord ?? '',
+      pathname !== '/'
+        ? search ?? SEARCH_CONTEXT?.searchWord ?? ''
+        : SEARCH_CONTEXT?.searchWord ?? '',
       PAGE_NUM_CONTEXT?.pageNumber ?? 1,
       filter,
     ).then((response) => {
-      console.log(response.data);
-      ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
-        ...prev,
-        ...response?.data,
-      ]);
-      setHasMore(response?.data.length > 0);
-      LOADING_CONTEXT?.setIsLoading(false);
+      if (pathname.includes('detail')) {
+        ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => {
+          const newItems = response?.data.filter(
+            (item: ImageItemProps) => item.imageId !== Number(id),
+          );
+
+          return [...prev, ...newItems];
+        });
+        setHasMore(response?.data.length > 0);
+        setLoading(false);
+      } else {
+        ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
+          ...prev,
+          ...response?.data,
+        ]);
+        setHasMore(response?.data.length > 0);
+        setLoading(false);
+      }
     });
   };
 
   return (
     <>
       <S_ImageCardWrap height={height} matrix={matrix}>
-        {ITEM_CONTEXT?.items.map((item: ImageItemProps) => (
-          <ImageCard key={item.imageId} item={item} />
-        ))}
+        {ITEM_CONTEXT?.items.map((item: ImageItemProps, index) => (
+          <ImageCard key={index} item={item} />
+        )) ?? <p>이미지 없음</p>}
       </S_ImageCardWrap>
       {/* 로딩 중일 때 */}
-      {LOADING_CONTEXT?.isLoading && (
-        <ImageCardSkeleton count={6} height={height} />
-      )}
-      {LOADING_CONTEXT?.isLoading && <S_LoaderBar>Loading more...</S_LoaderBar>}
+      {loading && <ImageCardSkeleton count={6} height={height} />}
+
+      {loading && <S_LoaderBar>Loading more...</S_LoaderBar>}
       {/* 검색 결과가 없을 때  | 받아올 데이터가 없을 때 */}
-      {!LOADING_CONTEXT?.isLoading && !hasMore && (
+      {loading && !hasMore && (
         <S_LoaderBar>No more photos to load.</S_LoaderBar>
       )}
       {/* 끝까지 스크롤 했을 때 */}

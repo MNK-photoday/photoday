@@ -30,8 +30,8 @@ function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
       } else {
         if (setActiveTextBox) setActiveTextBox(false);
         if (currentWord) SEARCH_CONTENT?.setSearchWord(currentWord);
+        if (activeSearchBar) navigate(`/tags/${currentWord}`);
       }
-      if (activeSearchBar) navigate(`/tags/${currentWord}`);
       setIsInputNull(false);
       ITEM_CONTEXT?.setItems([]);
       PAGE_NUM_CONTENT?.setPageNumber(1);

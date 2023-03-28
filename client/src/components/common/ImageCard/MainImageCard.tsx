@@ -40,8 +40,8 @@ function MainImageCard() {
   return (
     <S_MainImageContentBox>
       {items.map((item: ImageItemProps) => (
-        <S_MainImageCardBox>
-          <ImageCard key={item.imageId} item={item} />
+        <S_MainImageCardBox key={item.imageId}>
+          <ImageCard item={item} />
         </S_MainImageCardBox>
       ))}
       {isloading && <MainSkeleton count={2} height={390} />}
