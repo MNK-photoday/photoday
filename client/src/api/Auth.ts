@@ -1,21 +1,28 @@
+import axios, { AxiosResponse } from 'axios';
+
 function checkAuth() {
   const accessToken = localStorage.getItem('accessToken');
   if (!accessToken) {
     return false;
   }
 
-  /*
-    다시 발급받을 때 수정될 코드
+  const verifyToken = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_APP_API}/auth/reissue`, {
-        headers: {
-          Authorization: token,
+      await axios.get<AxiosResponse>(
+        `${import.meta.env.VITE_APP_API}/auth/accessToken`,
+        {
+          headers: {
+            Authorization: accessToken,
+          },
         },
-      });
-    } catch (error) {
-      console.error(error);
+      );
+    } catch (e) {
+      localStorage.clear();
+      location.reload();
+      return false;
     }
-  */
+  };
+  verifyToken();
 
   return true;
 }
