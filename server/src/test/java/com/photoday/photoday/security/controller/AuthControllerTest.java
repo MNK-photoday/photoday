@@ -26,8 +26,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -117,7 +117,7 @@ class AuthControllerTest {
         given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
         // when
         ResultActions actions = mvc.perform(
-                patch("/api/auth/password")
+                post("/api/auth/password")
                         .param("email", email)
                         .contentType(MediaType.APPLICATION_JSON));
 

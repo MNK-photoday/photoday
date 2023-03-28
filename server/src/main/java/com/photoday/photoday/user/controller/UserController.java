@@ -40,7 +40,7 @@ public class UserController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PostMapping("/update/password")
+    @PatchMapping("/update/password")
     public ResponseEntity<?> updateUserPassword(@RequestBody @Valid UserDto.UpdateUserPassword updateUserPasswordDto) {
         UserDto.Response response = userService.updateUserPassword(updateUserPasswordDto);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
