@@ -28,6 +28,7 @@ function UserThumnailArea({ userData, myPage }: User) {
   const [currentTap, setCurrentTap] = useState('follower');
   const [file, setFile] = useState<UploadImage | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     uploadHandler();
   }, [file]);
