@@ -40,8 +40,6 @@ class AuthControllerTest {
     private MockMvc mvc;
     @Autowired
     private SecurityTestHelper helper;
-    @Autowired
-    private SecurityTestHelper securityTestHelper;
     @MockBean
     private RedisService redisService;
     @MockBean
@@ -59,7 +57,7 @@ class AuthControllerTest {
                 .roles(List.of("USER"))
                 .build();
         String accessToken = helper.getAccessToken(email, List.of("USER"));
-        String refreshToken = securityTestHelper.getRefreshToken(email);
+        String refreshToken = helper.getRefreshToken(email);
         Cookie cookie = new Cookie("Refresh", refreshToken);
 
         given(redisService.getValues(anyString())).willReturn(refreshToken);
@@ -88,7 +86,7 @@ class AuthControllerTest {
     void logout() throws Exception {
         // given
         String accessToken = helper.getAccessToken("user@email.com", List.of("USER"));
-        String refreshToken = securityTestHelper.getRefreshToken("user@email.com");
+        String refreshToken = helper.getRefreshToken("user@email.com");
         Cookie cookie = new Cookie("Refresh", refreshToken);
 
         doNothing().when(redisService).deleteValues(anyString());
