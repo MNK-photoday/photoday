@@ -104,7 +104,7 @@ export const getFollows = async (userId: string | null | undefined) => {
       },
     },
   );
-  console.log('??', response.data);
+
   return response.data;
 };
 
