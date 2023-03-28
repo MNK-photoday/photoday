@@ -27,10 +27,10 @@ public class FollowServiceImpl implements FollowService {
     private final FollowMapper followMapper;
     private final AuthUserService authUserService;
 
-    @Override
     public FollowDto.ResponseFollowUsers findFollowUser(Long userId) {
-        Long loginUserId = authUserService.getLoginUserId();
+        User loginUser = authUserService.getLoginUser().orElse(null);
         User verifiedUser = userService.findVerifiedUser(userId);
+        Long loginUserId = loginUser != null ? loginUser.getUserId() : null;
 
         return followMapper.followUserListToResponseFollowUsers(verifiedUser, loginUserId);
     }
