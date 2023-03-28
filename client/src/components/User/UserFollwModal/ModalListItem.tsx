@@ -52,7 +52,8 @@ function ModalListItem({ user, tap, id, setFollowModal }: FollowData) {
           {user.name.length > 10 ? `${user.name.slice(0, 10)}...` : user.name}
         </S_UserName>
       </S_UserIntroductionWrap>
-      {user.userId !== id &&
+      {id !== 0 &&
+        user.userId !== id &&
         (user.checkFollow ? (
           <FiUserMinus
             className="follwIcon"
