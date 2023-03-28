@@ -250,7 +250,7 @@ class UserControllerTest {
 
         // when
         ResultActions actions = mvc.perform(
-                post("/api/users/update/password")
+                patch("/api/users/update/password")
                         .header("Authorization", "Bearer " + accessToken)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)

@@ -46,7 +46,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/password")
+    @PostMapping("/password")
     public ResponseEntity<?> setNewPassword(String email) {
         authUserService.setNewPassword(email);
         return ResponseEntity.ok().build();
