@@ -32,6 +32,7 @@ export const S_UserPageSubTitlePoint = styled.span`
 export const S_Tab = styled.div`
   height: 40px;
   margin-right: 50px;
+  cursor: pointer;
 
   @media screen and (max-width: 900px) {
     width: 100%;
