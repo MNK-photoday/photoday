@@ -129,11 +129,6 @@ function Detail() {
   };
   const handleCloseModal = () => setIsOpenModal(false);
 
-  const extractFileExtensionFromUrl = (url: string): string | null => {
-    const match = url.match(/\.([a-z0-9]+)(?:[\?#]|$)/i);
-    return match ? match[1].toLowerCase() : null;
-  };
-
   const downloadFile = (): void => {
     if (detailInfo) {
       const fileName = detailInfo.image.substring(62);
