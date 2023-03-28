@@ -11,6 +11,7 @@ export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
   grid-template-columns: 1fr 1fr 1fr;
   row-gap: 10px;
   column-gap: 10px;
+
   ${({ height }) => height && `grid-auto-rows: ${height}px`};
 
   @media screen and (max-width: 1500px) {
@@ -19,6 +20,21 @@ export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
   @media screen and (max-width: 1020px) {
     grid-template-columns: 1fr;
     grid-auto-rows: 350px;
+  }
+`;
+export const S_SkeletonImageCardWrap = styled.article<ImageCardBoxProps>`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  row-gap: 10px;
+  column-gap: 10px;
+  ${({ height }) => height && `grid-auto-rows: ${height}px`};
+
+  @media screen and (max-width: 1500px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (max-width: 1020px) {
+    grid-template-columns: 1fr;
   }
 `;
 
