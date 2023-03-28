@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.image.dto.ImageDto;
+import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.headers.RequestHeadersSnippet;
@@ -64,6 +66,15 @@ public class RestDocsSnippets {
     public static UserDto.Response getUserDtoResponse() {
         return new UserDto.Response(1L, "짱구", "http://profile-url.jpg", "짱구입니다.",
                 0, 0, 0, 0, false, false, false);
+    }
+
+    public static PageImpl<Image> getMockPageImage(Pageable pageable) {
+        Image image = Image.builder().build();
+        return new PageImpl<>(List.of(image), pageable, 10);
+    }
+
+    public static ImageDto.PageResponse getImageDtoPageResponse() {
+        return ImageDto.PageResponse.builder().imageId(1L).imageUrl("imageUrl").like(false).bookmark(false).build();
     }
 
     public static String getTagDto() {
