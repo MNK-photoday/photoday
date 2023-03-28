@@ -9,16 +9,24 @@ import {
   S_SelectContentBox,
   S_TagContentBox,
 } from './Search.styles';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { SearchContext } from '../../context/SearchContext';
+import { useParams } from 'react-router-dom';
+
+type Tags = {
+  id: number;
+  name: string;
+};
 
 function Search() {
-  /*임시 태그*/
-  const TEST_TAGS = [
-    { id: 1, name: '석양' },
-    { id: 2, name: '풍경' },
-    { id: 3, name: '나무' },
-  ];
   const [isSelect, setIsSelect] = useState('desc');
+  const [isTags, setIsTags] = useState<Tags[]>([]);
+  const { search } = useParams();
+
+  useEffect(() => {
+    const tags = search?.split(' ') ?? [''];
+    setIsTags(tags.map((tag, index) => ({ id: index + 1, name: tag })));
+  }, [search]);
 
   return (
     <ContainerWrap>
@@ -26,7 +34,7 @@ function Search() {
         <S_SearchBox>
           <S_SearchMenuBox>
             <S_TagContentBox>
-              <TagList tags={TEST_TAGS} />
+              <TagList tags={isTags} />
             </S_TagContentBox>
             <S_SelectContentBox>
               <SelectBox isSelect={isSelect} setIsSelect={setIsSelect} />
