@@ -51,4 +51,9 @@ public class AuthController {
         authUserService.setNewPassword(email);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/accessToken")
+    public ResponseEntity<?> checkTokenExpired() {
+        return ResponseEntity.ok().build();
+    }
 }

@@ -81,6 +81,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/*/auth/logout").authenticated()
                         .antMatchers(HttpMethod.POST, "/*/auth/password").permitAll()
                         .antMatchers(HttpMethod.GET, "/*/auth/reissue").authenticated()
+                        .antMatchers(HttpMethod.GET, "/*/auth/accessToken").authenticated()
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
