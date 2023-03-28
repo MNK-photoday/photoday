@@ -52,6 +52,7 @@ function Detail() {
   const [modiTags, setModiTags] = useState<Tags[]>([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [isLikeCount, setIsLikeCount] = useState(0);
   const [isBookmark, setIsBookmark] = useState(false);
   const [isMyImage, setIsMyImage] = useState(false);
   const [isTagEditMode, setIsTagEditMode] = useState(false);
@@ -71,7 +72,6 @@ function Detail() {
     axios
       .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
       .then((res) => {
-        console.log(res.data);
         const response = res.data.data;
         setDetailInfo({
           image: response.imageUrl,
@@ -90,6 +90,7 @@ function Detail() {
         });
         setIsBookmark(response.bookmark);
         setIsLike(response.like);
+        setIsLikeCount(response.likeCount);
         setIsFollowing(response.owner.checkFollow);
         setIsMyImage(response.myImage);
         if (response.tags.length > 0) {
@@ -99,22 +100,21 @@ function Detail() {
             },
           );
           setTags(objectArray);
+          let searchtags: string = '';
+          tags.forEach((el) => {
+            searchtags += ` ${el['name']}`;
+          });
+          PAGE_NUM_CONTEXT?.setPageNumber(1);
+          ITEM_CONTEXT?.setItems([]);
+          SEARCH_CONTEXT?.setSearchWord(searchtags);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [isLike, isFollowing, isTagModified]);
+  }, [isFollowing, isTagModified, id]);
 
-  // useEffect(() => {
-  //   let searchtags: string = '';
-  //   tags.forEach((el) => {
-  //     searchtags += ` ${el['name']}`;
-  //   });
-  //   PAGE_NUM_CONTEXT?.setPageNumber(1);
-  //   ITEM_CONTEXT?.setItems([]);
-  //   SEARCH_CONTEXT?.setSearchWord(searchtags);
-  // }, [id]);
+  useEffect(() => {}, [isLike]);
 
   const navigate = useNavigate();
 
@@ -166,6 +166,7 @@ function Detail() {
       )
       .then((res) => {
         setIsLike(res.data.data.like);
+        setIsLikeCount(res.data.data.likeCount);
       })
       .catch((err) => {
         console.log(err);
@@ -371,7 +372,7 @@ function Detail() {
                 </div>
                 <div>
                   <FaHeart size={18} className="like-icon" />
-                  {detailInfo?.likeCount}
+                  {isLikeCount}
                 </div>
               </S_CountBox>
               <Button

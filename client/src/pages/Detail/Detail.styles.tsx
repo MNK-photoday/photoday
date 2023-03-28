@@ -126,10 +126,13 @@ export const S_Contents = styled.div`
   align-items: center;
   max-width: 980px;
   height: auto;
+  min-height: 500px;
+  max-height: 700px;
 
   > img {
     width: 100%;
     height: auto;
+    max-height: 80%;
   }
 `;
 
