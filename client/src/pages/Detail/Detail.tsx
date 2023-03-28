@@ -99,19 +99,22 @@ function Detail() {
             },
           );
           setTags(objectArray);
-          let searchtags: string = '';
-          objectArray.forEach((el) => {
-            searchtags += ` ${el['name']}`;
-          });
-          PAGE_NUM_CONTEXT?.setPageNumber(1);
-          ITEM_CONTEXT?.setItems([]);
-          SEARCH_CONTEXT?.setSearchWord(searchtags);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [isLike, isFollowing, id, isTagModified]);
+  }, [isLike, isFollowing, isTagModified]);
+
+  // useEffect(() => {
+  //   let searchtags: string = '';
+  //   tags.forEach((el) => {
+  //     searchtags += ` ${el['name']}`;
+  //   });
+  //   PAGE_NUM_CONTEXT?.setPageNumber(1);
+  //   ITEM_CONTEXT?.setItems([]);
+  //   SEARCH_CONTEXT?.setSearchWord(searchtags);
+  // }, [id]);
 
   const navigate = useNavigate();
 
@@ -131,9 +134,9 @@ function Detail() {
     return match ? match[1].toLowerCase() : null;
   };
 
-  const downloadFile = (): void => {
+  const downloadFile = async (): Promise<void> => {
     if (detailInfo) {
-      axios
+      await axios
         .get<Blob>(detailInfo?.image, {
           responseType: 'blob',
           withCredentials: true,
