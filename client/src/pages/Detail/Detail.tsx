@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Container, ContainerWrap } from '../../styles/Layout';
 import Button from '../../components/common/Button/Button';
 import { FaHeart, FaBookmark } from 'react-icons/fa';
 import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
 import { GrView } from 'react-icons/gr';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
+import { SearchContext } from '../../context/SearchContext';
 import {
   S_DetailBox,
   S_PicBox,
@@ -54,6 +55,8 @@ function Detail() {
   const [isLike, setIsLike] = useState(false);
   const [isBookmark, setIsBookmark] = useState(false);
   const [isMyImage, setIsMyImage] = useState(false);
+
+  const SEARCH_CONTEXT = useContext(SearchContext);
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
@@ -91,6 +94,8 @@ function Detail() {
       .catch((err) => {
         console.log(err);
       });
+
+    SEARCH_CONTEXT?.setSearchWord('둥이');
   }, [isLike, isFollowing]);
 
   const navigate = useNavigate();
@@ -111,13 +116,26 @@ function Detail() {
     return match ? match[1].toLowerCase() : null;
   };
 
-  const imageDownloadHandler = () => {
+  const downloadFile = (): void => {
     if (detailInfo) {
-      const link = document.createElement('a');
-      const fileExtension = extractFileExtensionFromUrl(detailInfo.image);
-      link.download = `photoday_download${id}.${fileExtension}`;
-      link.href = detailInfo?.image;
-      link.click();
+      axios
+        .get<Blob>(detailInfo?.image, {
+          responseType: 'blob',
+          withCredentials: true,
+        })
+        .then((response) => {
+          const blob = new Blob([response.data]);
+          const a = document.createElement('a');
+          const url = window.URL.createObjectURL(blob);
+          a.href = url;
+          a.download = `download.jpg`;
+          console.log(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -263,7 +281,7 @@ function Detail() {
                 variant="point"
                 shape="round"
                 size="medium"
-                clickEventHandler={imageDownloadHandler}
+                clickEventHandler={downloadFile}
               >
                 Download
               </Button>
