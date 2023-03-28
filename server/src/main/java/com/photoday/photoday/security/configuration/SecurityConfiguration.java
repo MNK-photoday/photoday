@@ -79,7 +79,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.PATCH, "/*/follows/*").authenticated()
                         .antMatchers(HttpMethod.GET, "/*/follows/*").permitAll()
                         .antMatchers(HttpMethod.GET, "/*/auth/logout").authenticated()
-                        .antMatchers(HttpMethod.POST, "/*/auth/password").permitAll()
+                        .antMatchers(HttpMethod.PATCH, "/*/auth/password").permitAll()
                         .antMatchers(HttpMethod.GET, "/*/auth/reissue").authenticated()
                         .anyRequest().permitAll()
                 )

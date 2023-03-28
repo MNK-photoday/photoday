@@ -74,4 +74,29 @@ public class LoginTest {
                         getRequestFieldsLoginDto(),
                         getResponseHeadersAccessToken()));
     }
+
+    @Test
+    @DisplayName("login: 비밀번호 오류")
+    void loginFail() throws Exception {
+        // given
+        String email = "user@email.com";
+        String password = "123456!a";
+        LoginDto loginDto = LoginDto.builder().email(email).password(password + "123").build();
+        String content = gson.toJson(loginDto);
+
+        User user = User.builder().email(email).name("user").password(passwordEncoder.encode(password)).roles(List.of("USER")).build();
+        userRepository.save(user);
+
+        // when
+        ResultActions actions = mvc.perform(
+                post("/api/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content));
+
+        // then
+        actions
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 }

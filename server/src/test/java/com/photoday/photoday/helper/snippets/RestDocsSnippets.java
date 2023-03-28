@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.follow.dto.FollowDto;
 import com.photoday.photoday.image.dto.ImageDto;
+import com.photoday.photoday.image.entity.Image;
 import com.photoday.photoday.tag.dto.TagDto;
 import com.photoday.photoday.user.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.headers.RequestHeadersSnippet;
@@ -56,13 +58,33 @@ public class RestDocsSnippets {
         return gson.toJson(patch);
     }
 
+    public static String getUpdatePasswordJsonBody() {
+        UserDto.UpdateUserPassword updateUserPassword = new UserDto.UpdateUserPassword("123456a!", "123456a!");
+        return gson.toJson(updateUserPassword);
+    }
+
     public static UserDto.Response getUserDtoResponse() {
         return new UserDto.Response(1L, "짱구", "http://profile-url.jpg", "짱구입니다.",
                 0, 0, 0, 0, false, false, false);
     }
 
+    public static PageImpl<Image> getMockPageImage(Pageable pageable) {
+        Image image = Image.builder().build();
+        return new PageImpl<>(List.of(image), pageable, 10);
+    }
+
+    public static ImageDto.PageResponse getImageDtoPageResponse() {
+        return ImageDto.PageResponse.builder().imageId(1L).imageUrl("imageUrl").like(false).bookmark(false).build();
+    }
+
     public static String getTagDto() {
         List<String> names = new ArrayList<>(List.of("background", "blue"));
+        TagDto tags = new TagDto(names);
+        return gson.toJson(tags);
+    }
+
+    public static String getWrongTagDto() {
+        List<String> names = new ArrayList<>(List.of());
         TagDto tags = new TagDto(names);
         return gson.toJson(tags);
     }
@@ -244,7 +266,9 @@ public class RestDocsSnippets {
                 fieldWithPath("data.bookmark").type(JsonFieldType.BOOLEAN).description("현재 유저의 이미지 북마크 여부"),
                 fieldWithPath("data.viewCount").type(JsonFieldType.NUMBER).description("이미지 조회수"),
                 fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("이미지 태그 목록"),
-                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("이미지 생성 날자")
+                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("이미지 생성 날자"),
+                fieldWithPath("data.myImage").type(JsonFieldType.BOOLEAN).description("로그인 한 유저의 페이지 인지 여부"),
+                fieldWithPath("data.checkAdmin").type(JsonFieldType.BOOLEAN).description("현재 유저가 관리자인지 여부")
         );
     }
 

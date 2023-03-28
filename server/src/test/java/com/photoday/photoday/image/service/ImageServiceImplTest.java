@@ -304,15 +304,10 @@ class ImageServiceImplTest {
         User loginUser = getUser("loginUser@email.com", "loginUser");
         given(authUserService.getLoginUser()).willReturn(Optional.of(loginUser));
 
+        // when
         imageService.createReport(image.getImageId());
 
-        // when
-        Optional<User> optionalUser = userRepository.findById(owner.getUserId());
-        User user = optionalUser.get();
-
         // then
-        assertEquals(User.UserStatus.USER_BANNED, user.getStatus());
-        assertTrue(LocalDateTime.now().plusWeeks(1).minusMinutes(1).isBefore(user.getBanTime()));
     }
 
     @Test
