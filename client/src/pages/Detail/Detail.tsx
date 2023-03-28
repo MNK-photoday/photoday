@@ -134,26 +134,16 @@ function Detail() {
     return match ? match[1].toLowerCase() : null;
   };
 
-  const downloadFile = async (): Promise<void> => {
+  const downloadFile = (): void => {
     if (detailInfo) {
-      await axios
-        .get<Blob>(detailInfo?.image, {
-          responseType: 'blob',
-          withCredentials: true,
-        })
-        .then((response) => {
-          const blob = new Blob([response.data]);
-          const a = document.createElement('a');
-          const url = window.URL.createObjectURL(blob);
-          a.href = url;
-          a.download = `download.jpg`;
-          console.log(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const fileName = detailInfo.image.substring(62);
+      const a = document.createElement('a');
+      const url = `${
+        import.meta.env.VITE_APP_API
+      }/images/download?imagePath=${fileName}`;
+      a.href = url;
+      console.log(a);
+      a.click();
     }
   };
 
