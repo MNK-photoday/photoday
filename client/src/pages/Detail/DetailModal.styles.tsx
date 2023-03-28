@@ -9,7 +9,7 @@ export const S_DetailModalContainer = styled.div`
   border: 1px solid var(--color-primary-gray20);
   background-color: #fff;
   position: absolute;
-  top: 17.5%;
+  top: 165px;
 `;
 
 export const S_ModalReportButton = styled.button``;

@@ -52,6 +52,7 @@ function Detail() {
   const [modiTags, setModiTags] = useState<Tags[]>([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [isLikeCount, setIsLikeCount] = useState(0);
   const [isBookmark, setIsBookmark] = useState(false);
   const [isMyImage, setIsMyImage] = useState(false);
   const [isTagEditMode, setIsTagEditMode] = useState(false);
@@ -71,7 +72,6 @@ function Detail() {
     axios
       .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
       .then((res) => {
-        console.log(res.data);
         const response = res.data.data;
         setDetailInfo({
           image: response.imageUrl,
@@ -90,6 +90,7 @@ function Detail() {
         });
         setIsBookmark(response.bookmark);
         setIsLike(response.like);
+        setIsLikeCount(response.likeCount);
         setIsFollowing(response.owner.checkFollow);
         setIsMyImage(response.myImage);
         if (response.tags.length > 0) {
@@ -100,7 +101,7 @@ function Detail() {
           );
           setTags(objectArray);
           let searchtags: string = '';
-          objectArray.forEach((el) => {
+          tags.forEach((el) => {
             searchtags += ` ${el['name']}`;
           });
           PAGE_NUM_CONTEXT?.setPageNumber(1);
@@ -111,7 +112,9 @@ function Detail() {
       .catch((err) => {
         console.log(err);
       });
-  }, [isLike, isFollowing, id, isTagModified]);
+  }, [isFollowing, isTagModified, id]);
+
+  useEffect(() => {}, [isLike]);
 
   const navigate = useNavigate();
 
@@ -126,31 +129,16 @@ function Detail() {
   };
   const handleCloseModal = () => setIsOpenModal(false);
 
-  const extractFileExtensionFromUrl = (url: string): string | null => {
-    const match = url.match(/\.([a-z0-9]+)(?:[\?#]|$)/i);
-    return match ? match[1].toLowerCase() : null;
-  };
-
   const downloadFile = (): void => {
     if (detailInfo) {
-      axios
-        .get<Blob>(detailInfo?.image, {
-          responseType: 'blob',
-          withCredentials: true,
-        })
-        .then((response) => {
-          const blob = new Blob([response.data]);
-          const a = document.createElement('a');
-          const url = window.URL.createObjectURL(blob);
-          a.href = url;
-          a.download = `download.jpg`;
-          console.log(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const fileName = detailInfo.image.substring(62);
+      const a = document.createElement('a');
+      const url = `${
+        import.meta.env.VITE_APP_API
+      }/images/download?imagePath=${fileName}`;
+      a.href = url;
+      console.log(a);
+      a.click();
     }
   };
 
@@ -163,6 +151,7 @@ function Detail() {
       )
       .then((res) => {
         setIsLike(res.data.data.like);
+        setIsLikeCount(res.data.data.likeCount);
       })
       .catch((err) => {
         console.log(err);
@@ -368,7 +357,7 @@ function Detail() {
                 </div>
                 <div>
                   <FaHeart size={18} className="like-icon" />
-                  {detailInfo?.likeCount}
+                  {isLikeCount}
                 </div>
               </S_CountBox>
               <Button

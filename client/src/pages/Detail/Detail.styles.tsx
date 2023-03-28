@@ -124,13 +124,15 @@ export const S_Contents = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 85%;
+  max-width: 980px;
   height: auto;
+  min-height: 500px;
+  max-height: 700px;
 
   > img {
     width: 100%;
     height: auto;
-    max-height: 700px;
+    max-height: 80%;
   }
 `;
 
