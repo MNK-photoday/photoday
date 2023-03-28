@@ -95,7 +95,7 @@ public class ImageController {
     }
 
     @GetMapping("/download")
-    public ResponseEntity<ByteArrayResource> downloadFile(@RequestParam("imagePath") String imagePath) throws IOException {
+    public ResponseEntity<ByteArrayResource> downloadFile(@RequestParam String imagePath) throws IOException {
         byte[] data = s3Service.downloadImage(imagePath);
         ByteArrayResource resource = new ByteArrayResource(data);
         HttpHeaders headers = s3Service.buildHeaders(imagePath, data);
