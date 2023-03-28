@@ -5,7 +5,6 @@ import { FaHeart, FaBookmark } from 'react-icons/fa';
 import { FiUserPlus, FiUserCheck, FiUserMinus } from 'react-icons/fi';
 import { GrView } from 'react-icons/gr';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
-import { SearchContext } from '../../context/SearchContext';
 import {
   S_DetailBox,
   S_PicBox,
@@ -17,15 +16,19 @@ import {
   S_IconBox,
   S_CountBox,
   S_UploadDateBox,
+  S_TagBox,
+  S_TagWrap,
+  S_TagEditInput,
 } from './Detail.styles';
-import TEST_IMAGE from '../../assets/imgs/image1.jpg';
-import TEST_USER from '../../assets/imgs/userDefaultProfile.png';
 import TagList from '../../components/Upload/Tag/TagList';
 import ImageCardList from '../../components/common/ImageCardList/ImageCardList';
 import DetailModal from './DetailModal';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Tags } from '../Upload/Upload';
+import { SearchContext } from '../../context/SearchContext';
+import { PageNumContext } from '../../context/PageNumContext';
+import { ItemContext } from '../../context/ItemContext';
 
 type DetailInfo = {
   image: string;
@@ -42,21 +45,27 @@ type DetailInfo = {
   myImageCheck: boolean;
 };
 function Detail() {
+  const { id } = useParams();
   const [detailInfo, setDetailInfo] = useState<DetailInfo>();
   const [tags, setTags] = useState<Tags[]>([]);
-  const { id } = useParams();
+  const [modiTags, setModiTags] = useState<Tags[]>([]);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isLike, setIsLike] = useState(false);
+  const [isBookmark, setIsBookmark] = useState(false);
+  const [isMyImage, setIsMyImage] = useState(false);
+  const [isTagEditMode, setIsTagEditMode] = useState(false);
+  const [isTagEditComplete, setIsTagEditComplete] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [isTagModified, setIsTagModified] = useState(false);
 
   const token = localStorage.getItem('accessToken');
   const headers = {
     headers: { Authorization: token },
   };
 
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isLike, setIsLike] = useState(false);
-  const [isBookmark, setIsBookmark] = useState(false);
-  const [isMyImage, setIsMyImage] = useState(false);
-
   const SEARCH_CONTEXT = useContext(SearchContext);
+  const PAGE_NUM_CONTEXT = useContext(PageNumContext);
+  const ITEM_CONTEXT = useContext(ItemContext);
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
@@ -88,15 +97,19 @@ function Detail() {
             },
           );
           setTags(objectArray);
-          console.log(objectArray);
+          let searchtags: string = '';
+          objectArray.forEach((el) => {
+            searchtags += ` ${el['name']}`;
+          });
+          PAGE_NUM_CONTEXT?.setPageNumber(1);
+          ITEM_CONTEXT?.setItems([]);
+          SEARCH_CONTEXT?.setSearchWord(searchtags);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-
-    SEARCH_CONTEXT?.setSearchWord('둥이');
-  }, [isLike, isFollowing]);
+  }, [isLike, isFollowing, id, isTagModified]);
 
   const navigate = useNavigate();
 
@@ -199,6 +212,48 @@ function Detail() {
         });
     }
   };
+  const editModeClickHandler = () => {
+    setIsTagEditMode(!isTagEditMode);
+    setIsTagEditComplete(!isTagEditComplete);
+    setModiTags(tags);
+  };
+
+  const inputTagHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const removeTagHandler = (id: number) => {
+    setModiTags(modiTags.filter((tag) => tag.id !== id));
+  };
+
+  const createTagHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && inputValue !== '') {
+      setModiTags([...modiTags, { id: modiTags.length, name: inputValue }]);
+      setInputValue('');
+    }
+  };
+  const modiTagsStringArray = modiTags.map((tag) => {
+    return tag.name;
+  });
+  const tagModifyHandler = () => {
+    axios
+      .patch(
+        `${import.meta.env.VITE_APP_API}/images/${id}`,
+        { tags: modiTagsStringArray },
+        headers,
+      )
+      .then(() => {
+        setIsTagEditMode(!isTagEditMode);
+        setIsTagEditComplete(!isTagEditComplete);
+        setIsTagModified(!isTagModified);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 401) {
+          navigate('/login');
+        }
+      });
+  };
   return (
     <ContainerWrap>
       <Container>
@@ -287,9 +342,52 @@ function Detail() {
               </Button>
             </S_ContentsBottom>
           </S_PicBox>
-          <TagList tags={tags} isModificationMode={false} />
+          <S_TagWrap>
+            {isTagEditMode ? (
+              <>
+                <S_TagEditInput
+                  placeholder="add to tag"
+                  type="text"
+                  value={inputValue}
+                  onChange={inputTagHandler}
+                  onKeyPress={createTagHandler}
+                ></S_TagEditInput>
+                <TagList
+                  tags={modiTags}
+                  onRemove={removeTagHandler}
+                  isModificationMode={true}
+                />
+              </>
+            ) : (
+              <TagList tags={tags} isModificationMode={false} />
+            )}
+            {isMyImage &&
+              (isTagEditComplete ? (
+                <S_TagBox>
+                  <Button
+                    variant="point"
+                    shape="round"
+                    size="small"
+                    clickEventHandler={tagModifyHandler}
+                  >
+                    Save
+                  </Button>
+                </S_TagBox>
+              ) : (
+                <S_TagBox>
+                  <Button
+                    variant="point"
+                    shape="round"
+                    size="small"
+                    clickEventHandler={editModeClickHandler}
+                  >
+                    Edit tag
+                  </Button>
+                </S_TagBox>
+              ))}
+          </S_TagWrap>
           <S_SeachList>
-            <ImageCardList width={400} height={350} />
+            <ImageCardList width={400} height={270} />
           </S_SeachList>
         </S_DetailBox>
       </Container>
