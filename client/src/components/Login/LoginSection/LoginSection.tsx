@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { S_InputContainer } from '../Input/Input.styles';
 import { EmailInput, PasswordInput, CheckBox } from '../Input/Input';
 import {
@@ -26,6 +27,7 @@ export type ValidityResults = {
 
 function LoginSection() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState<LoginValue>({
     email: '',
@@ -47,7 +49,13 @@ function LoginSection() {
       const response = await postLogin(loginForm, keepLoggedIn);
       const { userId, userProfileImage } = response;
       dispatch(login({ userId, userProfileImage }));
-      window.location.href = '/';
+      navigate('/');
+
+      setTimeout(() => {
+        localStorage.clear();
+        alert('로그아웃 되었습니다. 로그인 후 이용해 주세요.');
+        navigate('/login');
+      }, 3600 * 1000);
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
