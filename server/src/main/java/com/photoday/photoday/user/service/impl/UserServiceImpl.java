@@ -170,6 +170,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void banUser(Image image) {
         if (image.getUser().getReportedCount() == 10) {
+            image.getUser().setReportedCount(0);
             image.getUser().setStatus(User.UserStatus.USER_BANNED);
             image.getUser().setBanTime(LocalDateTime.now().plusWeeks(1));
         }
