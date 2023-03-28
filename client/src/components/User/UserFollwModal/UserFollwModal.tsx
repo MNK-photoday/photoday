@@ -40,6 +40,7 @@ function UserFollwModal({ tap, myPage, setFollowModal }: Modal) {
     const fetchData = async () => {
       try {
         const response = await getFollows(myPage ? id : userId);
+
         if (tap === 'follower') {
           setFollowList(response.data.userFollower);
         } else {
