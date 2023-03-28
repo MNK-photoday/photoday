@@ -11,6 +11,7 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtProvider {
     @Getter
     @Value("${jwt.key}")
@@ -117,6 +119,7 @@ public class JwtProvider {
     }
 
     public void verifyRefreshToken(String refreshToken) {
+        log.info(refreshToken);
         String base64EncodedSecretKey = encodeBase64SecretKey(getSecretKey());
         verifySignature(refreshToken, base64EncodedSecretKey);
     }
@@ -139,7 +142,6 @@ public class JwtProvider {
 
     public String getRefreshTokenFromRequest(HttpServletRequest request) {
         String refresh = CookieUtil.getTokenCookie(request, "Refresh").getValue();
-
         return refresh;
     }
 
