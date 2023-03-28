@@ -39,7 +39,7 @@ public class UserMapper {
         response.setDescription(targetUser.getDescription());
         response.setCheckFollow(checkFollow(targetUser, loginUser));
         response.setLikeCount(targetUser.getLikes() != null ? targetUser.getLikes().size() : 0);
-        response.setReportCount(targetUser.getReports() != null ? targetUser.getReports().size() : 0);
+        response.setReportCount(targetUser.getReportedCount()); //필드 이름을 reportedCount로 했어야 덜 헷갈렸을 듯.
         response.setFollowerCount(targetUser.getFollower() != null ? targetUser.getFollower().size() : 0);
         response.setFollowingCount(targetUser.getFollowing() != null ? targetUser.getFollowing().size() : 0);
         response.setCheckAdmin(checkAdmin(loginUser));

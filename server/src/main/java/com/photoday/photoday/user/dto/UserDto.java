@@ -54,7 +54,7 @@ public class UserDto {
         private String profileImageUrl;
         private String description;
         private int likeCount;
-        private int reportCount;
+        private int reportCount; //필드 이름을 reportedCount로 했어야 덜 헷갈렸을 듯.
         private int followerCount;
         private int followingCount;
         private boolean checkFollow;

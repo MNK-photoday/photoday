@@ -28,7 +28,7 @@ public class ImageDto {
         private boolean like;
         private int likeCount;
         private boolean report;
-        private int reportCount;
+        private int reportCount; //필드 이름을 reportedCount로 했어야 덜 헷갈렸을 듯.
         private boolean bookmark;
         private int viewCount;
         private List<String> tags;
