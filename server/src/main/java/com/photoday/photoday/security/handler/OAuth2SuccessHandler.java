@@ -74,9 +74,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .host("photodayproject.s3-website.ap-northeast-2.amazonaws.com")
-                .port(3000)
+                .scheme("https")
+                .host("photoday.site")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
