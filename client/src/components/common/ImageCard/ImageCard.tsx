@@ -1,5 +1,6 @@
+import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   getDetailImage,
   patchBookmarkImage,
@@ -33,21 +34,41 @@ function ImageCard({ item }: ImageCardProps) {
   const [detail, setDetail] = useState<ImageDetail | null>(null);
   const [likestate, setlikeState] = useState<boolean>();
   const [bookstate, setBookmarkState] = useState<boolean>();
-
+  const navigate = useNavigate();
   const clickEventHanelr = async (type: string) => {
     if (type === 'like') {
-      await patchLikeImage(item.imageId);
-      setlikeState(!detail?.like);
+      try {
+        await patchLikeImage(item.imageId);
+        setlikeState(!detail?.like);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 401) {
+            navigate('/login');
+          }
+        }
+      }
     } else if (type === 'bookmark') {
-      await patchBookmarkImage(item.imageId);
-      setBookmarkState(!detail?.bookmark);
+      try {
+        await patchBookmarkImage(item.imageId);
+        setBookmarkState(!detail?.bookmark);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 401) {
+            navigate('/login');
+          }
+        }
+      }
     }
   };
 
   useEffect(() => {
-    getDetailImage(item.imageId).then((response) => {
-      setDetail(response.data);
-    });
+    try {
+      getDetailImage(item.imageId).then((response) => {
+        setDetail(response.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, [likestate, bookstate]);
 
   return (
