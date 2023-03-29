@@ -101,7 +101,7 @@ function Detail() {
           );
           setTags(objectArray);
           let searchtags: string = '';
-          tags.forEach((el) => {
+          objectArray.forEach((el) => {
             searchtags += ` ${el['name']}`;
           });
           PAGE_NUM_CONTEXT?.setPageNumber(1);
@@ -112,9 +112,7 @@ function Detail() {
       .catch((err) => {
         console.log(err);
       });
-  }, [isFollowing, isTagModified, id]);
-
-  useEffect(() => {}, [isLike]);
+  }, [isTagModified, id]);
 
   const navigate = useNavigate();
 
@@ -137,7 +135,6 @@ function Detail() {
         import.meta.env.VITE_APP_API
       }/images/download?imagePath=${fileName}`;
       a.href = url;
-      console.log(a);
       a.click();
     }
   };
