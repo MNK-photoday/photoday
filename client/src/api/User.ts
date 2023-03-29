@@ -39,13 +39,16 @@ export const updatePasswordUser = async ({
   );
 };
 
-export const deleteUser = async () => {
+export const deleteUser = async (userId: string | null) => {
   const token = localStorage.getItem('accessToken');
-  await axios.delete<AxiosResponse>(`${import.meta.env.VITE_APP_API}/users`, {
-    headers: {
-      Authorization: token,
+  await axios.delete<AxiosResponse>(
+    `${import.meta.env.VITE_APP_API}/users/${userId}`,
+    {
+      headers: {
+        Authorization: token,
+      },
     },
-  });
+  );
 
   localStorage.removeItem('accessToken');
   localStorage.removeItem('id');
