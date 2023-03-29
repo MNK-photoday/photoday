@@ -93,7 +93,7 @@ function UserInfoArea({ userData, myPage }: User) {
   const deleteUserHandler = async () => {
     if (confirm('정말로 탈퇴하시겠습니까?')) {
       try {
-        await deleteUser();
+        await deleteUser(id);
         dispatch(logout());
         alert(
           'potoday 회원탈퇴가 완료되었습니다. 그동안 potoday를 이용해 주셔서 감사합니다.',

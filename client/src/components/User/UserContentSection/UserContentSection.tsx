@@ -82,7 +82,11 @@ function UserContentSection({ userName, myPage, id, userId }: User) {
               <ImageCard key={post.imageId} item={post} />
             ))}
           </S_UserPhotoContentContainer>
-          <Pagination pagination={pagination} setPaginate={setPaginate} />
+          <Pagination
+            pagination={pagination}
+            paginate={paginate}
+            setPaginate={setPaginate}
+          />
         </>
       ) : (
         <S_NoPostsGuideContainer>

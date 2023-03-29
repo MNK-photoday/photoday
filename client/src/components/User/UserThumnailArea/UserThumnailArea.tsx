@@ -137,7 +137,7 @@ function UserThumnailArea({ userData, myPage }: User) {
             size="large"
             clickEventHandler={uploadClickHandler}
           >
-            Upload Image
+            Upload Profile
           </Button>
           <Button
             variant="point"
@@ -145,7 +145,7 @@ function UserThumnailArea({ userData, myPage }: User) {
             size="XLarge"
             clickEventHandler={deleteProfileHandler}
           >
-            Remove Image
+            Remove Profile
           </Button>
         </>
       )}
