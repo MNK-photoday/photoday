@@ -38,6 +38,7 @@ spring:
           google:
             clientId: ${G_CLIENT_ID}
             clientSecret: ${G_CLIENT_SECRET}
+            redirect-uri: https://api.photoday.shop/login/oauth2/code/google
             scope:
               - email
               - profile
