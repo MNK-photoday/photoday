@@ -97,6 +97,12 @@ public class SecurityConfiguration {
         configuration.addAllowedOrigin("http://localhost:3000"); //TODO 이거 슬슬 바꿔야할 듯.
         configuration.addAllowedOrigin("http://photodayproject.s3-website.ap-northeast-2.amazonaws.com/");
         configuration.addAllowedOrigin("https://friendly-raindrop-9b9849.netlify.app/");
+        configuration.addAllowedOrigin("http://photoday.site.s3-website.ap-northeast-2.amazonaws.com");
+        configuration.addAllowedOrigin("https://friendly-raindrop-9b9849.netlify.app");
+        configuration.addAllowedOrigin("https://photoday.site");
+        configuration.addAllowedOrigin("http://photoday.site");
+        configuration.addAllowedOrigin("http://www.photoday.site");
+        configuration.addAllowedOrigin("https://www.photoday.site");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("*");
