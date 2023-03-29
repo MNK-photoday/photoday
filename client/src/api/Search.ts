@@ -5,16 +5,10 @@ export const postSearchTags = async (
   pageNumber: number,
   filter: string,
 ) => {
-  try {
-    const response: AxiosResponse = await axios.get(
-      `${
-        import.meta.env.VITE_APP_API
-      }/tags/search?size=9&page=${pageNumber}&sort=imageId,${filter}&tags=${searchWord}`,
-    );
-    return response.data;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      console.log(error);
-    }
-  }
+  const response: AxiosResponse = await axios.get(
+    `${
+      import.meta.env.VITE_APP_API
+    }/tags/search?size=9&page=${pageNumber}&sort=imageId,${filter}&tags=${searchWord}`,
+  );
+  return response.data;
 };
