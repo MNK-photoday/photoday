@@ -40,7 +40,7 @@ export const postLogin = async (
   const { userId, userProfileImage } = response.data;
   const accessToken = response.headers.authorization;
 
-  if (keepLoggedIn && accessToken) {
+  if (accessToken) {
     localStorage.setItem('id', userId);
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('userProfileImage', userProfileImage);
