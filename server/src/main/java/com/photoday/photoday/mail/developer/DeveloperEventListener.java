@@ -21,8 +21,7 @@ public class DeveloperEventListener {
     public void listen(DeveloperApplicationEvent event) throws Exception {
         try {
             String[] to = new String[]{"photoday42@gmail.com"};
-            String message = event.getExceptionName() + " 에러가 발생하였습니다.\n 로그를 확인해주세요.\n" +
-                    "로그 확인 주소 : https://grafana.photoday.shop";
+            String message = event.getExceptionName() + " 에러가 발생하였습니다.\n 로그를 확인해주세요.";
             emailSender.sendEmail(to, "에러 발생!", message);
         } catch (MailSendException e) {
             e.printStackTrace();
