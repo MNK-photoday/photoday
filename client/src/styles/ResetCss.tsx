@@ -7,50 +7,6 @@ const ResetCss = css`
     margin: 0;
     padding: 0;
     font-family: 'NotoSans', 'NotoSans-KR', 'sans-serif';
-    //-ms-overflow-style: none; /* 인터넷 익스플로러 */
-    //scrollbar-width: none; /* 파이어폭스 */
-  }
-
-  /* *::-webkit-scrollbar {
-    display: none;
-  } */
-
-  @font-face {
-    font-family: 'NotoSans';
-    font-weight: 400;
-    src: url('../assets/fonts/NotoSans-Regular.ttf') format('truetype');
-    unicode-range: U+0041-005A, U+0061-007A;
-  }
-  @font-face {
-    font-family: 'NotoSans';
-    font-weight: 500;
-    src: url('../assets/fonts/NotoSans-Medium.ttf') format('truetype');
-    unicode-range: U+0041-005A, U+0061-007A;
-  }
-
-  @font-face {
-    font-family: 'NotoSans';
-    font-weight: 700;
-    src: url('../assets/fonts/NotoSans-Bold.ttf') format('truetype');
-    unicode-range: U+0041-005A, U+0061-007A;
-  }
-  @font-face {
-    font-family: 'NotoSans-KR';
-    font-weight: 400;
-    src: url('../assets/fonts/NotoSansKR-Regular.otf') format('opentype');
-    unicode-range: U+AC00-D7A3;
-  }
-  @font-face {
-    font-family: 'NotoSans-KR';
-    font-weight: 500;
-    src: url('../assets/fonts/NotoSansKR-Medium.otf') format('opentype');
-    unicode-range: U+AC00-D7A3;
-  }
-  @font-face {
-    font-family: 'NotoSans-KR';
-    font-weight: 700;
-    src: url('../assets/fonts/NotoSansKR-Bold.otf') format('opentype');
-    unicode-range: U+AC00-D7A3;
   }
 
   html,
