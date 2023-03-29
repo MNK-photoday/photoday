@@ -67,32 +67,36 @@ function ImageCardList({
 
   const fetchData = async () => {
     setLoading(true);
-    postSearchTags(
-      pathname !== '/'
-        ? search ?? SEARCH_CONTEXT?.searchWord ?? ''
-        : SEARCH_CONTEXT?.searchWord ?? '',
-      PAGE_NUM_CONTEXT?.pageNumber ?? 1,
-      filter,
-    ).then((response) => {
-      if (pathname.includes('detail')) {
-        ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => {
-          const newItems = response?.data.filter(
-            (item: ImageItemProps) => item.imageId !== Number(id),
-          );
+    try {
+      postSearchTags(
+        pathname !== '/'
+          ? search ?? SEARCH_CONTEXT?.searchWord ?? ''
+          : SEARCH_CONTEXT?.searchWord ?? '',
+        PAGE_NUM_CONTEXT?.pageNumber ?? 1,
+        filter,
+      ).then((response) => {
+        if (pathname.includes('detail')) {
+          ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => {
+            const newItems = response?.data.filter(
+              (item: ImageItemProps) => item.imageId !== Number(id),
+            );
 
-          return [...prev, ...newItems];
-        });
-        setHasMore(response?.data.length > 0);
-        setLoading(false);
-      } else {
-        ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
-          ...prev,
-          ...response?.data,
-        ]);
-        setHasMore(response?.data.length > 0);
-        setLoading(false);
-      }
-    });
+            return [...prev, ...newItems];
+          });
+          setHasMore(response?.data.length > 0);
+          setLoading(false);
+        } else {
+          ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
+            ...prev,
+            ...response?.data,
+          ]);
+          setHasMore(response?.data.length > 0);
+          setLoading(false);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -100,16 +104,13 @@ function ImageCardList({
       <S_ImageCardWrap height={height} matrix={matrix}>
         {ITEM_CONTEXT?.items.map((item: ImageItemProps, index) => (
           <ImageCard key={index} item={item} />
-        )) ?? <p>이미지 없음</p>}
+        )) ?? <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       </S_ImageCardWrap>
       {/* 로딩 중일 때 */}
       {loading && <ImageCardSkeleton count={6} height={height} />}
-
       {loading && <S_LoaderBar>Loading more...</S_LoaderBar>}
       {/* 검색 결과가 없을 때  | 받아올 데이터가 없을 때 */}
-      {loading && !hasMore && (
-        <S_LoaderBar>No more photos to load.</S_LoaderBar>
-      )}
+      {!hasMore && <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       {/* 끝까지 스크롤 했을 때 */}
       {hasMore && <S_LoaderBar ref={endRef}></S_LoaderBar>}
     </>
