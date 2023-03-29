@@ -24,17 +24,21 @@ function MainImageCard() {
 
   useEffect(() => {
     setIsLoading(true);
-    getMainImage().then((response) => {
-      let randomNum1 = randomNumFun();
-      let randomNum2 = randomNumFun();
+    try {
+      getMainImage().then((response) => {
+        let randomNum1 = randomNumFun();
+        let randomNum2 = randomNumFun();
 
-      while (randomNum2 === randomNum1) {
-        randomNum2 = randomNumFun();
-      }
-      setItems([response[randomNum1], response[randomNum2]]);
-    });
+        while (randomNum2 === randomNum1) {
+          randomNum2 = randomNumFun();
+        }
+        setItems([response[randomNum1], response[randomNum2]]);
+      });
 
-    setIsLoading(false);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
