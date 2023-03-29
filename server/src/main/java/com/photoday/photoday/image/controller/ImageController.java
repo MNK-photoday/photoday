@@ -4,9 +4,12 @@ import com.photoday.photoday.dto.MultiResponseDto;
 import com.photoday.photoday.dto.SingleResponseDto;
 import com.photoday.photoday.image.dto.ImageDto;
 import com.photoday.photoday.image.service.ImageService;
+import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.tag.dto.TagDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +28,7 @@ import java.util.List;
 @Validated
 public class ImageController {
     private final ImageService imageService;
+    private final S3Service s3Service;
 
     @PostMapping
     public ResponseEntity<?> createImage(@RequestPart @Valid TagDto post,
@@ -88,5 +92,14 @@ public class ImageController {
     public ResponseEntity<?> getMainImages() {
         List<ImageDto.PageResponse> mainImages = imageService.getMainImages();
         return new ResponseEntity<>(mainImages, HttpStatus.OK);
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<ByteArrayResource> downloadFile(@RequestParam String imagePath) throws IOException {
+        byte[] data = s3Service.downloadImage(imagePath);
+        ByteArrayResource resource = new ByteArrayResource(data);
+        HttpHeaders headers = s3Service.buildHeaders(imagePath, data);
+
+        return ResponseEntity.ok().headers(headers).body(resource);
     }
 }
