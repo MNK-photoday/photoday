@@ -23,7 +23,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long imageId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String imageUrl;
 
     @Column(nullable = false)

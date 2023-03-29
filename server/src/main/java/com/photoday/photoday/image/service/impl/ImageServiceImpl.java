@@ -255,6 +255,7 @@ public class ImageServiceImpl implements ImageService {
     private List<ImageTag> tagListToImageTagList(List<Tag> tagList, Image image) {
         return tagList.stream()
                 .map(tagService::verifyTag)
+                .distinct()
                 .map(this::tagToImageTag)
                 .peek(imageTag -> imageTag.setImage(image))
                 .collect(Collectors.toList());
