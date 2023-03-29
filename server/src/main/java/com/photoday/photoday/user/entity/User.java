@@ -69,7 +69,7 @@ public class User { //TODO 미사용 세터 정리
     @Default
     private List<Follow> follower = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Default
     private List<Report> reports = new ArrayList<>(); //TODO 추후 유저 삭제 후 확인
 
