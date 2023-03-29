@@ -9,8 +9,7 @@ import {
   S_SelectContentBox,
   S_TagContentBox,
 } from './Search.styles';
-import { useContext, useEffect, useState } from 'react';
-import { SearchContext } from '../../context/SearchContext';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 type Tags = {

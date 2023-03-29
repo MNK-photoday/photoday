@@ -18,23 +18,27 @@ function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
 
   const ITEM_CONTEXT = useContext(ItemContext);
   const SEARCH_CONTENT = useContext(SearchContext);
-  const PAGE_NUM_CONTENT = useContext(PageNumContext);
+  const PAGE_NUM_CONTEXT = useContext(PageNumContext);
+  const [currentWord, setCurrentWord] = useState<string>('');
 
   const keydownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      let currentWord = inputRef.current?.value;
-      if (currentWord === '') {
+      let newCurrentWord = inputRef.current?.value;
+      if (activeSearchBar) navigate(`/tags/${newCurrentWord}`);
+      if (newCurrentWord === '') {
         setTimeout(() => {
           setIsInputNull(true);
         }, 300);
       } else {
         if (setActiveTextBox) setActiveTextBox(false);
-        if (currentWord) SEARCH_CONTENT?.setSearchWord(currentWord);
-        if (activeSearchBar) navigate(`/tags/${currentWord}`);
+        if (newCurrentWord !== currentWord) {
+          SEARCH_CONTENT?.setSearchWord(newCurrentWord ?? '');
+          setCurrentWord(newCurrentWord ?? '');
+          setIsInputNull(false);
+          ITEM_CONTEXT?.setItems([]);
+          PAGE_NUM_CONTEXT?.setPageNumber(1);
+        }
       }
-      setIsInputNull(false);
-      ITEM_CONTEXT?.setItems([]);
-      PAGE_NUM_CONTENT?.setPageNumber(1);
     }
   };
 
@@ -42,6 +46,7 @@ function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
     <S_SearchBarWrap active={activeSearchBar}>
       <BsSearch className="search-icon" />
       <S_SearchBarInput
+        placeholder="photo search.."
         onKeyPress={keydownHandler}
         ref={inputRef}
         isInputNull={isInputNull}

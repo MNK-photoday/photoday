@@ -14,12 +14,12 @@ export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
 
   ${({ height }) => height && `grid-auto-rows: ${height}px`};
 
-  @media screen and (max-width: 1500px) {
+  @media screen and (max-width: 1024px) {
     grid-template-columns: 1fr 1fr;
-  }
-  @media screen and (max-width: 1020px) {
-    grid-template-columns: 1fr;
     grid-auto-rows: 350px;
+  }
+  @media screen and (max-width: 500px) {
+    grid-template-columns: 1fr;
   }
 `;
 export const S_SkeletonImageCardWrap = styled.article<ImageCardBoxProps>`

@@ -2,10 +2,6 @@ import styled from 'styled-components';
 
 export const S_MainImageContentBox = styled.section`
   width: 45%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-direction: column;
   @media screen and (max-width: 1500px) {
     padding-left: 30px;
   }
