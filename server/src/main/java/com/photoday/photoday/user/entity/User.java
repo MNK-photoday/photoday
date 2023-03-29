@@ -34,7 +34,7 @@ public class User { //TODO 미사용 세터 정리
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     @Default
     private String profileImageUrl = "https://ifh.cc/g/zPrPfv.png";
 
