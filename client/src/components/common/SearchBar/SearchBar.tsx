@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ItemContext } from '../../../context/ItemContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import { SearchContext } from '../../../context/SearchContext';
@@ -24,7 +24,6 @@ function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
   const keydownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       let newCurrentWord = inputRef.current?.value;
-      if (activeSearchBar) navigate(`/tags/${newCurrentWord}`);
       if (newCurrentWord === '') {
         setTimeout(() => {
           setIsInputNull(true);
@@ -38,6 +37,16 @@ function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
           ITEM_CONTEXT?.setItems([]);
           PAGE_NUM_CONTEXT?.setPageNumber(1);
         }
+        if (inputRef.current) {
+          inputRef.current.value = '';
+          ITEM_CONTEXT?.setItems([]);
+          PAGE_NUM_CONTEXT?.setPageNumber(1);
+        }
+      }
+      setIsInputNull(false);
+
+      if (activeSearchBar && newCurrentWord !== '') {
+        navigate(`/tags/${newCurrentWord}`);
       }
     }
   };

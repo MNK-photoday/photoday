@@ -27,8 +27,8 @@ function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
     <S_SelectModalWrap>
       <S_SelectModalContainer>
         <S_SelectModalSpan
-          onClick={() => selectfilter('desc')}
-          active={isSelect === 'desc'}
+          onClick={() => selectfilter('createdAt')}
+          active={isSelect === 'createdAt'}
         >
           Newest
         </S_SelectModalSpan>

@@ -8,7 +8,7 @@ export const postSearchTags = async (
   const response: AxiosResponse = await axios.get(
     `${
       import.meta.env.VITE_APP_API
-    }/tags/search?size=9&page=${pageNumber}&sort=imageId,${filter}&tags=${searchWord}`,
+    }/tags/search?size=9&page=${pageNumber}&sort=${filter},desc&tags=${searchWord}`,
   );
   return response.data;
 };
