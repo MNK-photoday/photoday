@@ -38,5 +38,6 @@ services:
       TEST_DB_NAME: ${TEST_DB_NAME}
       TEST_DB_ID: ${TEST_DB_ID}
       TEST_DB_PSW: ${TEST_DB_PSW}
+      OAUTH2_REDIRECT: ${OAUTH2_REDIRECT}
     depends_on:
       - redis
