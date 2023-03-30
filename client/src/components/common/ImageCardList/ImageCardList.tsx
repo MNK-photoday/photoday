@@ -26,7 +26,7 @@ function ImageCardList({
   width,
   height,
   matrix = 'columns',
-  filter = 'desc',
+  filter = 'createdAt',
 }: ImageCardListProps) {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>();
@@ -83,6 +83,7 @@ function ImageCardList({
 
             return [...prev, ...newItems];
           });
+
           setHasMore(response?.data.length > 0);
           setLoading(false);
         } else {
