@@ -112,6 +112,10 @@ function Detail() {
       .catch((err) => {
         console.log(err);
       });
+    return () => {
+      PAGE_NUM_CONTEXT?.setPageNumber(1);
+      ITEM_CONTEXT?.setItems([]);
+    };
   }, [isTagModified, id]);
 
   const navigate = useNavigate();
@@ -261,14 +265,14 @@ function Detail() {
       .then((res) => {
         if (res.data.data.report) {
           alert('Report completed');
-        } else if (!res.data.data.report) {
-          alert('Report canceled');
         }
       })
       .catch((err) => {
         console.log(err);
         if (err.response.status === 401) {
           navigate('/login');
+        } else if (err.response.status === 409) {
+          alert('You can only report it once');
         }
       });
   };

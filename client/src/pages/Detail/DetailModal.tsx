@@ -19,7 +19,11 @@ function DetailModal({
 }: ModalProps) {
   return (
     <S_DetailModalContainer>
-      <S_ModalReportButton onClick={reportHandler}>Report</S_ModalReportButton>
+      {!isMyImage ? (
+        <S_ModalReportButton onClick={reportHandler}>
+          Report
+        </S_ModalReportButton>
+      ) : null}
       {isMyImage || adminCheck ? (
         <S_ModalDeleteButton onClick={deleteHandler}>
           Delete

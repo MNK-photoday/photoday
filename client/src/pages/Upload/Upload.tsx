@@ -131,11 +131,24 @@ function Upload() {
     setInputValue(event.target.value);
   };
 
+  const tagDuplicateCheck = (input: string) => {
+    const filteringArray = tags.filter((tag) => tag.name.includes(input));
+    if (filteringArray.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const createTagHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && inputValue !== '') {
-      setTags([...tags, { id: tagCount, name: inputValue }]);
-      setTagCount(tagCount + 1);
-      setInputValue('');
+      if (tagDuplicateCheck(inputValue)) {
+        setTags([...tags, { id: tagCount, name: inputValue }]);
+        setTagCount(tagCount + 1);
+        setInputValue('');
+      } else {
+        alert('Duplicate tags cannot be entered');
+      }
     }
   };
   const removeTagHandler = (id: number) => {
