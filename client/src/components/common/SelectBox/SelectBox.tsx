@@ -13,7 +13,9 @@ function SelectBox({ isSelect, setIsSelect }: SelectBoxProps) {
 
   return (
     <S_SelectBoxWrap onClick={() => setIsActiveSelect(!isActiveSelect)}>
-      <S_SelectSpan>{isSelect === 'desc' ? 'Newest' : 'Popular'}</S_SelectSpan>
+      <S_SelectSpan>
+        {isSelect === 'createdAt' ? 'Newest' : 'Popular'}
+      </S_SelectSpan>
       {isActiveSelect ? (
         <BiChevronUp className="selectbox-icons" />
       ) : (
