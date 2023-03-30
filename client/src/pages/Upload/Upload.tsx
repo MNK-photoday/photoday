@@ -118,6 +118,9 @@ function Upload() {
           navigate(`/detail/${response.data.data.imageId}`);
         })
         .catch((error) => {
+          if (error.response.status === 409) {
+            alert('Duplicate pictures cannot be registered.');
+          }
           console.log(error);
         });
     } else if (imagefile === null) {
@@ -132,7 +135,9 @@ function Upload() {
   };
 
   const tagDuplicateCheck = (input: string) => {
-    const filteringArray = tags.filter((tag) => tag.name.includes(input));
+    const filteringArray = tags.filter((tag) => {
+      return tag.name === input;
+    });
     if (filteringArray.length > 0) {
       return false;
     } else {
