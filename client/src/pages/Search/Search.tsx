@@ -18,7 +18,7 @@ type Tags = {
 };
 
 function Search() {
-  const [isSelect, setIsSelect] = useState('desc');
+  const [isSelect, setIsSelect] = useState('createdAt');
   const [isTags, setIsTags] = useState<Tags[]>([]);
   const { search } = useParams();
 
