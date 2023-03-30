@@ -112,6 +112,10 @@ function Detail() {
       .catch((err) => {
         console.log(err);
       });
+    return () => {
+      PAGE_NUM_CONTEXT?.setPageNumber(1);
+      ITEM_CONTEXT?.setItems([]);
+    };
   }, [isTagModified, id]);
 
   const navigate = useNavigate();
