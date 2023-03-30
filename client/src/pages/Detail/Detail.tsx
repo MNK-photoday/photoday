@@ -69,6 +69,7 @@ function Detail() {
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
   const ITEM_CONTEXT = useContext(ItemContext);
   useEffect(() => {
+    window.scrollTo(0, 0);
     axios
       .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
       .then((res) => {
