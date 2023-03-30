@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { IoClose } from 'react-icons/io5';
 import { Flex } from '../../../styles/GlobalStyles';
 import { Tags } from '../../../pages/Upload/Upload';
+import { useNavigate } from 'react-router-dom';
 
 const TagItemWrap = styled.button<{ isModificationMode?: boolean }>`
   ${Flex}
@@ -43,9 +44,22 @@ type TagItemProps = {
 };
 
 function TagItem({ tag, onRemove, isModificationMode }: TagItemProps) {
+  const navigate = useNavigate();
+
+  let searchtags: string = '';
+  searchtags += tag['name'];
+
+  const tagSearch = () => {
+    if (isModificationMode === false) {
+      navigate(`/tags/${searchtags}`);
+    }
+  };
   return (
     <TagItemWrap
-      onClick={() => onRemove?.(tag.id)}
+      onClick={() => {
+        onRemove?.(tag.id);
+        tagSearch();
+      }}
       isModificationMode={isModificationMode}
     >
       {tag.name} <IoClose className="close-icon" />
