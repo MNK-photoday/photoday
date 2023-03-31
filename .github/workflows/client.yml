@@ -30,6 +30,6 @@ jobs:
         run: |
           aws s3 sync \
             --region ap-northeast-2 \
-            build s3://photodayproject \
+            build s3://photoday.site \
             --delete
         working-directory: ./client
