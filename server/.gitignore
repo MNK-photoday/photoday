@@ -36,9 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### yml ###
-*.yml
-
 # Created by https://www.toptal.com/developers/gitignore/api/macos,intellij,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,intellij,java
 

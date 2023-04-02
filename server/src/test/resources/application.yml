@@ -1,0 +1,80 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${TEST_DB_ENDPOINT}/${TEST_DB_NAME}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${TEST_DB_ID}
+    password: ${TEST_DB_PSW}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        hibernate:
+          open-in-view: true
+  output:
+    ansi:
+      enabled: always
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  logging:
+    level:
+      org:
+        hibernate:
+          SQL: DEBUG
+          type:
+            descriptor:
+              sql:
+                BasicBinder: TRACE
+        springframework:
+          orm:
+            jpa: DEBUG
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${G_CLIENT_ID}
+            clientSecret: ${G_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: ${ACCESS_TOKEN_EXP}
+  refresh-token-expiration-minutes: ${REFRESH_TOKEN_EXP}
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    s3:
+      bucket: ${S3_BUCKET}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+mail:
+  address:
+    admin: ${MAIL_ADMIN}
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    auth: true
+    starttls:
+      enable: true #일부 SMTP 서버에는 TLS 연결이 필요하므로 TLS 보호 연결을 활성화한다
+  subject:
+    member:
+      registration: Photoday 임시비밀번호 안내 이메일입니다.
+management:
+  endpoint:
+  endpoints:
+    web:
+      base-path: /application

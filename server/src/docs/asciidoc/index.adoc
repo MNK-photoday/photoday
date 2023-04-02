@@ -1,0 +1,336 @@
+= photoday API
+:sectnums:
+:toc: left
+:toclevels: 4
+:toc-title: Table of Contents
+:source-highlighter: prettify
+
+team 맑은 눈의 광인
+
+v1.0.1, 2023.03.28
+
+***
+== User
+=== 회원 가입
+.curl-request
+include::{snippets}/post-user/curl-request.adoc[]
+
+.http-request
+include::{snippets}/post-user/http-request.adoc[]
+
+.request-body
+include::{snippets}/post-user/request-body.adoc[]
+
+.request-fields
+include::{snippets}/post-user/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-user/http-response.adoc[]
+
+.response-headers
+include::{snippets}/post-user/response-headers.adoc[]
+
+=== 회원 정보 수정
+.curl-request
+include::{snippets}/update-user/curl-request.adoc[]
+
+.http-request
+include::{snippets}/update-user/http-request.adoc[]
+
+.request-parts
+include::{snippets}/update-user/request-parts.adoc[]
+
+.request-userUpdateDto-fields
+include::{snippets}/update-user/request-part-userUpdateDto-fields.adoc[]
+
+.http-response
+include::{snippets}/update-user/http-response.adoc[]
+
+.response-fields
+include::{snippets}/update-user/response-fields.adoc[]
+
+=== 회원 조회
+.curl-request
+include::{snippets}/get-user/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-user/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/get-user/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/get-user/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-user/response-fields.adoc[]
+
+=== 회원 탈퇴
+.curl-request
+include::{snippets}/delete-User/curl-request.adoc[]
+
+.http-request
+include::{snippets}/delete-User/http-request.adoc[]
+
+.http-response
+include::{snippets}/delete-User/http-response.adoc[]
+
+=== 로그인
+.curl-request
+include::{snippets}/login/curl-request.adoc[]
+
+.http-request
+include::{snippets}/login/http-request.adoc[]
+
+.request-fields
+include::{snippets}/login/request-fields.adoc[]
+
+.http-response
+include::{snippets}/login/http-response.adoc[]
+
+.response-headers
+include::{snippets}/login/response-headers.adoc[]
+
+=== 로그아웃
+.curl-request
+include::{snippets}/logout/curl-request.adoc[]
+
+.http-request
+include::{snippets}/logout/http-request.adoc[]
+
+.http-response
+include::{snippets}/logout/http-response.adoc[]
+
+=== 비밀번호 변경
+.curl-request
+include::{snippets}/update-user-password/curl-request.adoc[]
+
+.http-request
+include::{snippets}/update-user-password/http-request.adoc[]
+
+.request-headers
+include::{snippets}/update-user-password/request-headers.adoc[]
+
+.http-response
+include::{snippets}/update-user-password/http-response.adoc[]
+
+.response-fields
+include::{snippets}/update-user-password/response-fields.adoc[]
+
+=== 리프레시 토큰 재발급
+.curl-request
+include::{snippets}/reissue/curl-request.adoc[]
+
+.http-request
+include::{snippets}/reissue/http-request.adoc[]
+
+.request-headers
+include::{snippets}/reissue/request-headers.adoc[]
+
+.http-response
+include::{snippets}/reissue/http-response.adoc[]
+
+.response-headers
+include::{snippets}/reissue/response-headers.adoc[]
+
+=== 비밀번호 재발급
+.curl-request
+include::{snippets}/password/curl-request.adoc[]
+
+.http-request
+include::{snippets}/password/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/password/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/password/http-response.adoc[]
+
+=== 프로필 이미지 제거
+.curl-request
+include::{snippets}/delete-profile/curl-request.adoc[]
+
+.http-request
+include::{snippets}/delete-profile/http-request.adoc[]
+
+.request-headers
+include::{snippets}/delete-profile/request-headers.adoc[]
+
+.http-response
+include::{snippets}/delete-profile/http-response.adoc[]
+
+.response-fields
+include::{snippets}/delete-profile/response-fields.adoc[]
+
+== Follow
+=== 팔로우 설정 / 취소
+.curl-request
+include::{snippets}/patch-following-user/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patch-following-user/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patch-following-user/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/patch-following-user/http-response.adoc[]
+
+.response-fields
+include::{snippets}/patch-following-user/response-fields.adoc[]
+
+=== 팔로잉 & 팔로우 조회
+.curl-request
+include::{snippets}/get-follow-users/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-follow-users/http-request.adoc[]
+
+.http-response
+include::{snippets}/get-follow-users/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-follow-users/response-fields.adoc[]
+
+== Image
+=== 이미지 등록
+.curl-request
+include::{snippets}/create-Image/curl-request.adoc[]
+
+.http-request
+include::{snippets}/create-Image/http-request.adoc[]
+
+.request-parts
+include::{snippets}/create-Image/request-parts.adoc[]
+
+.http-response
+include::{snippets}/create-Image/http-response.adoc[]
+
+.response-fields
+include::{snippets}/create-Image/response-fields.adoc[]
+
+=== 이미지 태그 수정
+.curl-request
+include::{snippets}/update-Image/curl-request.adoc[]
+
+.http-request
+include::{snippets}/update-Image/http-request.adoc[]
+
+.request-fields
+include::{snippets}/update-Image/request-fields.adoc[]
+
+.http-response
+include::{snippets}/update-user/http-response.adoc[]
+
+.response-fields
+include::{snippets}/update-user/response-fields.adoc[]
+
+=== 이미지 조회
+.curl-request
+include::{snippets}/get-image/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-image/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/get-image/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/get-image/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-image/response-fields.adoc[]
+
+=== 이미지 삭제
+.curl-request
+include::{snippets}/delete-Image/http-request.adoc[]
+
+.http-request
+include::{snippets}/delete-Image/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-Image/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/delete-Image/http-response.adoc[]
+
+=== 북마크 설정 / 취소
+.curl-request
+include::{snippets}/update-bookmark/curl-request.adoc[]
+
+.http-request
+include::{snippets}/update-bookmark/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/update-bookmark/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/update-bookmark/http-response.adoc[]
+
+.response-fields
+include::{snippets}/update-bookmark/response-fields.adoc[]
+
+=== 북마크 이미지 조회
+.curl-request
+include::{snippets}/get-bookmark-images/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-bookmark-images/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/get-bookmark-images/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/get-bookmark-images/http-response.adoc[]
+
+.response
+include::{snippets}/get-bookmark-images/response-fields.adoc[]
+
+=== 이미지 신고
+.curl-request
+include::{snippets}/report-post/curl-request.adoc[]
+
+.http-request
+include::{snippets}/report-post/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/report-post/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/report-post/http-response.adoc[]
+
+.response-fields
+include::{snippets}/report-post/response-fields.adoc[]
+
+=== 좋아요 설정 / 취소
+.curl-request
+include::{snippets}/patch-likes/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patch-likes/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patch-likes/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/patch-likes/http-response.adoc[]
+
+.response-fields
+include::{snippets}/patch-likes/response-fields.adoc[]
+
+== Tag
+=== 태그로 조회하기
+.curl-request
+include::{snippets}/get-search-tags/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-search-tags/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/get-search-tags/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/get-search-tags/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-search-tags/response-fields.adoc[]
