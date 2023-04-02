@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         redisService.setValues(user.getEmail(), refreshToken);
 
-        CookieUtil.createCookie(response, refreshToken);
+//        CookieUtil.createCookie(response, refreshToken);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         int maxAge = 60 * jwtProvider.getRefreshTokenExpirationMinutes();
