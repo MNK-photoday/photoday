@@ -17,6 +17,15 @@ function checkAuth() {
         },
       );
     } catch (e) {
+      const response = await axios.get<AxiosResponse>(
+        `${import.meta.env.VITE_APP_API}/auth/reissue`,
+        {
+          headers: {
+            Authorization: accessToken,
+          },
+        },
+      );
+
       localStorage.clear();
       location.reload();
       return false;
