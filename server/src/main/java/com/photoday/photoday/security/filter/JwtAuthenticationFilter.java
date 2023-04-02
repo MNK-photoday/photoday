@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         userDataResponder.sendUserDataResponse(user.getUserId(), response);
         response.addHeader("Set-Cookie", "Refresh=" + refreshToken + "; SameSite=None; " +
                 "Max-Age=" + maxAge + "; HttpOnly; Path=/; Secure");
-
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 
