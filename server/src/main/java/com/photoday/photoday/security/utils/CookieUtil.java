@@ -21,7 +21,7 @@ public class CookieUtil {
 
     static public void createCookie(HttpServletResponse response, String refreshToken) {
         ResponseCookie cookie = ResponseCookie.from("Refresh", refreshToken)
-//                .domain(".photoday.site")
+                .domain(".photoday.site")
                 .sameSite("None")
                 .maxAge(Duration.ofDays(30))
                 .httpOnly(true)
