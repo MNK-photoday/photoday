@@ -66,9 +66,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader("Set-Cookie", "Refresh=" + refreshToken + "; SameSite=None; " +
                 "Max-Age=" + maxAge + "; HttpOnly; Path=/; Secure");
 //        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
-        response.setHeader("Access-Control-Allow-Origin", "https://photoday.site");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+//        response.setHeader("Access-Control-Allow-Origin", "https://photoday.site");
+//        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 
