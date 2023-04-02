@@ -58,10 +58,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         redisService.setValues(user.getEmail(), refreshToken);
 
-        Cookie refreshTokenCookie = CookieUtil.createCookie("Refresh", refreshToken);
+        CookieUtil.createCookie(response, refreshToken);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
-        response.addCookie(refreshTokenCookie);
+
         userDataResponder.sendUserDataResponse(user.getUserId(), response);
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);

@@ -56,8 +56,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String accessToken = jwtProvider.delegateAccessToken(user);
         String refreshToken = jwtProvider.delegateRefreshToken(user);
 
-        Cookie refreshTokenCookie = CookieUtil.createCookie("Refresh", refreshToken);
-        response.addCookie(refreshTokenCookie);
+        CookieUtil.createCookie(response, refreshToken);
 //        response.addHeader("Authorization", accessToken); //TODO 파라미터 전달로 바꾸기
 
         String uri = createURI(user, accessToken).toString();
