@@ -104,6 +104,7 @@ public class SecurityConfiguration {
         configuration.addAllowedOrigin("http://www.photoday.site");
         configuration.addAllowedOrigin("https://www.photoday.site");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
+        configuration.addExposedHeader("Access-Control-Allow-Credentials");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("*");
         configuration.setAllowCredentials(true);
