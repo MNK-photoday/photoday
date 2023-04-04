@@ -104,9 +104,10 @@ public class SecurityConfiguration {
         configuration.addAllowedOrigin("http://www.photoday.site");
         configuration.addAllowedOrigin("https://www.photoday.site");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
-        configuration.addExposedHeader("Access-Control-Allow-Credentials");
-        configuration.addAllowedHeader("*");
+        configuration.addAllowedHeader("Authorization");
+        configuration.addExposedHeader("Authorization");
         configuration.addExposedHeader("*");
+        configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
