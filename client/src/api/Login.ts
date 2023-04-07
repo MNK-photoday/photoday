@@ -25,10 +25,7 @@ export type ErrorResponse = {
   authorization?: string;
 };
 
-export const postLogin = async (
-  loginForm: LoginValue,
-  keepLoggedIn: boolean,
-) => {
+export const postLogin = async (loginForm: LoginValue) => {
   const response = await axios.post<undefined, AxiosResponse>(
     `${import.meta.env.VITE_APP_API}/auth/login`,
     {
@@ -43,13 +40,7 @@ export const postLogin = async (
   const { userId, userProfileImage } = response.data;
   const accessToken = response.headers.authorization;
 
-  if (accessToken) {
-    localStorage.setItem('id', userId);
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('userProfileImage', userProfileImage);
-  }
-
-  return { userId, userProfileImage };
+  return { userId, accessToken, userProfileImage };
 };
 
 export const socialLogin = () => {

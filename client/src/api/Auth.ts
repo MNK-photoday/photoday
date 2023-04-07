@@ -2,7 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 
 function checkAuth() {
   const accessToken = localStorage.getItem('accessToken');
-  if (!accessToken) {
+  const keepLoggedIn = localStorage.getItem('keepLoggedIn');
+
+  if (!accessToken || keepLoggedIn === 'false') {
     return false;
   }
 
@@ -17,21 +19,27 @@ function checkAuth() {
         },
       );
     } catch (e) {
-      const response = await axios.get<AxiosResponse>(
-        `${import.meta.env.VITE_APP_API}/auth/reissue`,
-        {
-          headers: {
-            Authorization: accessToken,
+      if (keepLoggedIn) {
+        const response = await axios.get<AxiosResponse>(
+          `${import.meta.env.VITE_APP_API}/auth/reissue`,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: accessToken,
+            },
           },
-        },
-      );
+        );
 
-      localStorage.clear();
-      location.reload();
-      return false;
+        localStorage.setItem('accessToken', response.headers.authorization);
+      } else {
+        localStorage.clear();
+      }
     }
   };
+
+  // setInterval(() => {
   verifyToken();
+  // }, 3600 * 1000);
 
   return true;
 }

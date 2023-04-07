@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import checkAuth from '../api/Auth';
 
 type AuthState = {
-  isLoggedIn: boolean;
+  isLoggedIn: boolean | undefined;
   id: string | null;
   userProfileImage: string;
   setUserProfile: string;
