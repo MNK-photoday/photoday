@@ -17,11 +17,11 @@ export const S_PicBox = styled.div`
   align-items: center;
 
   width: 100%;
+  min-width: 980px;
   height: auto;
   margin-bottom: 20px;
 
   padding: 20px 40px;
-  border-radius: 10px;
 
   &:hover {
     > :first-child {
@@ -32,6 +32,20 @@ export const S_PicBox = styled.div`
       transition: all 0.3s ease-in-out;
       opacity: 1;
     }
+  }
+
+  @media screen and (max-width: 1024px) {
+    min-width: 90%;
+    > :first-child {
+      opacity: 1;
+    }
+    > :last-child {
+      opacity: 1;
+    }
+    margin-left: 20px;
+  }
+  @media screen and (max-width: 650px) {
+    margin-left: 0;
   }
 `;
 

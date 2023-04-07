@@ -19,6 +19,7 @@ import GoogleButton from '../GoogleButton/GoogleButton';
 import { login } from '../../../store/authSlice';
 import { postLogin, LoginValue } from '../../../api/Login';
 import { validateLogin } from '../LoginValidationLogic/LoginValidationLogic';
+import checkAuth from '../../../api/Auth';
 
 export type ValidityResults = {
   isValidEmail: boolean;
@@ -46,16 +47,28 @@ function LoginSection() {
     e.preventDefault();
 
     try {
-      const response = await postLogin(loginForm, keepLoggedIn);
-      const { userId, userProfileImage } = response;
+      const response = await postLogin(loginForm);
+      const { userId, accessToken, userProfileImage } = response;
+
+      if (accessToken) {
+        localStorage.setItem('id', userId);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('userProfileImage', userProfileImage);
+        localStorage.setItem('keepLoggedIn', keepLoggedIn ? 'true' : 'false');
+      }
+
       dispatch(login({ userId, userProfileImage }));
       navigate('/');
 
-      setTimeout(() => {
-        localStorage.clear();
-        alert('로그아웃 되었습니다. 로그인 후 이용해 주세요.');
-        navigate('/login');
-      }, 3600 * 1000);
+      if (keepLoggedIn) {
+        checkAuth();
+      } else {
+        setTimeout(() => {
+          localStorage.clear();
+          alert('로그아웃 되었습니다. 로그인 후 이용해 주세요.');
+          navigate('/login');
+        }, 3600 * 1000);
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
