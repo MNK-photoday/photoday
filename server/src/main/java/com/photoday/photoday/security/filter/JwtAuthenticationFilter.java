@@ -58,17 +58,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         redisService.setValues(user.getEmail(), refreshToken);
 
-//        CookieUtil.createCookie(response, refreshToken);
+        CookieUtil.createCookie(response, refreshToken);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
-        int maxAge = 60 * jwtProvider.getRefreshTokenExpirationMinutes();
         userDataResponder.sendUserDataResponse(user.getUserId(), response);
-        response.addHeader("Set-Cookie", "Refresh=" + refreshToken + "; SameSite=None; " +
-                "Max-Age=" + maxAge + "; HttpOnly; Path=/; Secure");
-//        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
-//        response.setHeader("Access-Control-Allow-Origin", "https://photoday.site");
-//        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+//        int maxAge = 60 * jwtProvider.getRefreshTokenExpirationMinutes();
+//        response.addHeader("Set-Cookie", "Refresh=" + refreshToken + "; SameSite=None; " + "Max-Age=" + maxAge + "; HttpOnly; Path=/; Secure");
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 
