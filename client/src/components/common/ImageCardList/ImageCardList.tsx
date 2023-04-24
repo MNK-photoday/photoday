@@ -31,7 +31,7 @@ function ImageCardList({
   const [hasMore, setHasMore] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver>();
   const endRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const ITEM_CONTEXT = useContext(ItemContext);
   const SEARCH_CONTEXT = useContext(SearchContext);
@@ -39,6 +39,7 @@ function ImageCardList({
 
   const { search, id } = useParams();
   const { pathname } = useLocation();
+
   useEffect(() => {
     fetchData();
   }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
@@ -66,7 +67,6 @@ function ImageCardList({
   }, [loading, hasMore]);
 
   const fetchData = async () => {
-    setLoading(true);
     try {
       postSearchTags(
         pathname !== '/'
@@ -108,8 +108,13 @@ function ImageCardList({
         )) ?? <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       </S_ImageCardWrap>
       {/* 로딩 중일 때 */}
-      {loading && <ImageCardSkeleton count={6} height={height} />}
-      {loading && <S_LoaderBar>Loading more...</S_LoaderBar>}
+      {loading && (
+        <>
+          <ImageCardSkeleton count={6} height={height} />
+          <S_LoaderBar>Loading more...</S_LoaderBar>
+        </>
+      )}
+
       {/* 검색 결과가 없을 때  | 받아올 데이터가 없을 때 */}
       {!hasMore && <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       {/* 끝까지 스크롤 했을 때 */}
