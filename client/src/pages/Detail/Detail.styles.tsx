@@ -8,6 +8,7 @@ export const S_DetailBox = styled.div`
 
   padding-top: 40px;
 
+  width: 100%;
   height: auto;
 `;
 
@@ -51,7 +52,7 @@ export const S_PicBox = styled.div`
 
 export const S_ContentsTop = styled.div`
   ${RowFlex}
-  width: 100%;
+  width: 85%;
   justify-content: space-between;
   opacity: 0;
   z-index: 3;
@@ -152,7 +153,7 @@ export const S_Contents = styled.div`
 
 export const S_ContentsBottom = styled.div`
   ${RowFlex}
-  width: 100%;
+  width: 85%;
   justify-content: space-between;
   opacity: 0;
   transition: all 0.3s ease-in-out;
@@ -191,7 +192,7 @@ export const S_UploadDateBox = styled.div`
 
 export const S_SeachList = styled.div`
   width: 85%;
-  height: 1000px;
+  height: auto;
 `;
 export const S_TagWrap = styled.div`
   ${Flex}
