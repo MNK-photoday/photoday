@@ -7,7 +7,7 @@
 </div>
 
 - **`Team name` :**  맑눈광 
-- **`Project` :** photoday
+- **`Project` :** photoday : A photo sharing website
 - **`Project duration` :** 2023.03.03 - 2023.04.02
 - **`Team members` :** 김민수(팀장), 심현보, 조영롱, 유아현(부팀장), 이정호, 장은수
 - **`Link` :** [🌐 photoday ](http://photoday.site.s3-website.ap-northeast-2.amazonaws.com)
