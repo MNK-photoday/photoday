@@ -20,7 +20,7 @@ public class ImageMapper {
     public ImageDto.PageResponse imageToPageResponse(Image image) {
         return ImageDto.PageResponse.builder()
                 .imageId(image.getImageId())
-                .imageUrl(image.getImageUrl())
+                .thumbnailUrl(image.getThumbnailUrl()==null? image.getImageUrl(): image.getThumbnailUrl())
                 .like(hasLiked(image))
                 .bookmark(hasBookmarked(image))
                 .build();

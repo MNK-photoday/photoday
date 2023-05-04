@@ -27,7 +27,7 @@ public class Image {
     private String imageUrl;
 
     @Column(columnDefinition = "LONGTEXT")
-    private String resizedUrl;
+    private String thumbnailUrl;
 
     @Column(nullable = false)
     private int viewCount;
