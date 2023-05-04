@@ -68,7 +68,9 @@ public class ImageServiceImpl implements ImageService {
 //        Long userId = authUserService.getLoginUserId();
 
         String imageUrl = s3Service.saveImage(multipartFile);
-        Image image = makeImage(imageUrl, user);
+        String thumbnailUrl = s3Service.resizeImage(multipartFile, 800);
+
+        Image image = makeImage(imageUrl, thumbnailUrl,user);
         image.setImageHashValue(imageHashValue);
 
         List<Tag> tagList = tagMapper.dtoToTag(post);
@@ -104,7 +106,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void deleteImage(long imageId) {
+    public void deleteImage(long imageId) { //이미지 삭제하면 DB뿐만 아니라 s3에서도 삭제해야할 듯.
         Image image = findVerifiedImage(imageId);
 //        Long userId = authUserService.getLoginUserId();
         User user = authUserService.getLoginUser().orElseThrow(() -> new CustomException(USER_NOT_FOUND));
@@ -242,12 +244,13 @@ public class ImageServiceImpl implements ImageService {
         return optionalImage.orElseThrow(() -> new CustomException(IMAGE_NOT_FOUND));
     }
 
-    private Image makeImage(String imageUrl, User user) {
+    private Image makeImage(String imageUrl, String thumbnailUrl, User user) {
 //        User user = userService.findVerifiedUser(userId);
 
         Image image = new Image();
         image.setImageUrl(imageUrl);
         image.setUser(user);
+        image.setThumbnailUrl(thumbnailUrl);
 
         return image;
     }
