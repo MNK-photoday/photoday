@@ -10,13 +10,19 @@ import com.photoday.photoday.image.service.S3Service;
 import com.photoday.photoday.image.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import marvin.image.MarvinImage;
+import org.marvinproject.image.transform.scale.Scale;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
@@ -45,6 +51,45 @@ public class S3ServiceImpl implements S3Service {
         );
 
         return amazonS3Client.getUrl(s3Bucket, originalFilename).toString();
+    }
+
+    @Override
+    public String resizeImage(MultipartFile multipartFile, int targetWidth) throws IOException {
+            // MultipartFile -> BufferedImage Convert
+            BufferedImage image = ImageIO.read(multipartFile.getInputStream());
+            // newWidth : newHeight = originWidth : originHeight
+            int originWidth = image.getWidth();
+            int originHeight = image.getHeight();
+
+            // origin 이미지가 resizing될 사이즈보다 작을 경우 resizing 작업 안 함
+            if(originWidth < targetWidth) return null;
+
+            MarvinImage imageMarvin = new MarvinImage(image);
+
+            Scale scale = new Scale();
+            scale.load();
+            scale.setAttribute("newWidth", targetWidth);
+            scale.setAttribute("newHeight", targetWidth * originHeight / originWidth);
+            scale.process(imageMarvin.clone(), imageMarvin, null, null, false);
+
+            BufferedImage imageNoAlpha = imageMarvin.getBufferedImageNoAlpha();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/") + 1);
+            ImageIO.write(imageNoAlpha, fileFormat, baos);
+            baos.flush();
+
+            String resizedImageFilename = "s_"+multipartFile.getOriginalFilename();
+
+            MockMultipartFile mockMultipartFile = new MockMultipartFile(resizedImageFilename, baos.toByteArray());
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(mockMultipartFile.getContentType());
+            objectMetadata.setContentLength(mockMultipartFile.getSize());
+
+            amazonS3Client.putObject(new PutObjectRequest(s3Bucket, resizedImageFilename,
+                    mockMultipartFile.getInputStream(), objectMetadata));
+
+            return amazonS3Client.getUrl(s3Bucket, resizedImageFilename).toString();
     }
 
     @Override
