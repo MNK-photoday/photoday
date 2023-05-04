@@ -26,6 +26,9 @@ public class Image {
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String imageUrl;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String resizedUrl;
+
     @Column(nullable = false)
     private int viewCount;
 
