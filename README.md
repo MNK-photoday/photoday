@@ -54,6 +54,9 @@
 ## 🖼️ <a href="https://www.figma.com/file/FYJKiG6m0prgeyiFsIFb1k/Photoday?node-id=0%3A1&t=sCAetBgN1gxQvoRA-1" target="_blank">Wireframe</a>
 <img src="https://velog.velcdn.com/images/youa7878/post/0366138c-6a35-4fb2-8cad-759f7a2b18ed/image.png">
 
+## 🔖 <a href="https://dbdiagram.io/d/64059464296d97641d85a6c3" target="_blank">DB Diagram</a>
+<img alt="Untitled" src="https://user-images.githubusercontent.com/108881135/236846803-95baba22-f856-46d5-af80-a11f8d42e574.png">
+
 ## 📃 <a href="https://documenter.getpostman.com/view/25956865/2s93JowkWg" target="_blank">API</a>
 <img src="https://velog.velcdn.com/images/youa7878/post/21b0f354-44dd-44c8-92fb-2df862032e4d/image.png">
 
