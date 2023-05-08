@@ -43,7 +43,7 @@ public class ImageDto {
     @Getter
     public static class PageResponse {
         private Long imageId;
-        private String thumbnailUrl;
+        private String imageUrl;
         private boolean like;
         private boolean bookmark;
     }
