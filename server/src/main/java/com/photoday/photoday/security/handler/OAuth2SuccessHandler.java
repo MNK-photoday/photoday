@@ -56,9 +56,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String accessToken = jwtProvider.delegateAccessToken(user);
         String refreshToken = jwtProvider.delegateRefreshToken(user);
 
-        Cookie refreshTokenCookie = CookieUtil.createCookie("Refresh", refreshToken);
-        response.addCookie(refreshTokenCookie);
-//        response.addHeader("Authorization", accessToken); //TODO 파라미터 전달로 바꾸기
+        CookieUtil.createCookie(response, refreshToken);
+        response.addHeader("Authorization", accessToken);
 
         String uri = createURI(user, accessToken).toString();
         log.info("OAuth 인증 성공");
@@ -74,8 +73,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("https")
-                .host("photoday.site")
+                .scheme("http")
+                .host("localhost")
+                .port(3000)
                 .queryParams(queryParams)
                 .build()
                 .toUri();
