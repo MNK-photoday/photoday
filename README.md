@@ -12,6 +12,7 @@
 - **`Team members` :** 김민수(팀장), 심현보, 조영롱, 유아현(부팀장), 이정호, 장은수
 - **`Link` :** [🌐 photoday ](http://photoday.site.s3-website.ap-northeast-2.amazonaws.com)
 - **`사용자 요구사항 정의서`:** [사용자 요구사항 정의서](https://docs.google.com/spreadsheets/d/1Ag0E2LtVoF8s_KBggUSjhS9XFv0DJXGEpryifN7IOt8/edit#gid=0)
+- **`기술 발표 영상`:** [기술 발표 영상](https://www.youtube.com/watch?v=x1y4s9WShps)
 <br/>
 
 ## 💼 Team
