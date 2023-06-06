@@ -1,6 +1,10 @@
-import styled, { css, createGlobalStyle } from 'styled-components';
+import { css, createGlobalStyle } from 'styled-components';
 import Variables from './Variables';
 import ResetCss from './ResetCss';
+
+import NotoSansBold from '../assets/fonts/NotoSansKR-Bold.otf';
+import NotoSansMedium from '../assets/fonts/NotoSansKR-Medium.otf';
+import NotoSansRegular from '../assets/fonts/NotoSansKR-Regular.otf';
 
 export const Flex = css`
   display: flex;
@@ -21,6 +25,26 @@ export const ColFlex = css`
 `;
 
 export const GlobalStyle = createGlobalStyle`
-  ${ResetCss}
-  ${Variables}
+  ${ResetCss};
+  ${Variables};
+
+
+  @font-face {
+    font-family: 'NotoSansBold';
+    src: url(${NotoSansBold}) format('truetype');
+  }
+
+  @font-face {
+    font-family: 'NotoSansMedium';
+    src: url(${NotoSansMedium}) format('truetype');
+  }
+
+  @font-face {
+    font-family: 'NotoSansRegular';
+    src: url(${NotoSansRegular}) format('truetype');
+  }
+  
+  html, body, a, button, input {
+    font-family: 'NotoSansRegular';
+  }
 `;
