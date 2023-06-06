@@ -31,17 +31,17 @@ export const GlobalStyle = createGlobalStyle`
 
   @font-face {
     font-family: 'NotoSansBold';
-    src: url(${NotoSansBold}) format('truetype');
+    src: url(${NotoSansBold}) format('opentype');
   }
 
   @font-face {
     font-family: 'NotoSansMedium';
-    src: url(${NotoSansMedium}) format('truetype');
+    src: url(${NotoSansMedium}) format('opentype');
   }
 
   @font-face {
     font-family: 'NotoSansRegular';
-    src: url(${NotoSansRegular}) format('truetype');
+    src: url(${NotoSansRegular}) format('opentype');
   }
   
   html, body, a, button, input {
