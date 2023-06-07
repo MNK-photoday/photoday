@@ -29,6 +29,7 @@ import { Tags } from '../Upload/Upload';
 import { SearchContext } from '../../context/SearchContext';
 import { PageNumContext } from '../../context/PageNumContext';
 import { ItemContext } from '../../context/ItemContext';
+import MainImageLoding from './MainImageLoding';
 
 type DetailInfo = {
   image: string;
@@ -59,6 +60,7 @@ function Detail() {
   const [isTagEditComplete, setIsTagEditComplete] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isTagModified, setIsTagModified] = useState(false);
+  const [loding, setLoding] = useState(false);
 
   const token = localStorage.getItem('accessToken');
   const headers = {
@@ -70,6 +72,7 @@ function Detail() {
   const ITEM_CONTEXT = useContext(ItemContext);
   useEffect(() => {
     window.scrollTo(0, 0);
+    setLoding(true);
     axios
       .get(`${import.meta.env.VITE_APP_API}/images/${id}`, headers)
       .then((res) => {
@@ -89,6 +92,7 @@ function Detail() {
           myImageCheck: response.myImage,
           adminCheck: response.checkAdmin,
         });
+        setLoding(false);
         setIsBookmark(response.bookmark);
         setIsLike(response.like);
         setIsLikeCount(response.likeCount);
@@ -346,7 +350,11 @@ function Detail() {
               </S_IconBox>
             </S_ContentsTop>
             <S_Contents>
-              <img src={detailInfo?.image} alt="상세이미지" />
+              {loding ? (
+                <MainImageLoding />
+              ) : (
+                <img src={detailInfo?.image} alt="상세이미지" />
+              )}
             </S_Contents>
             <S_UploadDateBox>
               {dateTypeConverter(detailInfo?.createdAt)}
@@ -417,7 +425,7 @@ function Detail() {
               ))}
           </S_TagWrap>
           <S_SeachList>
-            <ImageCardList width={400} height={270} />
+            <ImageCardList width={400} height={300} />
           </S_SeachList>
         </S_DetailBox>
       </Container>
