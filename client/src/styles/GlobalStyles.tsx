@@ -39,7 +39,6 @@ export const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'NotoSansKrMedium';
     src: url(${NotoSansKrMedium}) format('opentype');
-    unicode-range: U+0030-0039;
   }
 
   // 숫자
