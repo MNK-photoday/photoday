@@ -2,9 +2,11 @@ import { css, createGlobalStyle } from 'styled-components';
 import Variables from './Variables';
 import ResetCss from './ResetCss';
 
-import NotoSansBold from '../assets/fonts/NotoSansKR-Bold.otf';
-import NotoSansMedium from '../assets/fonts/NotoSansKR-Medium.otf';
-import NotoSansRegular from '../assets/fonts/NotoSansKR-Regular.otf';
+import NotoSansKrBold from '../assets/fonts/NotoSansKR-Bold.otf';
+import NotoSansKrMedium from '../assets/fonts/NotoSansKR-Medium.otf';
+import NotoSansKrRegular from '../assets/fonts/NotoSansKR-Regular.otf';
+import OpenSansRegular from '../assets/fonts/OpenSans-Regular.ttf';
+import NotoSerifRegular from '../assets/fonts/NotoSerif-Regular.ttf';
 
 export const Flex = css`
   display: flex;
@@ -30,21 +32,39 @@ export const GlobalStyle = createGlobalStyle`
 
 
   @font-face {
-    font-family: 'NotoSansBold';
-    src: url(${NotoSansBold}) format('opentype');
+    font-family: 'NotoSansKrBold';
+    src: url(${NotoSansKrBold}) format('opentype');
   }
 
   @font-face {
-    font-family: 'NotoSansMedium';
-    src: url(${NotoSansMedium}) format('opentype');
+    font-family: 'NotoSansKrMedium';
+    src: url(${NotoSansKrMedium}) format('opentype');
+    unicode-range: U+0030-0039;
   }
 
+  // 숫자
   @font-face {
-    font-family: 'NotoSansRegular';
-    src: url(${NotoSansRegular}) format('opentype');
+    font-family: 'OpenSansRegular';
+    src: url(${OpenSansRegular}) format('truetype');
+    unicode-range: U+0030-0039;
+  }
+
+  // 영문 대문자, 소문자
+  @font-face {
+    font-family: 'NotoSerifRegular';
+    src: url(${NotoSerifRegular}) format('truetype');
+    unicode-range: U+0041-005A, U+0061-007A;
+  }
+
+
+  // 한글
+  @font-face {
+    font-family: 'NotoSansKrRegular';
+    src: url(${NotoSansKrRegular}) format('opentype');
+    unicode-range: U+AC00-D7A3;
   }
   
-  html, body, a, button, input {
-    font-family: 'NotoSansRegular';
+  html, body, a, p, h1, h2, h3, h4, h5, h6, span, div, button, input {
+    font-family: 'NotoSansKrRegular', 'NotoSerifRegular', 'OpenSansRegular';
   }
 `;
