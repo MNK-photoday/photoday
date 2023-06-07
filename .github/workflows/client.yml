@@ -19,6 +19,7 @@ jobs:
         env:
           VITE_APP_API: ${{ secrets.VITE_APP_API }}
           VITE_GOOGLE_AUTH_URL: ${{ secrets.VITE_GOOGLE_AUTH_URL }}
+        working-directory: ./client
       - name: Build
         run: yarn build
         working-directory: ./client
