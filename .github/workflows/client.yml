@@ -20,7 +20,7 @@ jobs:
           VITE_APP_API: ${{ secrets.VITE_APP_API }}
           VITE_GOOGLE_AUTH_URL: ${{ secrets.VITE_GOOGLE_AUTH_URL }}
       - name: Build
-        run: yarn vite build
+        run: yarn build
         working-directory: ./client
       - name: Sync Bucket
         env:
