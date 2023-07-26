@@ -8,7 +8,7 @@ export const S_MainImageContentBox = styled.section`
   @media screen and (max-width: 1024px) {
     width: 100%;
     padding-left: 0px;
-    height: 100%;
+    padding-bottom: 50px;
   }
 `;
 
@@ -20,6 +20,15 @@ export const S_MainImageCardBox = styled.div`
 
   &:first-of-type {
     margin-bottom: 30px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    height: 450px;
+  }
+  @media screen and (max-width: 650px) {
+    width: 100%;
+    height: 300px;
   }
 `;
 
@@ -35,5 +44,6 @@ export const S_MainImg = styled.img<{ pathname: string }>`
   max-width: 100%;
   max-height: 100%;
   width: 100%;
+  height: 100%;
   object-fit: cover;
 `;

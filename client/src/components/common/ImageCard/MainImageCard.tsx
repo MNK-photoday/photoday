@@ -16,14 +16,13 @@ export type ImageItemProps = {
 
 function MainImageCard() {
   const [items, setItems] = useState<ImageItemProps[]>([]);
-  const [isloading, setIsLoading] = useState(false);
+  const [isloading, setIsLoading] = useState(true);
 
   const randomNumFun = () => {
     return Math.floor(Math.random() * 10);
   };
 
   useEffect(() => {
-    setIsLoading(true);
     try {
       getMainImage().then((response) => {
         let randomNum1 = randomNumFun();

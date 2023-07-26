@@ -14,13 +14,14 @@ jobs:
         working-directory: ./client
       - name: Generate Environment Variables File for Production
         run: |
-          echo "VITE_APP_API=$VITE_APP_API" >> .env.
-          echo "VITE_GOOGLE_AUTH_URL=$VITE_GOOGLE_AUTH_URL" >> .env.
+          echo "VITE_APP_API=$VITE_APP_API" >> .env
+          echo "VITE_GOOGLE_AUTH_URL=$VITE_GOOGLE_AUTH_URL" >> .env
         env:
           VITE_APP_API: ${{ secrets.VITE_APP_API }}
           VITE_GOOGLE_AUTH_URL: ${{ secrets.VITE_GOOGLE_AUTH_URL }}
+        working-directory: ./client
       - name: Build
-        run: yarn vite build
+        run: yarn build
         working-directory: ./client
       - name: Sync Bucket
         env:
