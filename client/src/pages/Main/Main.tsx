@@ -39,7 +39,7 @@ function Main() {
             <S_MainTextBox textBoxActive={activeTextBox}>
               <S_MainTitle>
                 free pics.
-                <br /> do anyhing (CC0). <br /> make magic
+                <br /> do anything (CC0). <br /> make magic
               </S_MainTitle>
             </S_MainTextBox>
           </S_SearchContentBox>
