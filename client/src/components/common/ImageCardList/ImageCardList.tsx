@@ -15,7 +15,7 @@ export type ImageCardListProps = {
   filter?: string;
 };
 
-export type ImageItemProps = {
+export type ImageCardProps = {
   imageId: number;
   imageUrl: string;
   like: boolean;
@@ -76,9 +76,9 @@ function ImageCardList({
         filter,
       ).then((response) => {
         if (pathname.includes('detail')) {
-          ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => {
+          ITEM_CONTEXT?.setItems((prev: ImageCardProps[]) => {
             const newItems = response?.data.filter(
-              (item: ImageItemProps) => item.imageId !== Number(id),
+              (item: ImageCardProps) => item.imageId !== Number(id),
             );
 
             return [...prev, ...newItems];
@@ -87,7 +87,7 @@ function ImageCardList({
           setHasMore(response?.data.length > 0);
           setLoading(false);
         } else {
-          ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
+          ITEM_CONTEXT?.setItems((prev: ImageCardProps[]) => [
             ...prev,
             ...response?.data,
           ]);
@@ -103,7 +103,7 @@ function ImageCardList({
   return (
     <>
       <S_ImageCardWrap height={height} matrix={matrix}>
-        {ITEM_CONTEXT?.items.map((item: ImageItemProps, index) => (
+        {ITEM_CONTEXT?.items.map((item: ImageCardProps, index) => (
           <ImageCard key={index} item={item} />
         )) ?? <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       </S_ImageCardWrap>
