@@ -18,8 +18,18 @@ export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: 350px;
   }
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 1023px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 200px;
+  }
+
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 220px;
+  }
+  @media screen and (max-width: 640px) {
     grid-template-columns: 1fr;
+    grid-auto-rows: 220px;
   }
 `;
 export const S_SkeletonImageCardWrap = styled.article<ImageCardBoxProps>`
