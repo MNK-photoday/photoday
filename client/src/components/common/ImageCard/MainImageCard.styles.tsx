@@ -17,7 +17,7 @@ export const S_MainImageCardBox = styled.div`
   box-sizing: border-box;
   width: 100%;
   height: 390px;
-  padding-left: 60px;
+  padding: 0 30px;
 
   &:first-of-type {
     margin-bottom: 30px;
