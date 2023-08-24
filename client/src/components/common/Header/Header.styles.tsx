@@ -55,7 +55,8 @@ export const S_NavBox = styled.nav`
 
 export const S_NavLink = styled(Link)`
   color: var(--color-primary-black);
-  font-size: var(--font-size-sm);
+  font-size: 15px;
+  font-family: 'NaumGothicRegular';
   margin-left: 30px;
   &:first-child {
     margin-left: 100px;
@@ -63,6 +64,9 @@ export const S_NavLink = styled(Link)`
     @media screen and (max-width: 1500px) {
       margin-left: 30px;
     }
+  }
+  &:hover {
+    color: var(--color-primary-green);
   }
 `;
 export const S_NavSpan = styled.div`
