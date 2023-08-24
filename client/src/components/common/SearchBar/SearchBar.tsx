@@ -55,7 +55,7 @@ function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
     <S_SearchBarWrap active={activeSearchBar}>
       <BsSearch className="search-icon" />
       <S_SearchBarInput
-        placeholder="photo search.."
+        placeholder="Search for all images in photoday"
         onKeyPress={keydownHandler}
         ref={inputRef}
         isInputNull={isInputNull}
