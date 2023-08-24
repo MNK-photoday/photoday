@@ -29,7 +29,7 @@ export const S_ImageCardWrap = styled.article<ImageCardBoxProps>`
   }
   @media screen and (max-width: 640px) {
     grid-template-columns: 1fr;
-    grid-auto-rows: 220px;
+    grid-auto-rows: 300px;
   }
 `;
 export const S_SkeletonImageCardWrap = styled.article<ImageCardBoxProps>`
