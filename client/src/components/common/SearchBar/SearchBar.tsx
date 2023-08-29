@@ -48,7 +48,7 @@ function SearchBar({ setActiveTextBox, isMainPage }: SearchBarProps) {
         delayIfNullInput();
         setIsInputNull(false);
       } else {
-        isMain ?? MainSearchKeyword();
+        isMain && MainSearchKeyword();
         SEARCH_CONTENT?.setSearchWord(inputValue ?? '');
         setIsInputNull(false);
         resetInputAndPage();
