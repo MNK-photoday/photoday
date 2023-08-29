@@ -2,12 +2,11 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import ImageCard from '../ImageCard/ImageCard';
 import { S_ImageCardWrap, S_LoaderBar } from './ImageCardList.styles';
 import { postSearchTags } from '../../../api/Search';
-import { ItemContext } from '../../../context/ItemContext';
 import { SearchContext } from '../../../context/SearchContext';
 import { PageNumContext } from '../../../context/PageNumContext';
+import { ImageContext } from '../../../context/ImageContext';
 import ImageCardSkeleton from '../Skeleton/ImageCardSkeleton';
 import { useLocation, useParams } from 'react-router-dom';
-import path from 'path';
 
 export type ImageCardListProps = {
   width: number;
@@ -34,15 +33,14 @@ function ImageCardList({
   const endRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
-  const ITEM_CONTEXT = useContext(ItemContext);
+  const IMAGE_CONTEXT = useContext(ImageContext);
   const SEARCH_CONTEXT = useContext(SearchContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
   const { search, id } = useParams();
   const { pathname } = useLocation();
-  const isNotMain = useState(pathname !== '/');
+  const isMain = pathname === '/';
   useEffect(() => {
-    console.log('gd');
     fetchData();
   }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
 
@@ -70,26 +68,25 @@ function ImageCardList({
 
   const fetchData = async () => {
     try {
-      const searchWord = SEARCH_CONTEXT?.searchWord ?? '';
       const pageNumber = PAGE_NUM_CONTEXT?.pageNumber ?? 1;
-      const shouldExcludeImage = pathname.includes('detail') && isNotMain;
+      const searchWord = SEARCH_CONTEXT?.searchWord ?? '';
+      const isDetailPage = pathname.includes('detail') && !isMain;
 
       const response = await postSearchTags(
-        shouldExcludeImage ? search ?? searchWord : searchWord,
+        isMain ? searchWord : search ?? searchWord,
         pageNumber,
         filter,
       );
 
-      const newItems = response?.data.filter(
-        (item: ImageCardProps) =>
-          !shouldExcludeImage || item.imageId !== Number(id),
+      const filterImages = response?.data.filter(
+        (item: ImageCardProps) => isDetailPage && item.imageId !== Number(id),
       );
 
-      ITEM_CONTEXT?.setItems((prev: ImageCardProps[]) => [
+      IMAGE_CONTEXT?.setItems((prev: ImageCardProps[]) => [
         ...prev,
-        ...newItems,
+        ...filterImages,
       ]);
-      setHasMore(newItems.length > 0);
+      setHasMore(filterImages.length > 0);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -99,7 +96,7 @@ function ImageCardList({
   return (
     <>
       <S_ImageCardWrap height={height} matrix={matrix}>
-        {ITEM_CONTEXT?.items.map((item: ImageCardProps, index) => (
+        {IMAGE_CONTEXT?.items.map((item: ImageCardProps, index) => (
           <ImageCard key={index} item={item} />
         )) ?? <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       </S_ImageCardWrap>
