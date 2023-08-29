@@ -3,7 +3,7 @@ import { BsSearch } from 'react-icons/bs';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PageNumContext } from '../../../context/PageNumContext';
 import { SearchContext } from '../../../context/SearchContext';
-import { ImageContext } from '../../../context/ItemContext';
+import { ImageContext } from '../../../context/ImageContext';
 import { S_SearchBarInput, S_SearchBarWrap } from './SearchBar.styles';
 
 type SearchBarProps = {

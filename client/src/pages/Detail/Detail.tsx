@@ -28,7 +28,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Tags } from '../Upload/Upload';
 import { SearchContext } from '../../context/SearchContext';
 import { PageNumContext } from '../../context/PageNumContext';
-import { ImageContext } from '../../context/ItemContext';
+import { ImageContext } from '../../context/ImageContext';
 import MainImageLoding from './MainImageLoding';
 
 type DetailInfo = {

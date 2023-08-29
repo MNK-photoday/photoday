@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ItemContext } from '../../../context/ItemContext';
+import { ImageContext } from '../../../context/ImageContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import {
   S_SelectModalWrap,
@@ -12,7 +12,7 @@ interface SelectBoxProps {
   setIsSelect: (isSelect: string) => void;
 }
 function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
-  const ITEM_CONTEXT = useContext(ItemContext);
+  const ITEM_CONTEXT = useContext(ImageContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
   const selectfilter = (type: string) => {
