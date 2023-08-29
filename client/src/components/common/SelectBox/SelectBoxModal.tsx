@@ -12,12 +12,12 @@ interface SelectBoxProps {
   setIsSelect: (isSelect: string) => void;
 }
 function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
-  const ITEM_CONTEXT = useContext(ImageContext);
+  const IMAGE_CONTEXT = useContext(ImageContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
   const selectfilter = (type: string) => {
     if (isSelect !== type) {
-      ITEM_CONTEXT?.setItems([]);
+      IMAGE_CONTEXT?.setItems([]);
       PAGE_NUM_CONTEXT?.setPageNumber(1);
       setIsSelect(type);
     }
