@@ -18,11 +18,12 @@ export const S_SearchContentBox = styled.section`
   width: 50%;
   height: 450px;
   position: relative;
-  padding: 30px 0;
+  padding: 30px;
 
   @media screen and (max-width: 1400px) {
     padding-left: 30px;
   }
+
   @media screen and (max-width: 1024px) {
     width: 100%;
     padding: 30px;

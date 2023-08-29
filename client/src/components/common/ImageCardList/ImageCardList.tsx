@@ -7,6 +7,7 @@ import { SearchContext } from '../../../context/SearchContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import ImageCardSkeleton from '../Skeleton/ImageCardSkeleton';
 import { useLocation, useParams } from 'react-router-dom';
+import path from 'path';
 
 export type ImageCardListProps = {
   width: number;
@@ -39,8 +40,9 @@ function ImageCardList({
 
   const { search, id } = useParams();
   const { pathname } = useLocation();
-
+  const isNotMain = useState(pathname !== '/');
   useEffect(() => {
+    console.log('gd');
     fetchData();
   }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
 
@@ -68,33 +70,27 @@ function ImageCardList({
 
   const fetchData = async () => {
     try {
-      postSearchTags(
-        pathname !== '/'
-          ? search ?? SEARCH_CONTEXT?.searchWord ?? ''
-          : SEARCH_CONTEXT?.searchWord ?? '',
-        PAGE_NUM_CONTEXT?.pageNumber ?? 1,
+      const searchWord = SEARCH_CONTEXT?.searchWord ?? '';
+      const pageNumber = PAGE_NUM_CONTEXT?.pageNumber ?? 1;
+      const shouldExcludeImage = pathname.includes('detail') && isNotMain;
+
+      const response = await postSearchTags(
+        shouldExcludeImage ? search ?? searchWord : searchWord,
+        pageNumber,
         filter,
-      ).then((response) => {
-        if (pathname.includes('detail')) {
-          ITEM_CONTEXT?.setItems((prev: ImageCardProps[]) => {
-            const newItems = response?.data.filter(
-              (item: ImageCardProps) => item.imageId !== Number(id),
-            );
+      );
 
-            return [...prev, ...newItems];
-          });
+      const newItems = response?.data.filter(
+        (item: ImageCardProps) =>
+          !shouldExcludeImage || item.imageId !== Number(id),
+      );
 
-          setHasMore(response?.data.length > 0);
-          setLoading(false);
-        } else {
-          ITEM_CONTEXT?.setItems((prev: ImageCardProps[]) => [
-            ...prev,
-            ...response?.data,
-          ]);
-          setHasMore(response?.data.length > 0);
-          setLoading(false);
-        }
-      });
+      ITEM_CONTEXT?.setItems((prev: ImageCardProps[]) => [
+        ...prev,
+        ...newItems,
+      ]);
+      setHasMore(newItems.length > 0);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }

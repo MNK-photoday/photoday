@@ -8,7 +8,7 @@ export function Root() {
   return (
     <>
       <GlobalStyle />
-      <Header activeSearchBar={pathname !== '/'} />
+      <Header isMainPage={pathname !== '/'} />
       <Outlet />
       <Footer />
     </>

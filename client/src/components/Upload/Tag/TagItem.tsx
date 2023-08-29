@@ -1,8 +1,10 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { IoClose } from 'react-icons/io5';
 import { Flex } from '../../../styles/GlobalStyles';
 import { Tags } from '../../../pages/Upload/Upload';
 import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../../../context/SearchContext';
 
 const TagItemWrap = styled.button<{ isModificationMode?: boolean }>`
   ${Flex}
@@ -46,6 +48,7 @@ type TagItemProps = {
 
 function TagItem({ tag, onRemove, isModificationMode }: TagItemProps) {
   const navigate = useNavigate();
+  const SEARCH_CONTEXT = useContext(SearchContext);
 
   let searchtags: string = '';
   searchtags += tag['name'];
@@ -53,6 +56,7 @@ function TagItem({ tag, onRemove, isModificationMode }: TagItemProps) {
   const tagSearch = () => {
     if (isModificationMode === false) {
       navigate(`/tags/${searchtags}`);
+      SEARCH_CONTEXT?.setSearchWord(searchtags ?? '');
     }
   };
   return (

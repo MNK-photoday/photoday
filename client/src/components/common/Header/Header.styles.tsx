@@ -17,6 +17,10 @@ export const S_HeaderContainer = styled.div`
   align-items: center;
   padding: 0 50px;
   justify-content: space-between;
+
+  @media screen and (max-width: 1024px) {
+    padding: 0 20px;
+  }
 `;
 
 export const S_HeaderContent = styled.div`
@@ -36,10 +40,18 @@ export const S_LogoH1 = styled.h1`
   font-weight: normal;
   color: var(--color-primary-black);
   font-size: 27px;
+
+  @media screen and (max-width: 600px) {
+    font-size: 20px;
+  }
 `;
 export const S_LogoPoint = styled.span`
   font-size: 27px;
   color: var(--color-primary-green);
+
+  @media screen and (max-width: 600px) {
+    font-size: 20px;
+  }
 `;
 export const S_NavBox = styled.nav`
   ${RowFlex}

@@ -34,7 +34,7 @@ function Main() {
           <S_SearchContentBox>
             <SearchBar setActiveTextBox={setActiveTextBox} />
             <S_SearchImgBox textBoxActive={activeTextBox}>
-              <ImageCardList width={240} height={180} />
+              <ImageCardList width={240} height={200} />
             </S_SearchImgBox>
             <S_MainTextBox textBoxActive={activeTextBox}>
               <S_MainTitle>

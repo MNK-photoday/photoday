@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ItemContext } from '../../../context/ItemContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import { SearchContext } from '../../../context/SearchContext';
@@ -8,55 +8,63 @@ import { S_SearchBarInput, S_SearchBarWrap } from './SearchBar.styles';
 
 type SearchBarProps = {
   setActiveTextBox?: React.Dispatch<React.SetStateAction<boolean>>;
-  activeSearchBar?: boolean;
+  isMainPage?: boolean;
 };
 
-function SearchBar({ setActiveTextBox, activeSearchBar }: SearchBarProps) {
-  const [isInputNull, setIsInputNull] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
-
+function SearchBar({ setActiveTextBox, isMainPage }: SearchBarProps) {
   const ITEM_CONTEXT = useContext(ItemContext);
   const SEARCH_CONTENT = useContext(SearchContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
-  const [currentWord, setCurrentWord] = useState<string>('');
+
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [isInputNull, setIsInputNull] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isMain = useState(pathname === '/');
+
+  const resetInputAndPage = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+      ITEM_CONTEXT?.setItems([]);
+      PAGE_NUM_CONTEXT?.setPageNumber(1);
+    }
+  };
+  const delayIfNullInput = () => {
+    setTimeout(() => {
+      setIsInputNull(true);
+    }, 300);
+  };
+
+  const MainSearchKeyword = () => {
+    if (setActiveTextBox) {
+      setActiveTextBox(false);
+    }
+  };
 
   const keydownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      let newCurrentWord = inputRef.current?.value;
-      if (newCurrentWord === '') {
-        setTimeout(() => {
-          setIsInputNull(true);
-        }, 300);
+      let inputValue = inputRef.current?.value;
+      if (inputValue === '') {
+        delayIfNullInput();
+        setIsInputNull(false);
       } else {
-        if (setActiveTextBox) setActiveTextBox(false);
-        if (newCurrentWord !== currentWord) {
-          SEARCH_CONTENT?.setSearchWord(newCurrentWord ?? '');
-          setCurrentWord(newCurrentWord ?? '');
-          setIsInputNull(false);
-          ITEM_CONTEXT?.setItems([]);
-          PAGE_NUM_CONTEXT?.setPageNumber(1);
-        }
-        if (inputRef.current) {
-          inputRef.current.value = '';
-          ITEM_CONTEXT?.setItems([]);
-          PAGE_NUM_CONTEXT?.setPageNumber(1);
-        }
+        isMain ?? MainSearchKeyword();
+        SEARCH_CONTENT?.setSearchWord(inputValue ?? '');
+        setIsInputNull(false);
+        resetInputAndPage();
       }
-      setIsInputNull(false);
-
-      if (activeSearchBar && newCurrentWord !== '') {
-        navigate(`/tags/${newCurrentWord}`);
+      if (isMainPage && inputValue !== '') {
+        navigate(`/tags/${inputValue}`);
       }
     }
   };
 
   return (
-    <S_SearchBarWrap active={activeSearchBar}>
+    <S_SearchBarWrap active={isMainPage}>
       <BsSearch className="search-icon" />
       <S_SearchBarInput
         placeholder="Search for all images in photoday"
-        onKeyPress={keydownHandler}
+        onKeyDown={keydownHandler}
         ref={inputRef}
         isInputNull={isInputNull}
       ></S_SearchBarInput>
