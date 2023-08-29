@@ -7,8 +7,9 @@ type ImageContextProps = {
 };
 export const ImageContext = React.createContext<ImageContextProps | null>(null);
 
-const ItemStore = ({ children }: PropsWithChildren<{}>) => {
+const ImageStore = ({ children }: PropsWithChildren<{}>) => {
   const [items, setItems] = useState<ImageCardProps[]>([]);
+
   return (
     <ImageContext.Provider value={{ items, setItems }}>
       {children}
@@ -16,4 +17,4 @@ const ItemStore = ({ children }: PropsWithChildren<{}>) => {
   );
 };
 
-export default ItemStore;
+export default ImageStore;
