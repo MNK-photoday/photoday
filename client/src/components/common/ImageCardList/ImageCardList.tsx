@@ -78,14 +78,19 @@ function ImageCardList({
         filter,
       );
 
-      const filterImages = response?.data.filter(
-        (item: ImageCardProps) => isDetailPage && item.imageId !== Number(id),
-      );
+      const filterImages = isDetailPage
+        ? response?.data.filter(
+            (item: ImageCardProps) => item.imageId !== Number(id),
+          )
+        : response?.data;
+
+      console.log(filterImages);
 
       IMAGE_CONTEXT?.setItems((prev: ImageCardProps[]) => [
         ...prev,
         ...filterImages,
       ]);
+
       setHasMore(filterImages.length > 0);
       setLoading(false);
     } catch (error) {
