@@ -28,7 +28,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Tags } from '../Upload/Upload';
 import { SearchContext } from '../../context/SearchContext';
 import { PageNumContext } from '../../context/PageNumContext';
-import { ItemContext } from '../../context/ItemContext';
+import { ImageContext } from '../../context/ItemContext';
 import MainImageLoding from './MainImageLoding';
 
 type DetailInfo = {
@@ -69,7 +69,7 @@ function Detail() {
 
   const SEARCH_CONTEXT = useContext(SearchContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
-  const ITEM_CONTEXT = useContext(ItemContext);
+  const IMAGE_CONTEXT = useContext(ImageContext);
   useEffect(() => {
     window.scrollTo(0, 0);
     setLoding(true);
@@ -110,7 +110,7 @@ function Detail() {
             searchtags += ` ${el['name']}`;
           });
           PAGE_NUM_CONTEXT?.setPageNumber(1);
-          ITEM_CONTEXT?.setItems([]);
+          IMAGE_CONTEXT?.setItems([]);
           SEARCH_CONTEXT?.setSearchWord(searchtags);
         }
       })
@@ -119,7 +119,7 @@ function Detail() {
       });
     return () => {
       PAGE_NUM_CONTEXT?.setPageNumber(1);
-      ITEM_CONTEXT?.setItems([]);
+      IMAGE_CONTEXT?.setItems([]);
     };
   }, [isTagModified, id]);
 

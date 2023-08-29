@@ -1,9 +1,9 @@
 import { useContext, useRef, useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ItemContext } from '../../../context/ItemContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import { SearchContext } from '../../../context/SearchContext';
+import { ImageContext } from '../../../context/ItemContext';
 import { S_SearchBarInput, S_SearchBarWrap } from './SearchBar.styles';
 
 type SearchBarProps = {
@@ -12,7 +12,7 @@ type SearchBarProps = {
 };
 
 function SearchBar({ setActiveTextBox, isMainPage }: SearchBarProps) {
-  const ITEM_CONTEXT = useContext(ItemContext);
+  const IMAGE_CONTEXT = useContext(ImageContext);
   const SEARCH_CONTENT = useContext(SearchContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
@@ -25,7 +25,7 @@ function SearchBar({ setActiveTextBox, isMainPage }: SearchBarProps) {
   const resetInputAndPage = () => {
     if (inputRef.current) {
       inputRef.current.value = '';
-      ITEM_CONTEXT?.setItems([]);
+      IMAGE_CONTEXT?.setItems([]);
       PAGE_NUM_CONTEXT?.setPageNumber(1);
     }
   };
@@ -63,7 +63,7 @@ function SearchBar({ setActiveTextBox, isMainPage }: SearchBarProps) {
     <S_SearchBarWrap active={isMainPage}>
       <BsSearch className="search-icon" />
       <S_SearchBarInput
-        placeholder="Search for all images in photoday"
+        placeholder="Search for all images in photoday ex) dog cat ..."
         onKeyDown={keydownHandler}
         ref={inputRef}
         isInputNull={isInputNull}
