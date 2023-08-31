@@ -7,6 +7,7 @@ import { PageNumContext } from '../../../context/PageNumContext';
 import { ImageContext } from '../../../context/ImageContext';
 import ImageCardSkeleton from '../Skeleton/ImageCardSkeleton';
 import { useLocation, useParams } from 'react-router-dom';
+import useInfiniteScroll from '../../../hooks/useInfiniteScroll ';
 
 export type ImageCardListProps = {
   width: number;
@@ -23,14 +24,11 @@ export type ImageCardProps = {
 };
 
 function ImageCardList({
-  width,
   height,
   matrix = 'columns',
   filter = 'createdAt',
 }: ImageCardListProps) {
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const observer = useRef<IntersectionObserver>();
-  const endRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
   const IMAGE_CONTEXT = useContext(ImageContext);
@@ -40,34 +38,16 @@ function ImageCardList({
   const { search, id } = useParams();
   const { pathname } = useLocation();
   const isMain = pathname === '/';
+
   useEffect(() => {
     fetchData();
   }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
 
-  useEffect(() => {
-    if (loading) {
-      observer.current?.disconnect();
-      return;
-    }
-    if (observer.current) {
-      observer.current?.disconnect();
-    }
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          PAGE_NUM_CONTEXT?.setPageNumber((prev: number) => prev + 1);
-        }
-      },
-      { threshold: 0.5 },
-    );
-
-    if (endRef.current !== null) {
-      observer.current.observe(endRef.current);
-    }
-  }, [loading, hasMore]);
+  useInfiniteScroll(loading, hasMore);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const pageNumber = PAGE_NUM_CONTEXT?.pageNumber ?? 1;
       const searchWord = SEARCH_CONTEXT?.searchWord ?? '';
       const isDetailPage = pathname.includes('detail') && !isMain;
@@ -84,17 +64,16 @@ function ImageCardList({
           )
         : response?.data;
 
-      console.log(filterImages);
-
       IMAGE_CONTEXT?.setItems((prev: ImageCardProps[]) => [
         ...prev,
         ...filterImages,
       ]);
 
       setHasMore(filterImages.length > 0);
-      setLoading(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -116,7 +95,7 @@ function ImageCardList({
       {/* 검색 결과가 없을 때  | 받아올 데이터가 없을 때 */}
       {!hasMore && <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       {/* 끝까지 스크롤 했을 때 */}
-      {hasMore && <S_LoaderBar ref={endRef}></S_LoaderBar>}
+      {hasMore && <S_LoaderBar id="endElement"></S_LoaderBar>}
     </>
   );
 }
