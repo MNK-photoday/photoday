@@ -15,7 +15,7 @@ function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
   const IMAGE_CONTEXT = useContext(ImageContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
-  const selectfilter = (type: string) => {
+  const selectFilter = (type: string) => {
     if (isSelect !== type) {
       IMAGE_CONTEXT?.setItems([]);
       PAGE_NUM_CONTEXT?.setPageNumber(1);
@@ -27,13 +27,13 @@ function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
     <S_SelectModalWrap>
       <S_SelectModalContainer>
         <S_SelectModalSpan
-          onClick={() => selectfilter('createdAt')}
+          onClick={() => selectFilter('createdAt')}
           active={isSelect === 'createdAt'}
         >
           Newest
         </S_SelectModalSpan>
         <S_SelectModalSpan
-          onClick={() => selectfilter('viewCount')}
+          onClick={() => selectFilter('viewCount')}
           active={isSelect === 'viewCount'}
         >
           Popular
