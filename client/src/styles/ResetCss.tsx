@@ -6,7 +6,7 @@ const ResetCss = css`
   * {
     margin: 0;
     padding: 0;
-    font-family: 'NotoSans', 'NotoSans-KR', 'sans-serif';
+    font-family: 'NaumGothicRegular', 'NotoSans-KR', 'sans-serif';
   }
 
   html,

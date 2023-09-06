@@ -23,7 +23,7 @@ function Search() {
   const { search } = useParams();
 
   useEffect(() => {
-    const tags = search?.split(' ') ?? [''];
+    const tags = search?.split(' ') ?? [];
     setIsTags(tags.map((tag, index) => ({ id: index + 1, name: tag })));
   }, [search]);
 

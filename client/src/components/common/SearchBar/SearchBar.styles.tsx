@@ -3,7 +3,7 @@ import styled, { keyframes, css } from 'styled-components';
 export const S_SearchBarWrap = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
-  flex: 1;
+  width: 100%;
   position: relative;
   height: ${({ active }) => (active ? '30px' : '35px')};
   margin-bottom: ${({ active }) => (active ? '0px' : '20px')};
@@ -35,14 +35,14 @@ const vibratAnimation = css`
 `;
 
 export const S_SearchBarInput = styled.input<{ isInputNull: boolean }>`
-  border-radius: 25px;
+  border-radius: 20px;
   background-color: var(--color-primary-gray10);
   height: 100%;
   width: 100%;
-  padding: 3px 40px;
+  padding: 4px 40px;
   border: none;
   outline: none;
-  font-size: var(--font-size-m);
+  font-size: 14px;
   color: var(--color-primary-black);
   ${({ isInputNull }) => isInputNull && vibratAnimation};
 `;

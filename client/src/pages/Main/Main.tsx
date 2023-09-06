@@ -34,12 +34,12 @@ function Main() {
           <S_SearchContentBox>
             <SearchBar setActiveTextBox={setActiveTextBox} />
             <S_SearchImgBox textBoxActive={activeTextBox}>
-              <ImageCardList width={240} height={180} />
+              <ImageCardList width={240} height={200} />
             </S_SearchImgBox>
             <S_MainTextBox textBoxActive={activeTextBox}>
               <S_MainTitle>
                 free pics.
-                <br /> do anyhing (CC0). <br /> make magic
+                <br /> do anything (CC0). <br /> make magic
               </S_MainTitle>
             </S_MainTextBox>
           </S_SearchContentBox>

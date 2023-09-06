@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ItemContext } from '../../../context/ItemContext';
+import { ImageContext } from '../../../context/ImageContext';
 import { PageNumContext } from '../../../context/PageNumContext';
 import {
   S_SelectModalWrap,
@@ -12,12 +12,12 @@ interface SelectBoxProps {
   setIsSelect: (isSelect: string) => void;
 }
 function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
-  const ITEM_CONTEXT = useContext(ItemContext);
+  const IMAGE_CONTEXT = useContext(ImageContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
-  const selectfilter = (type: string) => {
+  const selectFilter = (type: string) => {
     if (isSelect !== type) {
-      ITEM_CONTEXT?.setItems([]);
+      IMAGE_CONTEXT?.setItems([]);
       PAGE_NUM_CONTEXT?.setPageNumber(1);
       setIsSelect(type);
     }
@@ -27,13 +27,13 @@ function SelectBoxModal({ isSelect, setIsSelect }: SelectBoxProps) {
     <S_SelectModalWrap>
       <S_SelectModalContainer>
         <S_SelectModalSpan
-          onClick={() => selectfilter('createdAt')}
+          onClick={() => selectFilter('createdAt')}
           active={isSelect === 'createdAt'}
         >
           Newest
         </S_SelectModalSpan>
         <S_SelectModalSpan
-          onClick={() => selectfilter('viewCount')}
+          onClick={() => selectFilter('viewCount')}
           active={isSelect === 'viewCount'}
         >
           Popular

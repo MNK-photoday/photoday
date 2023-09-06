@@ -43,7 +43,6 @@ export const S_PicBox = styled.div`
     > :last-child {
       opacity: 1;
     }
-    margin-left: 20px;
   }
   @media screen and (max-width: 650px) {
     margin-left: 0;
@@ -193,6 +192,10 @@ export const S_UploadDateBox = styled.div`
 export const S_SeachList = styled.div`
   width: 85%;
   height: auto;
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
 `;
 export const S_TagWrap = styled.div`
   ${Flex}

@@ -5,6 +5,7 @@ export const S_MainImageContentBox = styled.section`
   @media screen and (max-width: 1500px) {
     padding-left: 30px;
   }
+
   @media screen and (max-width: 1024px) {
     width: 100%;
     padding-left: 0px;
@@ -14,21 +15,27 @@ export const S_MainImageContentBox = styled.section`
 
 export const S_MainImageCardBox = styled.div`
   box-sizing: border-box;
-  padding: 0 30px;
   width: 100%;
   height: 390px;
+  padding: 0 30px;
 
   &:first-of-type {
     margin-bottom: 30px;
   }
 
+  @media screen and (max-width: 1400px) {
+    padding: 0 30px;
+  }
   @media screen and (max-width: 1024px) {
     width: 100%;
     height: 450px;
+    padding: 0 30px;
   }
-  @media screen and (max-width: 650px) {
+
+  @media screen and (max-width: 640px) {
     width: 100%;
     height: 300px;
+    padding: 0;
   }
 `;
 

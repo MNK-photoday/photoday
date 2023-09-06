@@ -2,11 +2,12 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import ImageCard from '../ImageCard/ImageCard';
 import { S_ImageCardWrap, S_LoaderBar } from './ImageCardList.styles';
 import { postSearchTags } from '../../../api/Search';
-import { ItemContext } from '../../../context/ItemContext';
 import { SearchContext } from '../../../context/SearchContext';
 import { PageNumContext } from '../../../context/PageNumContext';
+import { ImageContext } from '../../../context/ImageContext';
 import ImageCardSkeleton from '../Skeleton/ImageCardSkeleton';
 import { useLocation, useParams } from 'react-router-dom';
+import useInfiniteScroll from '../../../hooks/useInfiniteScroll ';
 
 export type ImageCardListProps = {
   width: number;
@@ -15,7 +16,7 @@ export type ImageCardListProps = {
   filter?: string;
 };
 
-export type ImageItemProps = {
+export type ImageCardProps = {
   imageId: number;
   imageUrl: string;
   like: boolean;
@@ -23,87 +24,63 @@ export type ImageItemProps = {
 };
 
 function ImageCardList({
-  width,
   height,
   matrix = 'columns',
   filter = 'createdAt',
 }: ImageCardListProps) {
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const observer = useRef<IntersectionObserver>();
-  const endRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
-  const ITEM_CONTEXT = useContext(ItemContext);
+  const IMAGE_CONTEXT = useContext(ImageContext);
   const SEARCH_CONTEXT = useContext(SearchContext);
   const PAGE_NUM_CONTEXT = useContext(PageNumContext);
 
   const { search, id } = useParams();
   const { pathname } = useLocation();
+  const isMain = pathname === '/';
 
   useEffect(() => {
     fetchData();
   }, [SEARCH_CONTEXT?.searchWord, PAGE_NUM_CONTEXT?.pageNumber, filter]);
 
-  useEffect(() => {
-    if (loading) {
-      observer.current?.disconnect();
-      return;
-    }
-    if (observer.current) {
-      observer.current?.disconnect();
-    }
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          PAGE_NUM_CONTEXT?.setPageNumber((prev: number) => prev + 1);
-        }
-      },
-      { threshold: 0.5 },
-    );
-
-    if (endRef.current !== null) {
-      observer.current.observe(endRef.current);
-    }
-  }, [loading, hasMore]);
+  useInfiniteScroll(loading, hasMore);
 
   const fetchData = async () => {
     try {
-      postSearchTags(
-        pathname !== '/'
-          ? search ?? SEARCH_CONTEXT?.searchWord ?? ''
-          : SEARCH_CONTEXT?.searchWord ?? '',
-        PAGE_NUM_CONTEXT?.pageNumber ?? 1,
+      setLoading(true);
+      const pageNumber = PAGE_NUM_CONTEXT?.pageNumber ?? 1;
+      const searchWord = SEARCH_CONTEXT?.searchWord ?? '';
+      const isDetailPage = pathname.includes('detail') && !isMain;
+
+      const response = await postSearchTags(
+        isMain ? searchWord : search ?? searchWord,
+        pageNumber,
         filter,
-      ).then((response) => {
-        if (pathname.includes('detail')) {
-          ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => {
-            const newItems = response?.data.filter(
-              (item: ImageItemProps) => item.imageId !== Number(id),
-            );
+      );
 
-            return [...prev, ...newItems];
-          });
+      const filterImages = isDetailPage
+        ? response?.data.filter(
+            (item: ImageCardProps) => item.imageId !== Number(id),
+          )
+        : response?.data;
 
-          setHasMore(response?.data.length > 0);
-          setLoading(false);
-        } else {
-          ITEM_CONTEXT?.setItems((prev: ImageItemProps[]) => [
-            ...prev,
-            ...response?.data,
-          ]);
-          setHasMore(response?.data.length > 0);
-          setLoading(false);
-        }
-      });
+      IMAGE_CONTEXT?.setItems((prev: ImageCardProps[]) => [
+        ...prev,
+        ...filterImages,
+      ]);
+
+      setHasMore(filterImages.length > 0);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <S_ImageCardWrap height={height} matrix={matrix}>
-        {ITEM_CONTEXT?.items.map((item: ImageItemProps, index) => (
+        {IMAGE_CONTEXT?.items.map((item: ImageCardProps, index) => (
           <ImageCard key={index} item={item} />
         )) ?? <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       </S_ImageCardWrap>
@@ -118,7 +95,7 @@ function ImageCardList({
       {/* 검색 결과가 없을 때  | 받아올 데이터가 없을 때 */}
       {!hasMore && <S_LoaderBar>No more photos to load.</S_LoaderBar>}
       {/* 끝까지 스크롤 했을 때 */}
-      {hasMore && <S_LoaderBar ref={endRef}></S_LoaderBar>}
+      {hasMore && <S_LoaderBar id="endElement"></S_LoaderBar>}
     </>
   );
 }

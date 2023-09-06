@@ -32,32 +32,31 @@ type ImageDetail = {
 function ImageCard({ item }: ImageCardProps) {
   const { pathname } = useLocation();
   const [detail, setDetail] = useState<ImageDetail | null>(null);
-  const [likestate, setlikeState] = useState<boolean>();
-  const [bookstate, setBookmarkState] = useState<boolean>();
+  const [likeState, setlikeState] = useState<boolean>(false);
+  const [bookMarkState, setbookMarkState] = useState<boolean>(false);
   const navigate = useNavigate();
-  const clickEventHanelr = async (type: string) => {
+
+  const handleRequest = async (
+    apiFunc: () => Promise<void>,
+    stateSetter: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => {
+    try {
+      await apiFunc();
+      stateSetter((prev) => !prev);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          navigate('/login');
+        }
+      }
+    }
+  };
+
+  const clickEventHandler = (type: string) => {
     if (type === 'like') {
-      try {
-        await patchLikeImage(item.imageId);
-        setlikeState(!detail?.like);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 401) {
-            navigate('/login');
-          }
-        }
-      }
+      handleRequest(() => patchLikeImage(item.imageId), setlikeState);
     } else if (type === 'bookmark') {
-      try {
-        await patchBookmarkImage(item.imageId);
-        setBookmarkState(!detail?.bookmark);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 401) {
-            navigate('/login');
-          }
-        }
-      }
+      handleRequest(() => patchBookmarkImage(item.imageId), setbookMarkState);
     }
   };
 
@@ -69,7 +68,7 @@ function ImageCard({ item }: ImageCardProps) {
     } catch (error) {
       console.log(error);
     }
-  }, [likestate, bookstate]);
+  }, [likeState, bookMarkState]);
 
   return (
     <S_CardImagePicture>
@@ -84,14 +83,14 @@ function ImageCard({ item }: ImageCardProps) {
         <S_OverlayControlsBox>
           <S_IconBox>
             <Heart
-              activelike={detail?.like?.toString()}
-              onClick={() => clickEventHanelr('like')}
+              activelike={detail?.like ? 'true' : 'false'}
+              onClick={() => clickEventHandler('like')}
             />
           </S_IconBox>
           <S_IconBox>
             <Bookmark
-              activebookmark={detail?.bookmark?.toString()}
-              onClick={() => clickEventHanelr('bookmark')}
+              activebookmark={detail?.bookmark ? 'true' : 'false'}
+              onClick={() => clickEventHandler('bookmark')}
             />
           </S_IconBox>
         </S_OverlayControlsBox>

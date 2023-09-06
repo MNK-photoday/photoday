@@ -21,10 +21,10 @@ import HeaderModal from './HeaderModal';
 import { RootState } from '../../../store/store';
 
 type HeaderProps = {
-  activeSearchBar: boolean;
+  isMainPage: boolean;
 };
 
-function Header({ activeSearchBar }: HeaderProps) {
+function Header({ isMainPage }: HeaderProps) {
   const { isLoggedIn, userProfileImage } = useSelector(
     (state: RootState) => state.auth,
   );
@@ -40,7 +40,7 @@ function Header({ activeSearchBar }: HeaderProps) {
             </Link>
           </S_LogoH1>
         </S_LogoBox>
-        {activeSearchBar && <SearchBar activeSearchBar={activeSearchBar} />}
+        {isMainPage && <SearchBar isMainPage={isMainPage} />}
         {isLoggedIn ? (
           <S_NavBox>
             <S_NavLink to="/upload">

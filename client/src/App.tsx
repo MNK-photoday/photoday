@@ -9,8 +9,8 @@ import Upload from './pages/Upload/Upload';
 import TagSearch from './pages/Search/Search';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import Detail from './pages/Detail/Detail';
-import ItemStore from './context/ItemContext';
 import React from 'react';
+import ImageStore from './context/ImageContext';
 import SearchStore from './context/SearchContext';
 import PageNumStore from './context/PageNumContext';
 
@@ -73,7 +73,7 @@ function App() {
   ]);
 
   return (
-    <AppProvider contexts={[ItemStore, SearchStore, PageNumStore]}>
+    <AppProvider contexts={[ImageStore, SearchStore, PageNumStore]}>
       <RouterProvider router={router}></RouterProvider>
     </AppProvider>
   );

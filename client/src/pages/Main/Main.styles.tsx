@@ -5,6 +5,7 @@ export const S_MainContentBox = styled.div`
   width: 100%;
   height: calc(100vh - 70px);
   align-items: center;
+  justify-content: center;
 
   @media screen and (max-width: 1024px) {
     flex-wrap: wrap;
@@ -19,8 +20,23 @@ export const S_SearchContentBox = styled.section`
   position: relative;
   padding: 30px;
 
+  @media screen and (max-width: 1400px) {
+    padding-left: 30px;
+  }
+
   @media screen and (max-width: 1024px) {
     width: 100%;
+    padding: 30px;
+  }
+
+  @media screen and (max-width: 640px) {
+    width: 100%;
+    padding: 30px 0;
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    padding: 30px 0;
   }
 `;
 
@@ -44,13 +60,13 @@ export const S_SearchImgBox = styled.div`
 `;
 
 export const S_MainTitle = styled.h1`
-  font-size: var(--font-size-xxxl);
+  font-size: 55px;
   color: var(--color-primary-black);
   font-weight: 500;
   line-height: 1.2;
 
   @media screen and (max-width: 1450px) {
-    font-size: 40px;
+    font-size: 50px;
   }
 
   @media screen and (max-width: 500px) {
