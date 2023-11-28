@@ -7,6 +7,22 @@
 </div>
 
 
+- **`Team name` :**  맑눈광 
+- **`Project` :** photoday : A photo sharing website
+- **`Project duration` :** 2023.03.03 - 2023.04.02
+- **`Team members` :** 김민수(팀장), 심현보, 조영롱, 유아현(부팀장), 이정호, 장은수
+- **`Link` :** [🌐 photoday ](http://photoday.site.s3-website.ap-northeast-2.amazonaws.com)
+- **`사용자 요구사항 정의서`:** [사용자 요구사항 정의서](https://docs.google.com/spreadsheets/d/1Ag0E2LtVoF8s_KBggUSjhS9XFv0DJXGEpryifN7IOt8/edit#gid=0)
+- **`기술 발표 영상`:** [기술 발표 영상](https://www.youtube.com/watch?v=x1y4s9WShps)
+<br/>
+
+## 💼 Team
+|                     <a href="https://github.com/youa7878" target="_blank">유아현</a> <br>(FE, FE lead)                     |                        <a href="https://github.com/leejungho9" target="_blank">이정호</a> <br>(FE)                        |                        <a href="https://github.com/heyroocoke" target="_blank">장은수</a> <br>(FE)                        |                    <a href="https://github.com/ichubtou" target="_blank">김민수</a> <br>(BE, BE lead)                     |                        <a href="https://github.com/qushe8r" target="_blank">심현보</a> <br>(BE)                        |                       <a href="https://github.com/youngrongcho" target="_blank">조영롱</a> <br>(BE)                        |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+|  <img alt="유아현" src="https://velog.velcdn.com/images/youa7878/post/a22012f1-99b5-4930-888f-02f5a6fc7291/image.png" height="100" width="100"> | <img alt="이정호" src="https://velog.velcdn.com/images/youa7878/post/159dc490-9e70-4c03-be58-6c1042ad70a4/image.png" height="100" width="100"> | <img alt="장은수" src="https://velog.velcdn.com/images/youa7878/post/d3c50837-70e4-4955-9904-55004b6c4df1/image.png" height="100" width="100"> | <img alt="김민수" src="https://velog.velcdn.com/images/youa7878/post/84c6b5cd-7d52-4046-b7b0-f473516aae29/image.png" height="100" width="100"> | <img alt="심현보" src="https://velog.velcdn.com/images/youa7878/post/b751cdc3-3bc3-4e33-b756-877e904cd6dd/image.png" height="100" width="100"> | <img alt="조영롱" src="https://velog.velcdn.com/images/youa7878/post/47b426a7-8e50-471c-8a51-c32ab66c2818/image.png" height="100" width="100"> |
+|<p align="left">**Pages**<br/>- Login & Signup &  Account Recovery page<br/>- User page <br/>**Components**<br/>- Google Button <br/>- Login Input <br/>- Follow Modal <br/>**Features**<br/>- User CRUD<br/>- Profile CRUD <br/> - Login & Signup CUD <br/>- User post & Bookmark R <br/>- Client AWS Deploy <br/>- Follow CRUD <br/>- Pagination<br/></p> | <p align="left">**Pages**<br/>-  Main page<br/>- Search Page<br/>- 404 Not Found Page<br/>**Common Component**<br/>- Button<br/>- Header<br/>- Footer<br/>- ImageCard<br/>- SearchBar<br/>- SelectBox<br/>- Skeleton UI<br/>**Features**<br/>- Infinite Scroll<br/>- Filter<br/></p> | <p align="left">**Pages**<br/>- Detail page<br/>- Upload page<br/>**Components**<br/>- Tag<br/>**Features**<br/>- Post CRUD<br/>- Tag CRUD<br/></p> |<p align="left">- CI/CD (Jenkins, Sonarqube)<br/>- AWS Deployment<br/>- Docker<br/>- Spring Security (JWT, OAuth2)<br/>- Image Hashing<br/>- Exception Handling <br/>- Follow Service<br/>- User Service <br/></p> |<p align="left">- JUnit Test<br/>- AWS Architecture (VPC, Nginx, Certbot)<br/>- Docker<br/>- Image Upload <br/>- Follow Service<br/>- Architecture Diagram<br/></p>|<p align="left">- Log Visualization (AOP, Grafana, Loki, Promtail, Prometheus)<br/>- SMTP Mail<br/>- Tag Search<br/>- Image Download <br/>- Follow Service<br/>- Bookmark Service<br/>- Like Service<br/>- Report Service<br/></p>|
+
+
 
 
 <br/>
