@@ -5,9 +5,8 @@ function MainSkeleton({ count, width, height }: any) {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (
-        <S_MainImageCardBox>
+        <S_MainImageCardBox key={index}>
           <Skeleton
-            key={index}
             height={height}
             width={width}
             animation={true}
